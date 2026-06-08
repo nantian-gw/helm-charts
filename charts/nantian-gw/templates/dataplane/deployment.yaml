@@ -149,6 +149,16 @@ spec:
             {{- end }}
             - name: tmp
               mountPath: /tmp
+            {{- $accessLogMountExists := false }}
+            {{- range .Values.dataplane.extraVolumeMounts }}
+            {{- if or (eq .name $.Values.dataplane.accessLogVolume.name) (eq .mountPath $.Values.dataplane.accessLogVolume.mountPath) }}
+            {{- $accessLogMountExists = true }}
+            {{- end }}
+            {{- end }}
+            {{- if and .Values.dataplane.accessLogVolume.enabled (not $accessLogMountExists) }}
+            - name: {{ .Values.dataplane.accessLogVolume.name }}
+              mountPath: {{ .Values.dataplane.accessLogVolume.mountPath }}
+            {{- end }}
             {{- with .Values.dataplane.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -178,6 +188,17 @@ spec:
         - name: tmp
           emptyDir:
             sizeLimit: 128Mi
+        {{- $accessLogVolumeExists := false }}
+        {{- range .Values.dataplane.extraVolumes }}
+        {{- if eq .name $.Values.dataplane.accessLogVolume.name }}
+        {{- $accessLogVolumeExists = true }}
+        {{- end }}
+        {{- end }}
+        {{- if and .Values.dataplane.accessLogVolume.enabled (not $accessLogVolumeExists) }}
+        - name: {{ .Values.dataplane.accessLogVolume.name }}
+          emptyDir:
+            sizeLimit: {{ .Values.dataplane.accessLogVolume.sizeLimit }}
+        {{- end }}
         {{- with .Values.dataplane.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

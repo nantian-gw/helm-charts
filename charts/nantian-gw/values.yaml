@@ -258,6 +258,7 @@ dataplane:
       cpu: "250m"
       memory: "256Mi"
     limits:
+      cpu: "2000m"
       memory: "1Gi"
 
   # -- Probe configuration
@@ -375,6 +376,13 @@ dataplane:
     existingSecret: ""
     # -- Secret key for the session persistence token (default: session-persistence)
     secretKey: "session-persistence"
+
+  # -- Chart-managed access log emptyDir. Disable when providing a custom log volume through extraVolumes/extraVolumeMounts.
+  accessLogVolume:
+    enabled: true
+    name: access-logs
+    mountPath: /var/log/nantian-gw
+    sizeLimit: 256Mi
 
   # -- Extra environment variables
   extraEnv: []
