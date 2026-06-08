@@ -380,8 +380,7 @@ dashboard:
   # -- Number of replicas
   replicas: 1
 
-  # -- NextAuth secret (64-char hex). If set, a Secret is generated.
-  # If not set, use authExistingSecret to reference a pre-created Secret.
+  # -- NextAuth secret value. Auto-generated if empty and no authExistingSecret.
   authSecret: ""
 
   # -- Name of a pre-created Secret (Opaque, key: auth-secret) for AUTH_SECRET.

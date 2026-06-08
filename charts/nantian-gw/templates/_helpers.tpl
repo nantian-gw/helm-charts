@@ -223,3 +223,22 @@ controlPlaneAddr: "http://{{ include "nantian-gw.name" . }}-controlplane-grpc.{{
 {{ toYaml $dpConfig }}
 {{- end }}
 {{- end }}
+
+{{/*
+Resolve the dashboard auth secret value.
+1. Use user-provided authSecret if set
+2. Reuse existing secret value (stable across upgrades)
+3. Otherwise, generate a random value on first install
+*/}}
+{{- define "nantian-gw.dashboard-auth-secret" -}}
+{{- if .Values.dashboard.authSecret }}
+{{- .Values.dashboard.authSecret }}
+{{- else }}
+{{- $secret := lookup "v1" "Secret" .Release.Namespace (printf "%s-dashboard-auth" (include "nantian-gw.name" .)) }}
+{{- if $secret }}
+{{- index $secret.data "auth-secret" | b64dec }}
+{{- else }}
+{{- randAlphaNum 32 }}
+{{- end }}
+{{- end }}
+{{- end }}
