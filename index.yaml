@@ -5,7 +5,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-08T20:16:41.70857728+08:00"
+    created: "2026-06-08T20:53:04.064041966+08:00"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 9ec7434066ee82cd500c2f6bfecd17ae9d028e1d5b157208f435ff843e172cd9
@@ -29,10 +29,10 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-08T20:16:41.712467112+08:00"
+    created: "2026-06-08T20:53:04.068970664+08:00"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
-    digest: fb9104d0422cb5d3c34286f936e4713ab825ec32d9538d3185a847c82b310d1f
+    digest: d4f1ef6ce11a2d28a8a21ad9bfc140aeaf56905d2edd577572474f49cfcf90c2
     home: https://github.com/nantian-gw/gateway
     keywords:
     - gateway
@@ -53,7 +53,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-08T20:16:41.710555255+08:00"
+    created: "2026-06-08T20:53:04.064963497+08:00"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: c49ff3c347efdb4e048adc94b038e35e0417f9aeb611ce855a1fa63fa7c79930
@@ -101,7 +101,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-08T20:16:41.706570642+08:00"
+    created: "2026-06-08T20:53:04.063065131+08:00"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 32b0dd0f6150f4ccfeeee7e8949715a9c8b64b938086e2b4b021891e7dd10cbd
@@ -125,7 +125,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-08T20:16:41.705402767+08:00"
+    created: "2026-06-08T20:53:04.062027069+08:00"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: b4b2a9ff6524e08cf0cc38b829769d7dafbd734a995f7a5f336fb32afd03986c
@@ -145,4 +145,4 @@ entries:
     urls:
     - https://chart.nantian.dev/nantian-gw-0.1.0-47c5e31.tgz
     version: 0.1.0-47c5e31
-generated: "2026-06-08T20:16:41.704213195+08:00"
+generated: "2026-06-08T20:53:04.060161121+08:00"
