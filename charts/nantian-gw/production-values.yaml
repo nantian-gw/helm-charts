@@ -19,7 +19,7 @@ controlplane:
 
   image:
     registry: "ghcr.io"
-    repository: "nantian-gw/controller"
+    repository: "nantian-gw/nantian-controlplane"
     tag: "latest"
     pullPolicy: Always
 

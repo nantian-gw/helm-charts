@@ -44,8 +44,8 @@ controlplane:
   # -- Container image
   image:
     # registry inherits from global.imageRegistry unless explicitly set
-    repository: "nantian-gw/controller"
-    tag: ""           # Defaults to Chart.appVersion
+    repository: "nantian-gw/nantian-controlplane"
+    tag: "latest"
     pullPolicy: Always
 
   # -- Pod security context (overrides defaults)
@@ -218,7 +218,7 @@ dataplane:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/dataplane"
-    tag: ""
+    tag: "latest"
     pullPolicy: Always
 
   # -- Pod security context (overrides defaults)
@@ -392,7 +392,7 @@ dashboard:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/dashboard"
-    tag: ""
+    tag: "latest"
     pullPolicy: Always
 
   # -- Pod security context
