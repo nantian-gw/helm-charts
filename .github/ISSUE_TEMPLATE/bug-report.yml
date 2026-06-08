@@ -1,0 +1,82 @@
+name: Bug Report
+description: Report a bug in Helm charts, templates, or deployment.
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Write in English or Chinese.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Select the nearest area this bug belongs to.
+      options:
+        - charts
+        - templates
+        - values / configuration
+        - release / CI
+        - docs
+        - other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: env
+    attributes:
+      label: Kubernetes Environment
+      options:
+        - kind
+        - minikube
+        - managed (EKS / AKS / GKE)
+        - self-managed
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the bug and impact.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps To Reproduce
+      placeholder: |
+        1. Helm install with values ...
+        2. Apply ...
+        3. See error ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      placeholder: Include Helm output or pod logs.
+    validations:
+      required: true
+
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions
+      value: |
+        - Helm version:
+        - Kubernetes version:
+        - Chart version:
+        - Branch / commit:
