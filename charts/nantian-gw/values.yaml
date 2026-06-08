@@ -175,6 +175,22 @@ controlplane:
       retryBackoff: "1s"
     adminReadiness:
       mode: "snapshot"
+    dashboardApi:
+      enabled: true
+      basePath: "/api/dashboard"
+      dataplaneAdminUrl: "http://nantian-dataplane-admin.nantian-gw.svc.cluster.local:19080"
+      requestTimeout: "5s"
+      resourceMutationsEnabled: true
+    pprof:
+      enabled: false
+      addr: "127.0.0.1:6060"
+    adminLimits:
+      maxRequestBodyBytes: 2097152
+      maxResponseBodyBytes: 8388608
+    # -- Experimental feature flags. Enable at your own risk — these APIs may change.
+    features:
+      enableExperimentalGateway: false
+      enableAiGateway: false
 
   # -- gRPC TLS configuration
   grpcTLS:
