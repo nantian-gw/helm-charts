@@ -1,3 +1,10 @@
+## ⚠️  Before you start — Gateway API CRDs are required
+
+Nantian Gateway requires Gateway API CRDs to be installed on your cluster.
+If you haven't installed them yet, run:
+
+  kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
+
 ---
 
 {{- $ns := include "nantian-gw.namespace" . }}
@@ -62,10 +69,9 @@ NAMESPACE: {{ $ns }}
 {{- end }}
 
 Get started:
+  kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
   kubectl apply -f my-gateway.yaml
   kubectl apply -f my-httproute.yaml
-
-Gateway API standard CRDs (v1.5.1) were installed with the chart.
 
 A GatewayClass "nantian" has been created. Configure your Gateway and HTTPRoute resources,
 then apply them to start routing traffic.
