@@ -1,0 +1,16 @@
+{{- if and .Values.controlplane.enabled (gt (int .Values.controlplane.replicas) 1) }}
+{{- $ns := include "nantian-gw.namespace" . }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "nantian-gw.name" . }}-controlplane
+  namespace: {{ $ns }}
+  labels:
+    {{- include "nantian-gw.controlplane.labels" . | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.controlplane.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "nantian-gw.controlplane.selectorLabels" . | nindent 6 }}
+{{- end }}

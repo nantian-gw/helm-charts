@@ -1,0 +1,54 @@
+name: Build Latest Chart
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+      - name: Package chart
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          VERSION=$(grep '^version:' charts/nantian-gw/Chart.yaml | awk '{print $2}')
+          mkdir -p .dist
+          helm package charts/nantian-gw -d .dist --version "${VERSION}-${SHORT_SHA}"
+
+      - name: Publish to GitHub Pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin gh-pages 2>/dev/null || true
+          if git rev-parse origin/gh-pages >/dev/null 2>&1; then
+            git checkout gh-pages
+            git pull origin gh-pages 2>/dev/null || true
+          else
+            git checkout --orphan gh-pages
+            git rm -rf . 2>/dev/null || true
+          fi
+
+          cp .dist/*.tgz .
+          if [ -f index.yaml ]; then
+            helm repo index . --url "https://chart.nantian.dev" --merge index.yaml
+          else
+            helm repo index . --url "https://chart.nantian.dev"
+          fi
+
+          echo "chart.nantian.dev" > CNAME
+
+          git add index.yaml *.tgz CNAME
+          git diff --staged --quiet || git commit -m "build latest [skip ci]"
+          git push origin gh-pages
