@@ -11,7 +11,7 @@ Helm charts for deploying [Nantian Gateway](https://github.com/nantian-gw/gatewa
 ## Usage
 
 ```bash
-helm repo add nantian-gw https://chart.nantian.dev
+helm repo add nantian-gw https://charts.nantian.dev
 helm install nantian-gw nantian-gw/nantian-gw --namespace nantian-gw --create-namespace
 ```
 
@@ -30,4 +30,4 @@ The GitHub Actions workflow will:
 1. Package the chart → `nantian-gw-{version}.tgz`
 2. Create a GitHub Release with the `.tgz` attached
 3. Update `index.yaml` pointing to the release artifact
-4. Cloudflare Pages picks up the new `index.yaml` and deploys to `chart.nantian.dev`
+4. Cloudflare Pages picks up the new `index.yaml` and deploys to `charts.nantian.dev`
