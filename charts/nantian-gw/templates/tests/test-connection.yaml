@@ -1,0 +1,38 @@
+{{- if .Values.tests.enabled }}
+{{- $name := include "nantian-gw.name" . }}
+{{- $ns := include "nantian-gw.namespace" . }}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ $name }}-test-connection
+  namespace: {{ $ns }}
+  labels:
+    {{- include "nantian-gw.labels" . | nindent 4 }}
+    app.kubernetes.io/component: test
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  restartPolicy: Never
+  containers:
+    - name: test-connection
+      image: "{{ .Values.tests.image.repository }}:{{ .Values.tests.image.tag }}"
+      imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
+      command:
+        - /bin/sh
+        - -ec
+      args:
+        - |
+          echo "Checking Nantian Gateway services"
+          {{- if .Values.controlplane.enabled }}
+          wget -q -T 5 -O - http://{{ $name }}-controlplane-admin:18081/livez
+          {{- end }}
+          {{- if .Values.dataplane.enabled }}
+          wget -q -T 5 -O - http://{{ $name }}-dataplane-admin:19080/livez
+          {{- end }}
+          {{- if .Values.dashboard.enabled }}
+          wget -q -T 5 -O - http://{{ $name }}-dashboard:3000/healthz
+          {{- end }}
+          echo "Nantian Gateway service checks completed"
+{{- end }}

@@ -514,6 +514,17 @@ networkPolicies:
   enabled: true
 
 # =============================================================================
+# Helm Tests
+# =============================================================================
+tests:
+  # -- Enable Helm test hook rendering
+  enabled: true
+  image:
+    repository: "busybox"
+    tag: "1.36"
+    pullPolicy: IfNotPresent
+
+# =============================================================================
 # Certificate generation (one-time, at install)
 # =============================================================================
 certs:
