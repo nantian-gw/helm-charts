@@ -1,0 +1,340 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": true,
+  "definitions": {
+    "stringMap": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "dnsLabel": {
+      "type": "string",
+      "maxLength": 63,
+      "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "registry": { "type": "string" },
+        "repository": { "type": "string", "minLength": 1 },
+        "tag": { "type": "string" },
+        "pullPolicy": {
+          "type": "string",
+          "enum": ["Always", "IfNotPresent", "Never"]
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "requests": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "cpu": { "type": "string", "minLength": 1 },
+            "memory": { "type": "string", "minLength": 1 }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "cpu": { "type": "string", "minLength": 1 },
+            "memory": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "probe": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "periodSeconds": { "type": "integer", "minimum": 1 },
+        "timeoutSeconds": { "type": "integer", "minimum": 1 },
+        "failureThreshold": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "probes": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "startup": { "$ref": "#/definitions/probe" },
+        "liveness": { "$ref": "#/definitions/probe" },
+        "readiness": { "$ref": "#/definitions/probe" }
+      }
+    },
+    "rollingUpdateStrategy": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["RollingUpdate", "Recreate"]
+        },
+        "rollingUpdate": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "maxSurge": {
+              "oneOf": [
+                { "type": "integer", "minimum": 0 },
+                { "type": "string", "minLength": 1 }
+              ]
+            },
+            "maxUnavailable": {
+              "oneOf": [
+                { "type": "integer", "minimum": 0 },
+                { "type": "string", "minLength": 1 }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "pdb": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "minAvailable": {
+          "oneOf": [
+            { "type": "integer", "minimum": 0 },
+            { "type": "string", "minLength": 1 }
+          ]
+        }
+      }
+    },
+    "componentBase": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "replicas": { "type": "integer", "minimum": 0 },
+        "image": { "$ref": "#/definitions/image" },
+        "podSecurityContext": { "type": "object", "additionalProperties": true },
+        "containerSecurityContext": { "type": "object", "additionalProperties": true },
+        "resources": { "$ref": "#/definitions/resources" },
+        "probes": { "$ref": "#/definitions/probes" },
+        "strategy": { "$ref": "#/definitions/rollingUpdateStrategy" },
+        "pdb": { "$ref": "#/definitions/pdb" },
+        "topologySpreadConstraints": {
+          "type": "array",
+          "items": { "type": "object", "additionalProperties": true }
+        },
+        "terminationGracePeriodSeconds": { "type": "integer", "minimum": 0 },
+        "nodeSelector": { "type": "object", "additionalProperties": true },
+        "tolerations": {
+          "type": "array",
+          "items": { "type": "object", "additionalProperties": true }
+        },
+        "affinity": { "type": "object", "additionalProperties": true },
+        "extraEnv": {
+          "type": "array",
+          "items": { "type": "object", "additionalProperties": true }
+        },
+        "extraVolumeMounts": {
+          "type": "array",
+          "items": { "type": "object", "additionalProperties": true }
+        },
+        "extraVolumes": {
+          "type": "array",
+          "items": { "type": "object", "additionalProperties": true }
+        }
+      }
+    }
+  },
+  "properties": {
+    "global": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "imageRegistry": { "type": "string" },
+        "imagePullSecrets": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "commonLabels": { "$ref": "#/definitions/stringMap" }
+      }
+    },
+    "nameOverride": { "type": "string" },
+    "fullnameOverride": { "type": "string" },
+    "namespace": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "create": { "type": "boolean" },
+        "name": { "type": "string" }
+      },
+      "if": {
+        "properties": {
+          "create": { "const": true }
+        },
+        "required": ["create"]
+      },
+      "then": {
+        "properties": {
+          "name": { "$ref": "#/definitions/dnsLabel" }
+        }
+      }
+    },
+    "gatewayClass": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "controllerName": {
+          "type": "string",
+          "maxLength": 253,
+          "pattern": "^gateway\\.networking\\.k8s\\.io/[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
+        }
+      }
+    },
+    "rbac": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "create": { "type": "boolean" }
+      }
+    },
+    "controlplane": {
+      "allOf": [
+        { "$ref": "#/definitions/componentBase" },
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "config": { "type": "object", "additionalProperties": true },
+            "grpcTLS": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "existingSecret": { "type": "string" },
+                "requireClientCert": { "type": "boolean" }
+              }
+            },
+            "adminAuth": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "bearerTokenFile": { "type": "string" },
+                "existingSecret": { "type": "string" },
+                "secretKey": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "dataplane": {
+      "allOf": [
+        { "$ref": "#/definitions/componentBase" },
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "config": { "type": "object", "additionalProperties": true },
+            "xdsTLS": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "existingSecret": { "type": "string" },
+                "domainName": { "type": "string" }
+              }
+            },
+            "adminAuth": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "bearerTokenFile": { "type": "string" },
+                "existingSecret": { "type": "string" },
+                "secretKey": { "type": "string", "minLength": 1 }
+              }
+            },
+            "sessionPersistence": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "sharedSecret": { "type": "string" },
+                "existingSecret": { "type": "string" },
+                "secretKey": { "type": "string", "minLength": 1 }
+              }
+            },
+            "accessLogVolume": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "name": { "$ref": "#/definitions/dnsLabel" },
+                "mountPath": { "type": "string", "pattern": "^/" },
+                "sizeLimit": { "type": "string", "minLength": 1 }
+              }
+            },
+            "hostNetwork": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "dashboard": {
+      "allOf": [
+        { "$ref": "#/definitions/componentBase" },
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "authSecret": { "type": "string" },
+            "authExistingSecret": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "hpa": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "minReplicas": { "type": "integer", "minimum": 1 },
+        "maxReplicas": { "type": "integer", "minimum": 1 },
+        "targetCPUUtilization": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "targetMemoryUtilization": { "type": "integer", "minimum": 1, "maximum": 100 }
+      }
+    },
+    "serviceMonitor": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "labels": { "$ref": "#/definitions/stringMap" },
+        "interval": { "type": "string", "minLength": 1 },
+        "scrapeTimeout": { "type": "string", "minLength": 1 }
+      }
+    },
+    "networkPolicies": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean" }
+      }
+    },
+    "certs": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "generate": { "type": "boolean" },
+        "domain": { "type": "string" }
+      }
+    },
+    "tests": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "image": { "$ref": "#/definitions/image" }
+      }
+    }
+  }
+}
