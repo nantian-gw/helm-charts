@@ -22,7 +22,6 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "nantian-gw.dataplane.selectorLabels" . | nindent 8 }}
         {{- include "nantian-gw.dataplane.labels" . | nindent 8 }}
       {{- with .Values.dataplane.podAnnotations }}
       annotations:
@@ -36,15 +35,11 @@ spec:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       {{- end }}
-      {{- include "nantian-gw.podSecurityContext" . | nindent 6 }}
       {{- if .Values.dataplane.podSecurityContext }}
       securityContext:
         {{- toYaml .Values.dataplane.podSecurityContext | nindent 8 }}
       {{- else }}
-      securityContext:
-        sysctls:
-          - name: net.ipv4.ip_unprivileged_port_start
-            value: "0"
+      {{- include "nantian-gw.dataplanePodSecurityContext" . | nindent 6 }}
       {{- end }}
       {{- if .Values.dataplane.topologySpreadConstraints }}
       topologySpreadConstraints:
@@ -114,19 +109,11 @@ spec:
             failureThreshold: {{ .Values.dataplane.probes.readiness.failureThreshold }}
           resources:
             {{- toYaml .Values.dataplane.resources | nindent 12 }}
-          {{- include "nantian-gw.containerSecurityContext" . | nindent 10 }}
           {{- if .Values.dataplane.containerSecurityContext }}
           securityContext:
             {{- toYaml .Values.dataplane.containerSecurityContext | nindent 12 }}
           {{- else }}
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-              add:
-                - NET_BIND_SERVICE
+          {{- include "nantian-gw.dataplaneContainerSecurityContext" . | nindent 10 }}
           {{- end }}
           volumeMounts:
             - name: config

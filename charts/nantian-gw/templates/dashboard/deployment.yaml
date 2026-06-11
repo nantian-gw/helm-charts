@@ -22,7 +22,6 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "nantian-gw.dashboard.selectorLabels" . | nindent 8 }}
         {{- include "nantian-gw.dashboard.labels" . | nindent 8 }}
     spec:
       automountServiceAccountToken: false
@@ -75,10 +74,11 @@ spec:
             failureThreshold: {{ .Values.dashboard.probes.readiness.failureThreshold }}
           resources:
             {{- toYaml .Values.dashboard.resources | nindent 12 }}
-          {{- include "nantian-gw.containerSecurityContext" . | nindent 10 }}
           {{- if .Values.dashboard.containerSecurityContext }}
           securityContext:
             {{- toYaml .Values.dashboard.containerSecurityContext | nindent 12 }}
+          {{- else }}
+          {{- include "nantian-gw.containerSecurityContext" . | nindent 10 }}
           {{- end }}
           env:
             - name: AUTH_SECRET

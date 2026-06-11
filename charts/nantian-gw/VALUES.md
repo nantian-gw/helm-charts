@@ -13,7 +13,7 @@ The chart defaults to a standard production-oriented install:
 ```yaml
 featureMode: standard
 gatewayAPI:
-  installCRDs: true
+  installCRDs: false
   channel: standard
 controlplane:
   replicas: 2
@@ -23,9 +23,9 @@ networkPolicies:
   enabled: true
 ```
 
-The default mode keeps experimental runtime features disabled, renders the official Gateway API v1.5.1 standard CRDs, creates two control plane replicas, creates two data plane replicas, enables PodDisruptionBudgets when replicas are greater than one, and keeps NetworkPolicies enabled.
+The default mode keeps experimental runtime features disabled, does not render cluster-scoped Gateway API CRDs, creates two control plane replicas, creates two data plane replicas, enables PodDisruptionBudgets when replicas are greater than one, and keeps NetworkPolicies enabled.
 
-For production, pin image tags to immutable release versions instead of `latest`, configure external secrets for TLS and admin authentication, and run the validation command before rollout:
+By default, component image tags are empty in `values.yaml`, so the chart uses `.Chart.AppVersion`. For stricter supply-chain control, pin image digests or immutable release tags in environment values, configure external secrets for TLS and admin authentication, and run the validation command before rollout:
 
 ```bash
 helm lint charts/nantian-gw
@@ -58,13 +58,13 @@ The chart vendors official Gateway API v1.5.1 CRDs and renders them from templat
 
 ```yaml
 gatewayAPI:
-  installCRDs: true
+  installCRDs: false
   channel: standard # standard | experimental
 ```
 
 `installCRDs=true` renders Gateway API CRDs from this chart. `channel=standard` renders the official standard bundle. `channel=experimental` renders the official experimental bundle, including resources such as TCPRoute and UDPRoute.
 
-`installCRDs=false` renders no Gateway API CRDs. Use this when CRDs are managed by a platform team, GitOps controller, or a separate cluster bootstrap process. In that mode, install official CRDs before applying Gateway API resources:
+`installCRDs=false` is the production default and renders no Gateway API CRDs. Use this when CRDs are managed by a platform team, GitOps controller, or a separate cluster bootstrap process. In that mode, install official CRDs before applying Gateway API resources:
 
 ```bash
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
@@ -136,7 +136,7 @@ controlplane:
   replicas: 2
   image:
     repository: nantian-gw/nantian-controlplane
-    tag: latest
+    tag: ""
     pullPolicy: Always
   resources:
     requests:
@@ -149,7 +149,7 @@ controlplane:
     enabled: true
 ```
 
-Use at least two replicas for availability. Keep leader election enabled when replicas are greater than one. Replace `latest` with a release tag for production rollouts.
+Use at least two replicas for availability. Keep leader election enabled when replicas are greater than one. Leave `tag` empty to use `.Chart.AppVersion`, or replace it with an immutable release tag or digest for production rollouts.
 
 `controlplane.grpcTLS` controls xDS/gRPC server TLS secret mounting:
 
@@ -183,7 +183,7 @@ dataplane:
   replicas: 2
   image:
     repository: nantian-gw/dataplane
-    tag: latest
+    tag: ""
     pullPolicy: Always
   resources:
     requests:
@@ -263,7 +263,7 @@ serviceMonitor:
 helm test nantian-gw --namespace nantian-gw
 ```
 
-`certs.generate=true` creates self-signed certificates at install time. This is convenient for development, but production should normally use cert-manager or pre-created secrets:
+`certs.generate=true` creates chart-managed self-signed certificates and keeps/reuses the generated Secrets across upgrades. This is convenient for development, but production should normally use cert-manager or pre-created secrets:
 
 ```yaml
 certs:
@@ -325,7 +325,7 @@ Chart 默认采用面向生产的标准安装：
 ```yaml
 featureMode: standard
 gatewayAPI:
-  installCRDs: true
+  installCRDs: false
   channel: standard
 controlplane:
   replicas: 2
@@ -335,9 +335,9 @@ networkPolicies:
   enabled: true
 ```
 
-默认模式会关闭实验性运行时能力，渲染官方 Gateway API v1.5.1 standard CRD，创建两个控制面副本和两个数据面副本，副本数大于 1 时启用 PodDisruptionBudget，并默认启用 NetworkPolicy。
+默认模式会关闭实验性运行时能力，不渲染集群级 Gateway API CRD，创建两个控制面副本和两个数据面副本，副本数大于 1 时启用 PodDisruptionBudget，并默认启用 NetworkPolicy。
 
-生产环境建议固定镜像 tag，不要使用 `latest`；TLS、Admin API token 等敏感配置应使用外部 Secret；上线前运行：
+默认镜像 tag 在 `values.yaml` 中为空，因此会使用 `.Chart.AppVersion`。生产环境可以进一步固定镜像 digest 或不可变发布 tag；TLS、Admin API token 等敏感配置应使用外部 Secret；上线前运行：
 
 ```bash
 helm lint charts/nantian-gw
@@ -370,13 +370,13 @@ Chart 内置官方 Gateway API v1.5.1 CRD，并从模板渲染，因此可以通
 
 ```yaml
 gatewayAPI:
-  installCRDs: true
+  installCRDs: false
   channel: standard # standard | experimental
 ```
 
 `installCRDs=true` 表示由本 Chart 渲染 Gateway API CRD。`channel=standard` 渲染官方 standard bundle。`channel=experimental` 渲染官方 experimental bundle，其中包含 TCPRoute、UDPRoute 等实验性资源。
 
-`installCRDs=false` 表示本 Chart 不渲染 Gateway API CRD。平台团队统一管理 CRD、使用 GitOps 管理 CRD、或在集群初始化阶段单独安装 CRD 时，建议使用这个模式。此时应先安装官方 CRD：
+`installCRDs=false` 是生产默认值，表示本 Chart 不渲染 Gateway API CRD。平台团队统一管理 CRD、使用 GitOps 管理 CRD、或在集群初始化阶段单独安装 CRD 时，建议使用这个模式。此时应先安装官方 CRD：
 
 ```bash
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
@@ -448,7 +448,7 @@ controlplane:
   replicas: 2
   image:
     repository: nantian-gw/nantian-controlplane
-    tag: latest
+    tag: ""
     pullPolicy: Always
   resources:
     requests:
@@ -459,7 +459,7 @@ controlplane:
       memory: 512Mi
 ```
 
-生产建议至少两个副本，并在多副本时保持 leader election 开启。镜像 tag 建议替换为明确发布版本。
+生产建议至少两个副本，并在多副本时保持 leader election 开启。`tag` 为空时使用 `.Chart.AppVersion`，也可以在环境 values 中替换为不可变发布 tag 或 digest。
 
 `controlplane.grpcTLS` 控制 gRPC 服务端 TLS Secret 挂载：
 
@@ -493,7 +493,7 @@ dataplane:
   replicas: 2
   image:
     repository: nantian-gw/dataplane
-    tag: latest
+    tag: ""
     pullPolicy: Always
   resources:
     requests:
@@ -573,7 +573,7 @@ serviceMonitor:
 helm test nantian-gw --namespace nantian-gw
 ```
 
-`certs.generate=true` 会在安装时创建自签名证书。它适合开发和快速验证，生产环境通常应使用 cert-manager 或预创建 Secret：
+`certs.generate=true` 会创建 Chart 管理的自签名证书，并在升级时保留/复用已生成的 Secret。它适合开发和快速验证，生产环境通常应使用 cert-manager 或预创建 Secret：
 
 ```yaml
 certs:
@@ -591,7 +591,7 @@ gatewayAPI:
 featureMode: standard
 ```
 
-由 Chart 管理 standard CRD：
+由 Chart 管理 standard CRD（开发或单集群快速安装）：
 
 ```yaml
 gatewayAPI:
