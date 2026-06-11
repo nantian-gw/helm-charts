@@ -7,13 +7,27 @@ global:
   imageRegistry: "ghcr.io"
   # -- Global image pull secrets (names of existing secrets)
   imagePullSecrets: []
-  # -- Common labels added to all resources
+# -- Common labels added to all resources
   commonLabels: {}
+
+# -- Feature mode for the chart. Standard is the production default; experimental explicitly enables experimental runtime integration points.
+# -- 功能模式。standard 是生产默认模式；experimental 用于显式开启实验性运行时集成点。
+featureMode: standard
 
 # -- Override the name of the chart
 nameOverride: ""
 # -- Override the full name of the release
 fullnameOverride: ""
+
+# -- Gateway API configuration
+# -- Gateway API 配置
+gatewayAPI:
+  # -- Render official Gateway API CRDs from this chart. Set false when CRDs are managed separately by the platform.
+  # -- 是否由本 Chart 渲染官方 Gateway API CRD。平台统一管理 CRD 时设置为 false。
+  installCRDs: true
+  # -- Official Gateway API CRD channel to render: standard or experimental.
+  # -- 要渲染的官方 Gateway API CRD 通道：standard 或 experimental。
+  channel: standard
 
 # -- Namespace configuration
 namespace:

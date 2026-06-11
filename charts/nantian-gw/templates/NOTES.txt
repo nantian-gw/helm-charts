@@ -1,15 +1,29 @@
 ---
 
 {{- $ns := include "nantian-gw.namespace" . }}
+{{- $name := include "nantian-gw.name" . }}
+{{- $gatewayClassName := .Values.gatewayClass.controllerName | replace "gateway.networking.k8s.io/" "" | replace "." "-" }}
 Nantian Gateway {{ .Chart.AppVersion }} has been installed.
 
 NAMESPACE: {{ $ns }}
-✅ GatewayClass "nantian" created
+FEATURE MODE: {{ .Values.featureMode }}
+GATEWAY API CRDS:
+{{- if .Values.gatewayAPI.installCRDs }}
+   Managed by this chart, channel={{ .Values.gatewayAPI.channel }}
+{{- else }}
+   Not managed by this chart. Install Gateway API CRDs separately before creating Gateway API resources.
+{{- end }}
+
+{{- if .Values.gatewayClass.enabled }}
+✅ GatewayClass "{{ $gatewayClassName }}" created
+{{- else }}
+GatewayClass creation disabled
+{{- end }}
 
 {{- if .Values.controlplane.enabled }}
 ✅ Controlplane deployed ({{ .Values.controlplane.replicas }} replica(s))
-   gRPC:  nantian-controlplane-grpc.{{ $ns }}.svc:18080
-   Admin: nantian-controlplane-admin.{{ $ns }}.svc:18081
+   gRPC:  {{ $name }}-controlplane-grpc.{{ $ns }}.svc:18080
+   Admin: {{ $name }}-controlplane-admin.{{ $ns }}.svc:18081
    {{- if .Values.controlplane.grpcTLS.enabled }}
    ⚠️  gRPC mTLS enabled — dataplanes must present valid client certs.
    {{- end }}
@@ -18,7 +32,7 @@ NAMESPACE: {{ $ns }}
 {{- if .Values.dataplane.enabled }}
 ✅ Dataplane deployed ({{ .Values.dataplane.replicas }} replica(s))
    HTTP:  port 10080 on each node
-   Admin: nantian-dataplane-admin.{{ $ns }}.svc:19080
+   Admin: {{ $name }}-dataplane-admin.{{ $ns }}.svc:19080
    {{- if .Values.dataplane.xdsTLS.enabled }}
    ⚠️  xDS mTLS enabled — controlplane connection uses TLS.
    {{- end }}
@@ -26,7 +40,7 @@ NAMESPACE: {{ $ns }}
 
 {{- if .Values.dashboard.enabled }}
 ✅ Dashboard deployed
-   HTTP: nantian-dashboard.{{ $ns }}.svc:3000
+   HTTP: {{ $name }}-dashboard.{{ $ns }}.svc:3000
 {{- end }}
 
 {{- if .Values.hpa.enabled }}
@@ -62,12 +76,19 @@ NAMESPACE: {{ $ns }}
 {{- end }}
 
 Get started:
+{{- if not .Values.gatewayAPI.installCRDs }}
+  kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/{{ .Values.gatewayAPI.channel }}-install.yaml
+{{- end }}
   kubectl apply -f my-gateway.yaml
   kubectl apply -f my-httproute.yaml
 
-Gateway API standard CRDs (v1.5.1) were installed with the chart.
+{{- if .Values.gatewayAPI.installCRDs }}
+Gateway API {{ .Values.gatewayAPI.channel }} CRDs (v1.5.1) were rendered by the chart.
+{{- else }}
+Gateway API CRDs were not rendered by the chart.
+{{- end }}
 
-A GatewayClass "nantian" has been created. Configure your Gateway and HTTPRoute resources,
+Configure your Gateway and HTTPRoute resources,
 then apply them to start routing traffic.
 
 For production setup, see https://nantian.dev/en/installation/production/

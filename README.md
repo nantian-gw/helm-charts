@@ -8,6 +8,8 @@ Helm charts for deploying [Nantian Gateway](https://github.com/nantian-gw/gatewa
 |---|---|
 | [nantian-gw](./charts/nantian-gw) | Full Nantian Gateway stack — controlplane, dataplane, and dashboard |
 
+Detailed values documentation is available in [charts/nantian-gw/VALUES.md](./charts/nantian-gw/VALUES.md).
+
 ## Usage
 
 ```bash
