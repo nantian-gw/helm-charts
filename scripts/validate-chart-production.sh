@@ -11,6 +11,7 @@ experimental_crd_render="$tmp_dir/experimental-crds.yaml"
 standard_crd_render="$tmp_dir/standard-crds.yaml"
 no_crd_render="$tmp_dir/no-crds.yaml"
 certs_render="$tmp_dir/certs.yaml"
+custom_namespace_render="$tmp_dir/custom-namespace.yaml"
 
 helm lint "$chart_dir"
 
@@ -74,7 +75,12 @@ grep -q 'gateway.networking.k8s.io/channel: experimental' "$experimental_crd_ren
 helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set certs.generate=true > "$certs_render"
 
-python3 - "$default_render" "$no_crd_render" "$standard_crd_render" "$experimental_crd_render" "$certs_render" <<'PY'
+helm template customrel "$chart_dir" --namespace release-ns \
+  --set nameOverride=customgw \
+  --set namespace.create=true \
+  --set namespace.name=workload-ns > "$custom_namespace_render"
+
+python3 - "$default_render" "$no_crd_render" "$standard_crd_render" "$experimental_crd_render" "$certs_render" "$custom_namespace_render" <<'PY'
 import sys
 from pathlib import Path
 
@@ -127,6 +133,37 @@ pods = {
     for doc in docs
     if isinstance(doc, dict) and doc.get("kind") == "Pod"
 }
+configmaps = {
+    doc["metadata"]["name"]: doc
+    for doc in docs
+    if isinstance(doc, dict) and doc.get("kind") == "ConfigMap"
+}
+
+for deployment_name, deployment in deployments.items():
+    selector = deployment["spec"]["selector"]["matchLabels"]
+    template_labels = deployment["spec"]["template"]["metadata"]["labels"]
+    missing = {
+        key: value
+        for key, value in selector.items()
+        if template_labels.get(key) != value
+    }
+    if missing:
+        raise SystemExit(
+            f"{deployment_name} selector labels missing from pod template: {missing}"
+        )
+
+controlplane_config = yaml.safe_load(
+    configmaps["nantian-gw-controlplane-config"]["data"]["config.yaml"]
+)
+expected_admin_url = (
+    "http://nantian-gw-dataplane-admin.nantian-gw.svc.cluster.local:19080"
+)
+actual_admin_url = controlplane_config["dashboardApi"]["dataplaneAdminUrl"]
+if actual_admin_url != expected_admin_url:
+    raise SystemExit(
+        "controlplane dashboardApi.dataplaneAdminUrl mismatch: "
+        f"expected {expected_admin_url}, got {actual_admin_url}"
+    )
 
 images = []
 for deployment in deployments.values():
@@ -193,4 +230,28 @@ for secret_name in [
     annotations = secrets.get(secret_name, {}).get("metadata", {}).get("annotations", {})
     if annotations.get("helm.sh/resource-policy") != "keep":
         raise SystemExit(f"{secret_name} missing helm.sh/resource-policy=keep")
+
+custom_docs = load_safe(sys.argv[6])
+custom_configmaps = {
+    doc["metadata"]["name"]: doc
+    for doc in custom_docs
+    if isinstance(doc, dict) and doc.get("kind") == "ConfigMap"
+}
+custom_controlplane_config = yaml.safe_load(
+    custom_configmaps["customgw-controlplane-config"]["data"]["config.yaml"]
+)
+expected_custom_admin_url = (
+    "http://customgw-dataplane-admin.workload-ns.svc.cluster.local:19080"
+)
+actual_custom_admin_url = custom_controlplane_config["dashboardApi"]["dataplaneAdminUrl"]
+if actual_custom_admin_url != expected_custom_admin_url:
+    raise SystemExit(
+        "custom controlplane dashboardApi.dataplaneAdminUrl mismatch: "
+        f"expected {expected_custom_admin_url}, got {actual_custom_admin_url}"
+    )
 PY
+
+if grep -q 'lookup "v1" "Secret" \.Release\.Namespace' "$chart_dir/templates/_helpers.tpl"; then
+  echo "dashboard auth secret lookup must use the chart resource namespace, not .Release.Namespace" >&2
+  exit 1
+fi

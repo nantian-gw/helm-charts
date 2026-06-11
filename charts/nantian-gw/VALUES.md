@@ -171,6 +171,15 @@ controlplane:
     secretKey: token
 ```
 
+`controlplane.config.dashboardApi.dataplaneAdminUrl` is empty by default. When empty, the chart computes the in-cluster dataplane admin Service URL from the rendered chart name and namespace, for example `http://nantian-gw-dataplane-admin.nantian-gw.svc.cluster.local:19080`. Set it explicitly only when the control plane must call a different dataplane admin endpoint:
+
+```yaml
+controlplane:
+  config:
+    dashboardApi:
+      dataplaneAdminUrl: http://custom-dataplane-admin.nantian-gw.svc.cluster.local:19080
+```
+
 ### Dataplane
 
 The data plane serves gateway traffic and connects to the control plane.
@@ -479,6 +488,15 @@ controlplane:
     bearerTokenFile: /etc/nantian-gw/admin-auth/token
     existingSecret: nantian-controlplane-admin-auth
     secretKey: token
+```
+
+`controlplane.config.dashboardApi.dataplaneAdminUrl` 默认为空。为空时，Chart 会根据渲染后的 chart 名称和 namespace 自动计算集群内数据面 Admin Service 地址，例如 `http://nantian-gw-dataplane-admin.nantian-gw.svc.cluster.local:19080`。只有当控制面需要访问不同的数据面 Admin 端点时才需要显式设置：
+
+```yaml
+controlplane:
+  config:
+    dashboardApi:
+      dataplaneAdminUrl: http://custom-dataplane-admin.nantian-gw.svc.cluster.local:19080
 ```
 
 ### 数据面

@@ -192,7 +192,8 @@ controlplane:
     dashboardApi:
       enabled: true
       basePath: "/api/dashboard"
-      dataplaneAdminUrl: "http://nantian-dataplane-admin.nantian-gw.svc.cluster.local:19080"
+      # Empty value computes the in-cluster dataplane admin Service URL from the chart name and namespace.
+      dataplaneAdminUrl: ""
       requestTimeout: "5s"
       resourceMutationsEnabled: true
     pprof:
