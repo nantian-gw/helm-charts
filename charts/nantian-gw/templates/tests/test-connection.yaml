@@ -14,11 +14,14 @@ metadata:
     "helm.sh/hook": test
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
+  automountServiceAccountToken: false
   restartPolicy: Never
+  {{- include "nantian-gw.podSecurityContext" . | nindent 2 }}
   containers:
     - name: test-connection
       image: "{{ .Values.tests.image.repository }}:{{ .Values.tests.image.tag }}"
       imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
+      {{- include "nantian-gw.containerSecurityContext" . | nindent 6 }}
       command:
         - /bin/sh
         - -ec
@@ -35,4 +38,13 @@ spec:
           wget -q -T 5 -O - http://{{ $name }}-dashboard:3000/healthz
           {{- end }}
           echo "Nantian Gateway service checks completed"
+      resources:
+        {{- toYaml .Values.tests.resources | nindent 8 }}
+      volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+  volumes:
+    - name: tmp
+      emptyDir:
+        sizeLimit: 16Mi
 {{- end }}

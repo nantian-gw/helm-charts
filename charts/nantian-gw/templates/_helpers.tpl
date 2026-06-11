@@ -190,6 +190,22 @@ securityContext:
 {{- end }}
 
 {{/*
+Dataplane pod security context with low-port binding sysctl.
+*/}}
+{{- define "nantian-gw.dataplanePodSecurityContext" -}}
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+  seccompProfile:
+    type: RuntimeDefault
+  sysctls:
+    - name: net.ipv4.ip_unprivileged_port_start
+      value: "0"
+{{- end }}
+
+{{/*
 Container security context
 */}}
 {{- define "nantian-gw.containerSecurityContext" -}}
@@ -199,6 +215,20 @@ securityContext:
   capabilities:
     drop:
       - ALL
+{{- end }}
+
+{{/*
+Dataplane container security context
+*/}}
+{{- define "nantian-gw.dataplaneContainerSecurityContext" -}}
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+    add:
+      - NET_BIND_SERVICE
 {{- end }}
 
 {{/*

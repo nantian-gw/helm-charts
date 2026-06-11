@@ -405,7 +405,8 @@
       "additionalProperties": true,
       "properties": {
         "enabled": { "type": "boolean" },
-        "image": { "$ref": "#/definitions/image" }
+        "image": { "$ref": "#/definitions/image" },
+        "resources": { "$ref": "#/definitions/resources" }
       }
     }
   }

@@ -22,7 +22,6 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "nantian-gw.controlplane.selectorLabels" . | nindent 8 }}
         {{- include "nantian-gw.controlplane.labels" . | nindent 8 }}
       {{- with .Values.controlplane.podAnnotations }}
       annotations:
@@ -31,10 +30,11 @@ spec:
     spec:
       serviceAccountName: {{ $cpName }}-controlplane
       terminationGracePeriodSeconds: {{ .Values.controlplane.terminationGracePeriodSeconds }}
-      {{- include "nantian-gw.podSecurityContext" . | nindent 6 }}
       {{- if .Values.controlplane.podSecurityContext }}
       securityContext:
         {{- toYaml .Values.controlplane.podSecurityContext | nindent 8 }}
+      {{- else }}
+      {{- include "nantian-gw.podSecurityContext" . | nindent 6 }}
       {{- end }}
       {{- if .Values.controlplane.topologySpreadConstraints }}
       topologySpreadConstraints:
@@ -106,10 +106,11 @@ spec:
             failureThreshold: {{ .Values.controlplane.probes.readiness.failureThreshold }}
           resources:
             {{- toYaml .Values.controlplane.resources | nindent 12 }}
-          {{- include "nantian-gw.containerSecurityContext" . | nindent 10 }}
           {{- if .Values.controlplane.containerSecurityContext }}
           securityContext:
             {{- toYaml .Values.controlplane.containerSecurityContext | nindent 12 }}
+          {{- else }}
+          {{- include "nantian-gw.containerSecurityContext" . | nindent 10 }}
           {{- end }}
           volumeMounts:
             - name: config

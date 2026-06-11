@@ -22,9 +22,9 @@ fullnameOverride: ""
 # -- Gateway API configuration
 # -- Gateway API 配置
 gatewayAPI:
-  # -- Render official Gateway API CRDs from this chart. Set false when CRDs are managed separately by the platform.
-  # -- 是否由本 Chart 渲染官方 Gateway API CRD。平台统一管理 CRD 时设置为 false。
-  installCRDs: true
+  # -- Render official Gateway API CRDs from this chart. Production clusters should normally manage CRDs separately.
+  # -- 是否由本 Chart 渲染官方 Gateway API CRD。生产集群通常应由平台层统一管理 CRD。
+  installCRDs: false
   # -- Official Gateway API CRD channel to render: standard or experimental.
   # -- 要渲染的官方 Gateway API CRD 通道：standard 或 experimental。
   channel: standard
@@ -59,7 +59,7 @@ controlplane:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/nantian-controlplane"
-    tag: "latest"
+    tag: ""
     pullPolicy: Always
 
   # -- Pod security context (overrides defaults)
@@ -248,7 +248,7 @@ dataplane:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/dataplane"
-    tag: "latest"
+    tag: ""
     pullPolicy: Always
 
   # -- Pod security context (overrides defaults)
@@ -429,7 +429,7 @@ dashboard:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/dashboard"
-    tag: "latest"
+    tag: ""
     pullPolicy: Always
 
   # -- Pod security context
@@ -537,6 +537,13 @@ tests:
     repository: "busybox"
     tag: "1.36"
     pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "16Mi"
+    limits:
+      cpu: "100m"
+      memory: "64Mi"
 
 # =============================================================================
 # Certificate generation (one-time, at install)
