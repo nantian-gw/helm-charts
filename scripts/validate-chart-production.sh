@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-chart_dir="charts/nantian-gw"
+chart_dir="${CHART_DIR:-charts/nantian-gw}"
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT
 

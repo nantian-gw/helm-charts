@@ -35,10 +35,10 @@ The GitHub Actions workflow will:
 
 ### Snapshot charts
 
-Every push to `main` runs chart validation and publishes an immutable snapshot chart version:
+Every push to `main` runs chart validation and publishes one immutable snapshot chart version for each commit included in that push:
 
 ```text
 <Chart.yaml version>-<git short SHA>
 ```
 
-For example, chart version `0.2.3` at commit `abc1234` is published as `0.2.3-abc1234`. Stable chart versions are still created from `v*` tags.
+For example, chart version `0.2.3` at commit `abc1234` is published as `0.2.3-abc1234`. Helm treats these versions as prereleases, so use `helm search repo nantian-gw --devel` when you want to list snapshot charts. Stable chart versions are still created from `v*` tags.
