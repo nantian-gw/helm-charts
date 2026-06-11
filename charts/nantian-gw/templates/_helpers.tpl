@@ -58,6 +58,7 @@ Controlplane labels
 {{- define "nantian-gw.controlplane.labels" -}}
 {{ include "nantian-gw.labels" . }}
 app.kubernetes.io/component: controlplane
+app: {{ include "nantian-gw.name" . }}-controlplane
 {{- end }}
 
 {{/*
@@ -74,6 +75,7 @@ Dataplane labels
 {{- define "nantian-gw.dataplane.labels" -}}
 {{ include "nantian-gw.labels" . }}
 app.kubernetes.io/component: dataplane
+app: {{ include "nantian-gw.name" . }}-dataplane
 {{- end }}
 
 {{/*
@@ -90,6 +92,7 @@ Dashboard labels
 {{- define "nantian-gw.dashboard.labels" -}}
 {{ include "nantian-gw.labels" . }}
 app.kubernetes.io/component: dashboard
+app: {{ include "nantian-gw.name" . }}-dashboard
 {{- end }}
 
 {{/*
@@ -236,6 +239,11 @@ Controlplane config as YAML
 */}}
 {{- define "nantian-gw.controlplane.configYaml" -}}
 {{- $cfg := deepCopy .Values.controlplane.config -}}
+{{- $dashboardApi := default (dict) $cfg.dashboardApi -}}
+{{- if not (get $dashboardApi "dataplaneAdminUrl") -}}
+{{- $_ := set $dashboardApi "dataplaneAdminUrl" (printf "http://%s-dataplane-admin.%s.svc.cluster.local:19080" (include "nantian-gw.name" .) (include "nantian-gw.namespace" .)) -}}
+{{- $_ := set $cfg "dashboardApi" $dashboardApi -}}
+{{- end -}}
 {{- $configuredFeatures := default (dict) $cfg.features -}}
 {{- $experimentalGatewayEnabled := eq .Values.featureMode "experimental" -}}
 {{- $aiGatewayEnabled := and $experimentalGatewayEnabled (default false (get $configuredFeatures "enableAiGateway")) -}}
@@ -270,7 +278,8 @@ Resolve the dashboard auth secret value.
 {{- if .Values.dashboard.authSecret }}
 {{- .Values.dashboard.authSecret }}
 {{- else }}
-{{- $secret := lookup "v1" "Secret" .Release.Namespace (printf "%s-dashboard-auth" (include "nantian-gw.name" .)) }}
+{{- $ns := include "nantian-gw.namespace" . }}
+{{- $secret := lookup "v1" "Secret" $ns (printf "%s-dashboard-auth" (include "nantian-gw.name" .)) }}
 {{- if $secret }}
 {{- index $secret.data "auth-secret" | b64dec }}
 {{- else }}
