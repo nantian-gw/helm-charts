@@ -59,7 +59,7 @@ controlplane:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/nantian-controlplane"
-    tag: "sha-f1eb00f"
+    tag: "sha-b3b9649"
     pullPolicy: Always
 
   # -- Pod security context (overrides defaults)
