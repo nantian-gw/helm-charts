@@ -45,10 +45,11 @@ jobs:
           fi
 
           cp .dist/*.tgz .
-          if [ -f index.yaml ]; then
-            helm repo index . --url "https://chart.nantian.dev" --merge index.yaml
-          else
-            helm repo index . --url "https://chart.nantian.dev"
+          rm -rf .dist
+          helm repo index . --url "https://chart.nantian.dev"
+          if grep -q '\.dist/' index.yaml; then
+            echo "index.yaml must not contain unpublished .dist chart URLs" >&2
+            exit 1
           fi
 
           echo "chart.nantian.dev" > CNAME
