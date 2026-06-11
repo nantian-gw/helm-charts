@@ -13,7 +13,7 @@ Detailed values documentation is available in [charts/nantian-gw/VALUES.md](./ch
 ## Usage
 
 ```bash
-helm repo add nantian-gw https://charts.nantian.dev
+helm repo add nantian-gw https://chart.nantian.dev
 helm install nantian-gw nantian-gw/nantian-gw --namespace nantian-gw --create-namespace
 ```
 
@@ -30,6 +30,15 @@ git push origin v0.1.0
 
 The GitHub Actions workflow will:
 1. Package the chart → `nantian-gw-{version}.tgz`
-2. Create a GitHub Release with the `.tgz` attached
-3. Update `index.yaml` pointing to the release artifact
-4. Cloudflare Pages picks up the new `index.yaml` and deploys to `charts.nantian.dev`
+2. Update `index.yaml` on the `gh-pages` branch
+3. Publish the stable chart through GitHub Pages at `https://chart.nantian.dev`
+
+### Snapshot charts
+
+Every push to `main` runs chart validation and publishes an immutable snapshot chart version:
+
+```text
+<Chart.yaml version>-<git short SHA>
+```
+
+For example, chart version `0.2.3` at commit `abc1234` is published as `0.2.3-abc1234`. Stable chart versions are still created from `v*` tags.

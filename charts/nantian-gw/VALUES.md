@@ -25,7 +25,7 @@ networkPolicies:
 
 The default mode keeps experimental runtime features disabled, does not render cluster-scoped Gateway API CRDs, creates two control plane replicas, creates two data plane replicas, enables PodDisruptionBudgets when replicas are greater than one, and keeps NetworkPolicies enabled.
 
-By default, component image tags are empty in `values.yaml`, so the chart uses `.Chart.AppVersion`. For stricter supply-chain control, pin image digests or immutable release tags in environment values, configure external secrets for TLS and admin authentication, and run the validation command before rollout:
+By default, the control plane image tag is pinned to an immutable `sha-` tag that contains the standard-mode Gateway API CRD compatibility fix. Data plane and dashboard image tags are empty in `values.yaml`, so those components use `.Chart.AppVersion`. For stricter supply-chain control, pin image digests or immutable release tags in environment values, configure external secrets for TLS and admin authentication, and run the validation command before rollout:
 
 ```bash
 helm lint charts/nantian-gw
@@ -149,7 +149,7 @@ controlplane:
     enabled: true
 ```
 
-Use at least two replicas for availability. Keep leader election enabled when replicas are greater than one. Leave `tag` empty to use `.Chart.AppVersion`, or replace it with an immutable release tag or digest for production rollouts.
+Use at least two replicas for availability. Keep leader election enabled when replicas are greater than one. The default `tag` is an immutable `sha-` image tag for the tested control plane build; replace it with another immutable release tag or digest for environment-specific production rollouts.
 
 `controlplane.grpcTLS` controls xDS/gRPC server TLS secret mounting:
 
@@ -346,7 +346,7 @@ networkPolicies:
 
 默认模式会关闭实验性运行时能力，不渲染集群级 Gateway API CRD，创建两个控制面副本和两个数据面副本，副本数大于 1 时启用 PodDisruptionBudget，并默认启用 NetworkPolicy。
 
-默认镜像 tag 在 `values.yaml` 中为空，因此会使用 `.Chart.AppVersion`。生产环境可以进一步固定镜像 digest 或不可变发布 tag；TLS、Admin API token 等敏感配置应使用外部 Secret；上线前运行：
+默认 controlplane 镜像 tag 固定为不可变的 `sha-` tag，其中包含 standard 模式下兼容 Gateway API CRD 的修复。dataplane 和 dashboard 的镜像 tag 在 `values.yaml` 中为空，因此会使用 `.Chart.AppVersion`。生产环境可以进一步固定镜像 digest 或不可变发布 tag；TLS、Admin API token 等敏感配置应使用外部 Secret；上线前运行：
 
 ```bash
 helm lint charts/nantian-gw
@@ -468,7 +468,7 @@ controlplane:
       memory: 512Mi
 ```
 
-生产建议至少两个副本，并在多副本时保持 leader election 开启。`tag` 为空时使用 `.Chart.AppVersion`，也可以在环境 values 中替换为不可变发布 tag 或 digest。
+生产建议至少两个副本，并在多副本时保持 leader election 开启。默认 `tag` 是经过验证的 controlplane 构建对应的不可变 `sha-` 镜像 tag，也可以在环境 values 中替换为其他不可变发布 tag 或 digest。
 
 `controlplane.grpcTLS` 控制 gRPC 服务端 TLS Secret 挂载：
 

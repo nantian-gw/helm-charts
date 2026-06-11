@@ -13,6 +13,20 @@ no_crd_render="$tmp_dir/no-crds.yaml"
 certs_render="$tmp_dir/certs.yaml"
 custom_namespace_render="$tmp_dir/custom-namespace.yaml"
 
+python3 - "$chart_dir/values.yaml" <<'PY'
+import sys
+from pathlib import Path
+
+import yaml
+
+values = yaml.safe_load(Path(sys.argv[1]).read_text())
+if values.get("featureMode") != "standard":
+    raise SystemExit("values.yaml featureMode default must be standard")
+gateway_api = values.get("gatewayAPI") or {}
+if gateway_api.get("channel") != "standard":
+    raise SystemExit("values.yaml gatewayAPI.channel default must be standard")
+PY
+
 helm lint "$chart_dir"
 
 helm template nantian-gw "$chart_dir" --namespace nantian-gw > "$default_render"

@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   build:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -18,6 +17,9 @@ jobs:
       - name: Install Helm
         run: |
           curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+      - name: Validate chart
+        run: bash scripts/validate-chart-production.sh
 
       - name: Package chart
         run: |
