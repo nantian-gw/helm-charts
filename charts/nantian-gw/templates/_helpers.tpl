@@ -205,7 +205,13 @@ securityContext:
 Controlplane config as YAML
 */}}
 {{- define "nantian-gw.controlplane.configYaml" -}}
-{{- toYaml .Values.controlplane.config }}
+{{- $cfg := deepCopy .Values.controlplane.config -}}
+{{- $configuredFeatures := default (dict) $cfg.features -}}
+{{- $experimentalGatewayEnabled := eq .Values.featureMode "experimental" -}}
+{{- $aiGatewayEnabled := and $experimentalGatewayEnabled (default false (get $configuredFeatures "enableAiGateway")) -}}
+{{- $features := mergeOverwrite (deepCopy $configuredFeatures) (dict "enableExperimentalGateway" $experimentalGatewayEnabled "enableAiGateway" $aiGatewayEnabled) -}}
+{{- $_ := set $cfg "features" $features -}}
+{{- toYaml $cfg }}
 {{- end }}
 
 {{/*

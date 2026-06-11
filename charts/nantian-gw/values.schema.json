@@ -2,6 +2,63 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "additionalProperties": true,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "featureMode": { "const": "standard" }
+        }
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": ["controlplane"],
+              "properties": {
+                "controlplane": {
+                  "required": ["config"],
+                  "properties": {
+                    "config": {
+                      "required": ["features"],
+                      "properties": {
+                        "features": {
+                          "required": ["enableExperimentalGateway"],
+                          "properties": {
+                            "enableExperimentalGateway": { "const": true }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "required": ["controlplane"],
+              "properties": {
+                "controlplane": {
+                  "required": ["config"],
+                  "properties": {
+                    "config": {
+                      "required": ["features"],
+                      "properties": {
+                        "features": {
+                          "required": ["enableAiGateway"],
+                          "properties": {
+                            "enableAiGateway": { "const": true }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "definitions": {
     "stringMap": {
       "type": "object",
@@ -159,8 +216,23 @@
         "commonLabels": { "$ref": "#/definitions/stringMap" }
       }
     },
+    "featureMode": {
+      "type": "string",
+      "enum": ["standard", "experimental"]
+    },
     "nameOverride": { "type": "string" },
     "fullnameOverride": { "type": "string" },
+    "gatewayAPI": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "installCRDs": { "type": "boolean" },
+        "channel": {
+          "type": "string",
+          "enum": ["standard", "experimental"]
+        }
+      }
+    },
     "namespace": {
       "type": "object",
       "additionalProperties": true,
