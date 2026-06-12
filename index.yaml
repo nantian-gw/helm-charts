@@ -3,7 +3,7 @@ entries:
   nantian-gw:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.357695098Z"
+    created: "2026-06-12T09:06:32.334665601Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 7f1c96c2c81e9585626909aec20b74de5eb62edac0674dd95b57fbaaed36fb5d
@@ -21,11 +21,11 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.2.3-952d3de.tgz
+    - https://charts.nantian.dev/nantian-gw-0.2.3-952d3de.tgz
     version: 0.2.3-952d3de
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.346132076Z"
+    created: "2026-06-12T09:06:32.320462781Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 1710c8bbc4003a1ffee0feb04d2a8d80899ac30caa3c0b942eaebfa6bec1e453
@@ -43,11 +43,11 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.2.3-65b7818.tgz
+    - https://charts.nantian.dev/nantian-gw-0.2.3-65b7818.tgz
     version: 0.2.3-65b7818
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.335006409Z"
+    created: "2026-06-12T09:06:32.309737101Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: a82df18c8b8bf38964aa9258afcdb7922a328130edd0397718f0e64257a1fe0c
@@ -65,11 +65,33 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.2.3-4d3bbda.tgz
+    - https://charts.nantian.dev/nantian-gw-0.2.3-4d3bbda.tgz
     version: 0.2.3-4d3bbda
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.32431574Z"
+    created: "2026-06-12T09:06:32.298740509Z"
+    description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
+      plane and Rust/Nantian data plane
+    digest: 4e8bb842f9d0e7472ff099c25a58143e0ed8364e3af1805b8f6fb19cf5575a6e
+    home: https://github.com/nantian-gw/gateway
+    keywords:
+    - gateway
+    - gateway-api
+    - nantian
+    - rust
+    - kubernetes
+    maintainers:
+    - name: Nantian Gateway Maintainers
+    name: nantian-gw
+    sources:
+    - https://github.com/nantian-gw/gateway
+    type: application
+    urls:
+    - https://charts.nantian.dev/nantian-gw-0.2.3-23fabed.tgz
+    version: 0.2.3-23fabed
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2026-06-12T09:06:32.289147773Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 41ee3554b914c209d47a9a3d2a9f8f160422cf43726af23810c8a8403394f554
@@ -87,11 +109,11 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.2.3-19992d4.tgz
+    - https://charts.nantian.dev/nantian-gw-0.2.3-19992d4.tgz
     version: 0.2.3-19992d4
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.3130255Z"
+    created: "2026-06-12T09:06:32.278998292Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 582252bd77b6759357696fcdb77a10e31e2dbffe33c725174e9f09c2cb77b968
@@ -109,11 +131,11 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.2.2-d5b69ab.tgz
+    - https://charts.nantian.dev/nantian-gw-0.2.2-d5b69ab.tgz
     version: 0.2.2-d5b69ab
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.301610488Z"
+    created: "2026-06-12T09:06:32.268406078Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 441d83598f166c53fd922cc1d6e618527137a6a7ceb22a12a7fddb0e91f246b3
@@ -131,11 +153,11 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.2.2-61d5c2f.tgz
+    - https://charts.nantian.dev/nantian-gw-0.2.2-61d5c2f.tgz
     version: 0.2.2-61d5c2f
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.290056179Z"
+    created: "2026-06-12T09:06:32.258138912Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 3e8fdde0e7cebecc6b051475bc10392b992385a2649b66ace82849ea7deab2e8
@@ -153,11 +175,11 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.2.1-31b590f.tgz
+    - https://charts.nantian.dev/nantian-gw-0.2.1-31b590f.tgz
     version: 0.2.1-31b590f
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.278603602Z"
+    created: "2026-06-12T09:06:32.248042451Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 012ed9f8e17b62d79809646796ab5cb8e0ac967d050dccd4f440e56e722d6653
@@ -175,13 +197,13 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.2.0-cc3b21e.tgz
+    - https://charts.nantian.dev/nantian-gw-0.2.0-cc3b21e.tgz
     version: 0.2.0-cc3b21e
   - annotations:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.248368217Z"
+    created: "2026-06-12T09:06:32.220092949Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 4e56bf4579af2ee476fd5987104db42f638ac160c217357d30e4ca01b7bc2f97
@@ -199,13 +221,13 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.1.0-59aa816.tgz
+    - https://charts.nantian.dev/nantian-gw-0.1.0-59aa816.tgz
     version: 0.1.0
   - annotations:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.265990212Z"
+    created: "2026-06-12T09:06:32.237009305Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: c49ff3c347efdb4e048adc94b038e35e0417f9aeb611ce855a1fa63fa7c79930
@@ -223,13 +245,13 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.1.0-fd70869.tgz
+    - https://charts.nantian.dev/nantian-gw-0.1.0-fd70869.tgz
     version: 0.1.0-fd70869
   - annotations:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.264876083Z"
+    created: "2026-06-12T09:06:32.23590874Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: c53d1334fd2243b926ff31407004786779ad4f64b44943220aeff11f13135dc8
@@ -247,13 +269,13 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.1.0-c8a94f5.tgz
+    - https://charts.nantian.dev/nantian-gw-0.1.0-c8a94f5.tgz
     version: 0.1.0-c8a94f5
   - annotations:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.261188404Z"
+    created: "2026-06-12T09:06:32.231771915Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 87b49cd270b8d970ce3bd10216a0c03eb9297859428214565a59f2782637eaed
@@ -271,13 +293,13 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.1.0-a2769df.tgz
+    - https://charts.nantian.dev/nantian-gw-0.1.0-a2769df.tgz
     version: 0.1.0-a2769df
   - annotations:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.25693996Z"
+    created: "2026-06-12T09:06:32.228293771Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: dacfecbc25f01016cd63a153b74c6c9b33920f8ac74adfbb25bbc96845fe56bf
@@ -295,13 +317,13 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.1.0-a11d1ef.tgz
+    - https://charts.nantian.dev/nantian-gw-0.1.0-a11d1ef.tgz
     version: 0.1.0-a11d1ef
   - annotations:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.252463253Z"
+    created: "2026-06-12T09:06:32.224054209Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 3cd58e4ff62a153080d308b352e82762bf7404c5a73efc3225bdd9439add722b
@@ -319,13 +341,13 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.1.0-9859dd4.tgz
+    - https://charts.nantian.dev/nantian-gw-0.1.0-9859dd4.tgz
     version: 0.1.0-9859dd4
   - annotations:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.244346453Z"
+    created: "2026-06-12T09:06:32.215706418Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 32b0dd0f6150f4ccfeeee7e8949715a9c8b64b938086e2b4b021891e7dd10cbd
@@ -343,13 +365,13 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.1.0-558b4d1.tgz
+    - https://charts.nantian.dev/nantian-gw-0.1.0-558b4d1.tgz
     version: 0.1.0-558b4d1
   - annotations:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.242314369Z"
+    created: "2026-06-12T09:06:32.214552333Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 535da2a143cff5f3b3aec3635157dad9273bfbdc5116cdfc3ce195ab9da14081
@@ -367,13 +389,13 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.1.0-53f6b4f.tgz
+    - https://charts.nantian.dev/nantian-gw-0.1.0-53f6b4f.tgz
     version: 0.1.0-53f6b4f
   - annotations:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-06-11T14:54:52.237588952Z"
+    created: "2026-06-12T09:06:32.21009959Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: b4b2a9ff6524e08cf0cc38b829769d7dafbd734a995f7a5f336fb32afd03986c
@@ -391,6 +413,6 @@ entries:
     - https://github.com/nantian-gw/gateway
     type: application
     urls:
-    - https://chart.nantian.dev/nantian-gw-0.1.0-47c5e31.tgz
+    - https://charts.nantian.dev/nantian-gw-0.1.0-47c5e31.tgz
     version: 0.1.0-47c5e31
-generated: "2026-06-11T14:54:52.236312804Z"
+generated: "2026-06-12T09:06:32.208837133Z"
