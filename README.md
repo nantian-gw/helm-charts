@@ -13,7 +13,7 @@ Detailed values documentation is available in [charts/nantian-gw/VALUES.md](./ch
 ## Usage
 
 ```bash
-helm repo add nantian-gw https://chart.nantian.dev
+helm repo add nantian-gw https://charts.nantian.dev
 helm install nantian-gw nantian-gw/nantian-gw --namespace nantian-gw --create-namespace
 ```
 
@@ -31,7 +31,7 @@ git push origin v0.1.0
 The GitHub Actions workflow will:
 1. Package the chart → `nantian-gw-{version}.tgz`
 2. Update `index.yaml` on the `gh-pages` branch
-3. Publish the stable chart through GitHub Pages at `https://chart.nantian.dev`
+3. Publish the stable chart through GitHub Pages at `https://charts.nantian.dev`
 
 ### Snapshot charts
 

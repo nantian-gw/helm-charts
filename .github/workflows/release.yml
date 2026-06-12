@@ -40,14 +40,15 @@ jobs:
 
           # Copy tgz and generate index
           cp .dist/*.tgz .
-          if [ -f index.yaml ]; then
-            helm repo index . --url "https://chart.nantian.dev" --merge index.yaml
-          else
-            helm repo index . --url "https://chart.nantian.dev"
+          rm -rf .dist
+          helm repo index . --url "https://charts.nantian.dev"
+          if grep -q '\.dist/' index.yaml; then
+            echo "index.yaml must not contain unpublished .dist chart URLs" >&2
+            exit 1
           fi
 
           # Ensure CNAME exists
-          echo "chart.nantian.dev" > CNAME
+          echo "charts.nantian.dev" > CNAME
 
           git add index.yaml *.tgz CNAME
           git diff --staged --quiet || git commit -m "release ${{ github.ref_name }}"
