@@ -13,6 +13,7 @@ no_crd_render="$tmp_dir/no-crds.yaml"
 certs_render="$tmp_dir/certs.yaml"
 custom_namespace_render="$tmp_dir/custom-namespace.yaml"
 dashboard_disabled_render="$tmp_dir/dashboard-disabled.yaml"
+dashboard_override_render="$tmp_dir/dashboard-override.yaml"
 
 python3 - "$chart_dir/values.yaml" <<'PY'
 import sys
@@ -99,7 +100,11 @@ helm template customrel "$chart_dir" --namespace release-ns \
 helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set dashboard.enabled=false > "$dashboard_disabled_render"
 
-python3 - "$default_render" "$no_crd_render" "$standard_crd_render" "$experimental_crd_render" "$certs_render" "$custom_namespace_render" "$dashboard_disabled_render" <<'PY'
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  --set dashboard.enabled=false \
+  --set controlplane.config.dashboard.enabled=true > "$dashboard_override_render"
+
+python3 - "$default_render" "$no_crd_render" "$standard_crd_render" "$experimental_crd_render" "$certs_render" "$custom_namespace_render" "$dashboard_disabled_render" "$dashboard_override_render" <<'PY'
 import sys
 from pathlib import Path
 
@@ -187,7 +192,16 @@ dashboard_cfg = controlplane_config.get("dashboard") or {}
 if dashboard_cfg.get("enabled") is not True:
     raise SystemExit("default controlplane dashboard.enabled must render as true")
 dashboard_caps = dashboard_cfg.get("capabilities") or {}
-for key in ["aiOverview", "wasmPlugins"]:
+for key in [
+    "aiOverview",
+    "aiServices",
+    "aiTokenPolicies",
+    "aiCost",
+    "aiTraces",
+    "aiUsage",
+    "wasmPlugins",
+    "chatbot",
+]:
     if dashboard_caps.get(key) is not True:
         raise SystemExit(f"default controlplane dashboard.capabilities.{key} must render as true")
 
@@ -288,6 +302,20 @@ dashboard_disabled_config = yaml.safe_load(
 if dashboard_disabled_config["dashboard"]["enabled"] is not False:
     raise SystemExit(
         "controlplane dashboard.enabled must follow chart dashboard.enabled=false by default"
+    )
+
+dashboard_override_docs = load_safe(sys.argv[8])
+dashboard_override_configmaps = {
+    doc["metadata"]["name"]: doc
+    for doc in dashboard_override_docs
+    if isinstance(doc, dict) and doc.get("kind") == "ConfigMap"
+}
+dashboard_override_config = yaml.safe_load(
+    dashboard_override_configmaps["nantian-gw-controlplane-config"]["data"]["config.yaml"]
+)
+if dashboard_override_config["dashboard"]["enabled"] is not True:
+    raise SystemExit(
+        "explicit controlplane.config.dashboard.enabled=true override must win over chart dashboard.enabled=false"
     )
 PY
 
