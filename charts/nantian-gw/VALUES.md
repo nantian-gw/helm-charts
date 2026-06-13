@@ -25,7 +25,7 @@ networkPolicies:
 
 The default mode keeps experimental runtime features disabled, does not render cluster-scoped Gateway API CRDs, creates two control plane replicas, creates two data plane replicas, enables PodDisruptionBudgets when replicas are greater than one, and keeps NetworkPolicies enabled.
 
-By default, the control plane image tag is pinned to an immutable `sha-` tag that contains the standard-mode Gateway API CRD compatibility fix. Data plane and dashboard image tags are empty in `values.yaml`, so those components use `.Chart.AppVersion`. For stricter supply-chain control, pin image digests or immutable release tags in environment values, configure external secrets for TLS and admin authentication, and run the validation command before rollout:
+The current chart defaults use the `latest` tag for control plane, data plane, and dashboard images so a fresh install follows the currently published public images. For stricter supply-chain control, pin image digests or immutable release tags in environment values, configure external secrets for TLS and admin authentication, and run the validation command before rollout:
 
 ```bash
 helm lint charts/nantian-gw
@@ -136,7 +136,7 @@ controlplane:
   replicas: 2
   image:
     repository: nantian-gw/nantian-controlplane
-    tag: ""
+    tag: latest
     pullPolicy: Always
   resources:
     requests:
@@ -227,7 +227,7 @@ dataplane:
   replicas: 2
   image:
     repository: nantian-gw/dataplane
-    tag: ""
+    tag: latest
     pullPolicy: Always
   resources:
     requests:
@@ -343,20 +343,20 @@ gatewayAPI:
   channel: experimental
 ```
 
-Pinned production images:
+Example immutable production image pinning:
 
 ```yaml
 controlplane:
   image:
-    tag: v0.1.0
+    tag: sha-<controlplane-commit>
     pullPolicy: IfNotPresent
 dataplane:
   image:
-    tag: v0.1.0
+    tag: sha-<dataplane-commit>
     pullPolicy: IfNotPresent
 dashboard:
   image:
-    tag: v0.1.0
+    tag: sha-<dashboard-commit>
     pullPolicy: IfNotPresent
 ```
 
@@ -381,7 +381,7 @@ networkPolicies:
 
 默认模式会关闭实验性运行时能力，不渲染集群级 Gateway API CRD，创建两个控制面副本和两个数据面副本，副本数大于 1 时启用 PodDisruptionBudget，并默认启用 NetworkPolicy。
 
-默认 controlplane 镜像 tag 固定为不可变的 `sha-` tag，其中包含 standard 模式下兼容 Gateway API CRD 的修复。dataplane 和 dashboard 的镜像 tag 在 `values.yaml` 中为空，因此会使用 `.Chart.AppVersion`。生产环境可以进一步固定镜像 digest 或不可变发布 tag；TLS、Admin API token 等敏感配置应使用外部 Secret；上线前运行：
+当前 chart 默认对 controlplane、dataplane 和 dashboard 都使用 `latest` tag，便于跟随当前公开发布的镜像快速安装。生产环境可以进一步固定镜像 digest 或不可变发布 tag；TLS、Admin API token 等敏感配置应使用外部 Secret；上线前运行：
 
 ```bash
 helm lint charts/nantian-gw
@@ -492,7 +492,7 @@ controlplane:
   replicas: 2
   image:
     repository: nantian-gw/nantian-controlplane
-    tag: ""
+    tag: latest
     pullPolicy: Always
   resources:
     requests:
@@ -581,7 +581,7 @@ dataplane:
   replicas: 2
   image:
     repository: nantian-gw/dataplane
-    tag: ""
+    tag: latest
     pullPolicy: Always
   resources:
     requests:
@@ -697,19 +697,19 @@ gatewayAPI:
   channel: experimental
 ```
 
-固定生产镜像：
+固定生产镜像示例：
 
 ```yaml
 controlplane:
   image:
-    tag: v0.1.0
+    tag: sha-<controlplane-commit>
     pullPolicy: IfNotPresent
 dataplane:
   image:
-    tag: v0.1.0
+    tag: sha-<dataplane-commit>
     pullPolicy: IfNotPresent
 dashboard:
   image:
-    tag: v0.1.0
+    tag: sha-<dashboard-commit>
     pullPolicy: IfNotPresent
 ```
