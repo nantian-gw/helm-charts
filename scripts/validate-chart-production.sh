@@ -12,6 +12,7 @@ standard_crd_render="$tmp_dir/standard-crds.yaml"
 no_crd_render="$tmp_dir/no-crds.yaml"
 certs_render="$tmp_dir/certs.yaml"
 custom_namespace_render="$tmp_dir/custom-namespace.yaml"
+dashboard_disabled_render="$tmp_dir/dashboard-disabled.yaml"
 
 python3 - "$chart_dir/values.yaml" <<'PY'
 import sys
@@ -32,6 +33,7 @@ helm lint "$chart_dir"
 helm template nantian-gw "$chart_dir" --namespace nantian-gw > "$default_render"
 grep -q 'enableExperimentalGateway: false' "$default_render"
 grep -q 'enableAiGateway: false' "$default_render"
+grep -q 'dashboard:' "$default_render"
 if grep -q 'kind: CustomResourceDefinition' "$default_render"; then
   echo "default production render unexpectedly contains Gateway API CRDs" >&2
   exit 1
@@ -94,7 +96,10 @@ helm template customrel "$chart_dir" --namespace release-ns \
   --set namespace.create=true \
   --set namespace.name=workload-ns > "$custom_namespace_render"
 
-python3 - "$default_render" "$no_crd_render" "$standard_crd_render" "$experimental_crd_render" "$certs_render" "$custom_namespace_render" <<'PY'
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  --set dashboard.enabled=false > "$dashboard_disabled_render"
+
+python3 - "$default_render" "$no_crd_render" "$standard_crd_render" "$experimental_crd_render" "$certs_render" "$custom_namespace_render" "$dashboard_disabled_render" <<'PY'
 import sys
 from pathlib import Path
 
@@ -178,6 +183,13 @@ if actual_admin_url != expected_admin_url:
         "controlplane dashboardApi.dataplaneAdminUrl mismatch: "
         f"expected {expected_admin_url}, got {actual_admin_url}"
     )
+dashboard_cfg = controlplane_config.get("dashboard") or {}
+if dashboard_cfg.get("enabled") is not True:
+    raise SystemExit("default controlplane dashboard.enabled must render as true")
+dashboard_caps = dashboard_cfg.get("capabilities") or {}
+for key in ["aiOverview", "wasmPlugins"]:
+    if dashboard_caps.get(key) is not True:
+        raise SystemExit(f"default controlplane dashboard.capabilities.{key} must render as true")
 
 images = []
 for deployment in deployments.values():
@@ -262,6 +274,20 @@ if actual_custom_admin_url != expected_custom_admin_url:
     raise SystemExit(
         "custom controlplane dashboardApi.dataplaneAdminUrl mismatch: "
         f"expected {expected_custom_admin_url}, got {actual_custom_admin_url}"
+    )
+
+dashboard_disabled_docs = load_safe(sys.argv[7])
+dashboard_disabled_configmaps = {
+    doc["metadata"]["name"]: doc
+    for doc in dashboard_disabled_docs
+    if isinstance(doc, dict) and doc.get("kind") == "ConfigMap"
+}
+dashboard_disabled_config = yaml.safe_load(
+    dashboard_disabled_configmaps["nantian-gw-controlplane-config"]["data"]["config.yaml"]
+)
+if dashboard_disabled_config["dashboard"]["enabled"] is not False:
+    raise SystemExit(
+        "controlplane dashboard.enabled must follow chart dashboard.enabled=false by default"
     )
 PY
 

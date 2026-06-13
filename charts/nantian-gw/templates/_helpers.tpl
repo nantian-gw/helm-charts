@@ -244,6 +244,14 @@ Controlplane config as YAML
 {{- $_ := set $dashboardApi "dataplaneAdminUrl" (printf "http://%s-dataplane-admin.%s.svc.cluster.local:19080" (include "nantian-gw.name" .) (include "nantian-gw.namespace" .)) -}}
 {{- $_ := set $cfg "dashboardApi" $dashboardApi -}}
 {{- end -}}
+{{- $configuredDashboard := default (dict) $cfg.dashboard -}}
+{{- if not (hasKey $configuredDashboard "enabled") -}}
+{{- $_ := set $configuredDashboard "enabled" .Values.dashboard.enabled -}}
+{{- end -}}
+{{- $defaultDashboardCaps := dict "aiOverview" true "aiServices" true "aiTokenPolicies" true "aiCost" true "aiTraces" true "aiUsage" true "wasmPlugins" true "chatbot" true -}}
+{{- $configuredDashboardCaps := default (dict) (get $configuredDashboard "capabilities") -}}
+{{- $_ := set $configuredDashboard "capabilities" (mergeOverwrite (deepCopy $defaultDashboardCaps) $configuredDashboardCaps) -}}
+{{- $_ := set $cfg "dashboard" $configuredDashboard -}}
 {{- $configuredFeatures := default (dict) $cfg.features -}}
 {{- $experimentalGatewayEnabled := eq .Values.featureMode "experimental" -}}
 {{- $aiGatewayEnabled := and $experimentalGatewayEnabled (default false (get $configuredFeatures "enableAiGateway")) -}}

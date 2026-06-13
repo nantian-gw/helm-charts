@@ -180,6 +180,41 @@ controlplane:
       dataplaneAdminUrl: http://custom-dataplane-admin.nantian-gw.svc.cluster.local:19080
 ```
 
+`controlplane.config.dashboard` controls the Dashboard-facing capability policy that the control plane publishes to the UI. By default, `controlplane.config.dashboard.enabled` follows the chart-level `dashboard.enabled` toggle, so disabling the Dashboard deployment also disables the published Dashboard capability policy unless you explicitly override it:
+
+```yaml
+dashboard:
+  enabled: false
+controlplane:
+  config:
+    dashboard:
+      enabled: false
+      capabilities:
+        aiOverview: true
+        aiServices: true
+        aiTokenPolicies: true
+        aiCost: true
+        aiTraces: true
+        aiUsage: true
+        wasmPlugins: true
+        chatbot: true
+```
+
+Use `controlplane.config.dashboard.enabled` only when you intentionally want the control plane to advertise a different Dashboard availability policy than the chart-level Dashboard workload toggle. The nested `capabilities.*` switches only affect UI exposure policy; they do not enable backend AI or experimental runtime features by themselves.
+
+Example: deploy the Dashboard but hide Wasm and chatbot surfaces from operators:
+
+```yaml
+dashboard:
+  enabled: true
+controlplane:
+  config:
+    dashboard:
+      capabilities:
+        wasmPlugins: false
+        chatbot: false
+```
+
 ### Dataplane
 
 The data plane serves gateway traffic and connects to the control plane.
@@ -497,6 +532,41 @@ controlplane:
   config:
     dashboardApi:
       dataplaneAdminUrl: http://custom-dataplane-admin.nantian-gw.svc.cluster.local:19080
+```
+
+`controlplane.config.dashboard` 用于控制控制面向 Dashboard 发布的能力策略。默认情况下，`controlplane.config.dashboard.enabled` 会跟随 chart 级别的 `dashboard.enabled` 开关，因此当你关闭 Dashboard 工作负载时，控制面默认也会同步发布 `dashboard.enabled=false`，除非你显式覆盖：
+
+```yaml
+dashboard:
+  enabled: false
+controlplane:
+  config:
+    dashboard:
+      enabled: false
+      capabilities:
+        aiOverview: true
+        aiServices: true
+        aiTokenPolicies: true
+        aiCost: true
+        aiTraces: true
+        aiUsage: true
+        wasmPlugins: true
+        chatbot: true
+```
+
+只有在你明确希望“Dashboard 工作负载是否部署”和“控制面向 UI 暴露的 Dashboard 可用性策略”不同步时，才需要单独设置 `controlplane.config.dashboard.enabled`。其中 `capabilities.*` 只控制 UI 暴露策略，不会自行开启后端 AI 或实验性运行时能力。
+
+示例：部署 Dashboard，但对运维人员隐藏 Wasm 和 chatbot 功能入口：
+
+```yaml
+dashboard:
+  enabled: true
+controlplane:
+  config:
+    dashboard:
+      capabilities:
+        wasmPlugins: false
+        chatbot: false
 ```
 
 ### 数据面

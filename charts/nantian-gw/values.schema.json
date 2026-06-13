@@ -278,7 +278,41 @@
           "type": "object",
           "additionalProperties": true,
           "properties": {
-            "config": { "type": "object", "additionalProperties": true },
+            "config": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "dashboard": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "enabled": { "type": "boolean" },
+                    "capabilities": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "properties": {
+                        "aiOverview": { "type": "boolean" },
+                        "aiServices": { "type": "boolean" },
+                        "aiTokenPolicies": { "type": "boolean" },
+                        "aiCost": { "type": "boolean" },
+                        "aiTraces": { "type": "boolean" },
+                        "aiUsage": { "type": "boolean" },
+                        "wasmPlugins": { "type": "boolean" },
+                        "chatbot": { "type": "boolean" }
+                      }
+                    }
+                  }
+                },
+                "dashboardApi": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "features": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            },
             "grpcTLS": {
               "type": "object",
               "additionalProperties": true,
