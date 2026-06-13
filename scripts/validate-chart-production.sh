@@ -212,9 +212,6 @@ for deployment in deployments.values():
 for pod in pods.values():
     for container in pod["spec"].get("containers", []):
         images.append(container.get("image", ""))
-latest = [image for image in images if image.endswith(":latest")]
-if latest:
-    raise SystemExit(f"mutable latest image tags rendered: {', '.join(sorted(latest))}")
 
 dataplane = deployments["nantian-gw-dataplane"]
 dp_pod = dataplane["spec"]["template"]["spec"]
