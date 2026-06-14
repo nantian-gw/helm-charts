@@ -104,6 +104,17 @@ app: {{ include "nantian-gw.name" . }}-dashboard
 {{- end }}
 
 {{/*
+Dashboard service account name.
+*/}}
+{{- define "nantian-gw.dashboard.serviceAccountName" -}}
+{{- if .Values.dashboard.serviceAccount.name -}}
+{{- .Values.dashboard.serviceAccount.name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-dashboard" (include "nantian-gw.name" .) | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end }}
+
+{{/*
 Controlplane image
 */}}
 {{- define "nantian-gw.controlplane.image" -}}
@@ -257,6 +268,21 @@ Controlplane config as YAML
 {{- $aiGatewayEnabled := and $experimentalGatewayEnabled (default false (get $configuredFeatures "enableAiGateway")) -}}
 {{- $features := mergeOverwrite (deepCopy $configuredFeatures) (dict "enableExperimentalGateway" $experimentalGatewayEnabled "enableAiGateway" $aiGatewayEnabled) -}}
 {{- $_ := set $cfg "features" $features -}}
+{{- $grpcTLS := default (dict) $cfg.grpcTLS -}}
+{{- if .Values.controlplane.grpcTLS.enabled -}}
+{{- $_ := set $grpcTLS "enabled" true -}}
+{{- if not (get $grpcTLS "certPath") -}}
+{{- $_ := set $grpcTLS "certPath" "/etc/nantian-gw/grpc-tls/tls.crt" -}}
+{{- end -}}
+{{- if not (get $grpcTLS "keyPath") -}}
+{{- $_ := set $grpcTLS "keyPath" "/etc/nantian-gw/grpc-tls/tls.key" -}}
+{{- end -}}
+{{- if not (get $grpcTLS "clientCAPath") -}}
+{{- $_ := set $grpcTLS "clientCAPath" "/etc/nantian-gw/grpc-tls/ca.crt" -}}
+{{- end -}}
+{{- $_ := set $grpcTLS "requireClientCert" .Values.controlplane.grpcTLS.requireClientCert -}}
+{{- $_ := set $cfg "grpcTLS" $grpcTLS -}}
+{{- end -}}
 {{- toYaml $cfg }}
 {{- end }}
 
@@ -264,7 +290,24 @@ Controlplane config as YAML
 Dataplane config as YAML
 */}}
 {{- define "nantian-gw.dataplane.configYaml" -}}
-{{- $cfg := .Values.dataplane.config -}}
+{{- $cfg := deepCopy .Values.dataplane.config -}}
+{{- if .Values.dataplane.xdsTLS.enabled -}}
+{{- $xdsTLS := default (dict) $cfg.xdsTls -}}
+{{- $_ := set $xdsTLS "enabled" true -}}
+{{- if not (get $xdsTLS "caPath") -}}
+{{- $_ := set $xdsTLS "caPath" "/etc/nantian-gw/xds-tls/ca.crt" -}}
+{{- end -}}
+{{- if not (get $xdsTLS "certPath") -}}
+{{- $_ := set $xdsTLS "certPath" "/etc/nantian-gw/xds-tls/tls.crt" -}}
+{{- end -}}
+{{- if not (get $xdsTLS "keyPath") -}}
+{{- $_ := set $xdsTLS "keyPath" "/etc/nantian-gw/xds-tls/tls.key" -}}
+{{- end -}}
+{{- if and (not (get $xdsTLS "domainName")) .Values.dataplane.xdsTLS.domainName -}}
+{{- $_ := set $xdsTLS "domainName" .Values.dataplane.xdsTLS.domainName -}}
+{{- end -}}
+{{- $_ := set $cfg "xdsTls" $xdsTLS -}}
+{{- end -}}
 {{- if $cfg.controlPlaneAddr -}}
 {{- $dpConfig := omit $cfg "controlPlaneAddr" -}}
 controlPlaneAddr: {{ $cfg.controlPlaneAddr | quote }}

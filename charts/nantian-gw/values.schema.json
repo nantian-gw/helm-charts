@@ -57,6 +57,117 @@
           ]
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "dashboard": {
+            "properties": {
+              "serviceAccount": {
+                "properties": {
+                  "create": { "const": false }
+                },
+                "required": ["create"]
+              }
+            },
+            "required": ["serviceAccount"]
+          }
+        },
+        "required": ["dashboard"]
+      },
+      "then": {
+        "properties": {
+          "dashboard": {
+            "properties": {
+              "serviceAccount": {
+                "properties": {
+                  "name": { "minLength": 1 }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dashboard": {
+            "properties": {
+              "ingress": {
+                "properties": {
+                  "tls": {
+                    "properties": {
+                      "enabled": { "const": true }
+                    },
+                    "required": ["enabled"]
+                  }
+                },
+                "required": ["tls"]
+              }
+            },
+            "required": ["ingress"]
+          }
+        },
+        "required": ["dashboard"]
+      },
+      "then": {
+        "properties": {
+          "dashboard": {
+            "properties": {
+              "ingress": {
+                "properties": {
+                  "tls": {
+                    "properties": {
+                      "secretName": { "minLength": 1 }
+                    },
+                    "required": ["secretName"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "certs": {
+            "properties": {
+              "certManager": {
+                "properties": {
+                  "enabled": { "const": true }
+                },
+                "required": ["enabled"]
+              }
+            },
+            "required": ["certManager"]
+          }
+        },
+        "required": ["certs"]
+      },
+      "then": {
+        "properties": {
+          "certs": {
+            "properties": {
+              "generate": { "const": false },
+              "certManager": {
+                "properties": {
+                  "issuerRef": {
+                    "properties": {
+                      "name": { "minLength": 1 }
+                    },
+                    "required": ["name"]
+                  }
+                },
+                "required": ["issuerRef"]
+              }
+            }
+          }
+        }
+      }
     }
   ],
   "definitions": {
@@ -65,6 +176,10 @@
       "additionalProperties": {
         "type": "string"
       }
+    },
+    "stringArray": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
     },
     "dnsLabel": {
       "type": "string",
@@ -393,7 +508,40 @@
           "additionalProperties": true,
           "properties": {
             "authSecret": { "type": "string" },
-            "authExistingSecret": { "type": "string" }
+            "authExistingSecret": { "type": "string" },
+            "serviceAccount": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "create": { "type": "boolean" },
+                "name": { "type": "string" },
+                "automountServiceAccountToken": { "type": "boolean" }
+              }
+            },
+            "ingress": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "className": { "type": "string" },
+                "annotations": { "$ref": "#/definitions/stringMap" },
+                "host": { "type": "string" },
+                "path": { "type": "string", "pattern": "^/" },
+                "pathType": {
+                  "type": "string",
+                  "enum": ["Exact", "Prefix", "ImplementationSpecific"]
+                },
+                "tls": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "enabled": { "type": "boolean" },
+                    "secretName": { "type": "string" }
+                  }
+                },
+                "fromNamespaces": { "$ref": "#/definitions/stringArray" }
+              }
+            }
           }
         }
       ]
@@ -431,7 +579,37 @@
       "additionalProperties": true,
       "properties": {
         "generate": { "type": "boolean" },
-        "domain": { "type": "string" }
+        "domain": { "type": "string" },
+        "selfSigned": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "caDurationDays": { "type": "integer", "minimum": 1, "maximum": 825 },
+            "serverDurationDays": { "type": "integer", "minimum": 1, "maximum": 397 },
+            "clientDurationDays": { "type": "integer", "minimum": 1, "maximum": 397 }
+          }
+        },
+        "certManager": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "issuerRef": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "name": { "type": "string" },
+                "kind": {
+                  "type": "string",
+                  "enum": ["Issuer", "ClusterIssuer"]
+                },
+                "group": { "type": "string", "minLength": 1 }
+              }
+            },
+            "duration": { "type": "string", "minLength": 1 },
+            "renewBefore": { "type": "string", "minLength": 1 }
+          }
+        }
       }
     },
     "tests": {

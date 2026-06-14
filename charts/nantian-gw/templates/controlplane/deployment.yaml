@@ -116,7 +116,7 @@ spec:
             - name: config
               mountPath: /etc/nantian-gw
               readOnly: true
-            {{- if or .Values.controlplane.grpcTLS.enabled .Values.certs.generate }}
+            {{- if or .Values.controlplane.grpcTLS.enabled .Values.certs.generate .Values.certs.certManager.enabled }}
             - name: grpc-tls
               mountPath: /etc/nantian-gw/grpc-tls
               readOnly: true
@@ -133,7 +133,7 @@ spec:
         - name: config
           configMap:
             name: {{ $cpName }}-controlplane-config
-        {{- if or .Values.controlplane.grpcTLS.enabled .Values.certs.generate }}
+        {{- if or .Values.controlplane.grpcTLS.enabled .Values.certs.generate .Values.certs.certManager.enabled }}
         - name: grpc-tls
           secret:
             secretName: {{ .Values.controlplane.grpcTLS.existingSecret | default (printf "%s-grpc-server-tls" $cpName) }}

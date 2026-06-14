@@ -24,7 +24,8 @@ spec:
       labels:
         {{- include "nantian-gw.dashboard.labels" . | nindent 8 }}
     spec:
-      automountServiceAccountToken: false
+      serviceAccountName: {{ include "nantian-gw.dashboard.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.dashboard.serviceAccount.automountServiceAccountToken }}
       terminationGracePeriodSeconds: {{ .Values.dashboard.terminationGracePeriodSeconds }}
       securityContext:
         {{- toYaml .Values.dashboard.podSecurityContext | nindent 8 }}

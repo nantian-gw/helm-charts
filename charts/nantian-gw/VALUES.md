@@ -277,6 +277,25 @@ dashboard:
 
 For production, prefer `authExistingSecret` with a pre-created secret containing the `auth-secret` key. If neither `authExistingSecret` nor `authSecret` is set, the chart creates a kept secret and reuses it on upgrades.
 
+Newer chart versions create a dedicated Dashboard ServiceAccount by default through `dashboard.serviceAccount`. The token is not mounted unless `dashboard.serviceAccount.automountServiceAccountToken=true`. If you need to keep using an existing principal, set `dashboard.serviceAccount.create=false` and `dashboard.serviceAccount.name=<existing-sa>`.
+
+`dashboard.ingress.enabled=false` is the default. Enable it only when an ingress controller is installed:
+
+```yaml
+dashboard:
+  ingress:
+    enabled: true
+    className: nginx
+    host: dashboard.example.com
+    tls:
+      enabled: true
+      secretName: dashboard-example-tls
+    fromNamespaces:
+      - ingress-nginx
+```
+
+When NetworkPolicies are enabled, `dashboard.ingress.fromNamespaces` must include the ingress controller namespace when that controller runs outside the Helm release namespace, so it can reach the dashboard Service.
+
 ### Autoscaling, Monitoring, Network Policy, Tests, and Certificates
 
 `hpa.enabled` creates a dataplane HorizontalPodAutoscaler. Enable it when metrics-server or equivalent metrics are available:
@@ -313,6 +332,29 @@ helm test nantian-gw --namespace nantian-gw
 certs:
   generate: false
 ```
+
+For production gRPC/xDS TLS, prefer cert-manager or pre-created Secrets. The chart can render cert-manager `Certificate` resources when cert-manager and an Issuer already exist:
+
+```yaml
+controlplane:
+  grpcTLS:
+    enabled: true
+    requireClientCert: true
+dataplane:
+  xdsTLS:
+    enabled: true
+certs:
+  certManager:
+    enabled: true
+    issuerRef:
+      name: nantian-ca
+      kind: ClusterIssuer
+      group: cert-manager.io
+```
+
+Rendering cert-manager `Certificate` resources does not by itself enable runtime TLS; operators still need `controlplane.grpcTLS.enabled=true` and `dataplane.xdsTLS.enabled=true`. Enabling `certs.certManager.enabled=true` still changes the pod manifests by mounting the expected TLS Secret volumes into the control plane and data plane workloads.
+
+`certs.generate=true` remains a development shortcut. Newly generated self-signed material defaults to a 365-day CA and 90-day server/client certificates.
 
 ### Production Examples
 
@@ -631,6 +673,25 @@ dashboard:
 
 生产环境建议使用 `authExistingSecret`，并预先创建包含 `auth-secret` key 的 Secret。如果 `authExistingSecret` 和 `authSecret` 都为空，Chart 会创建带 keep 策略的 Secret，并在升级时复用。
 
+较新的 chart 版本默认通过 `dashboard.serviceAccount` 为 Dashboard 创建独立的 ServiceAccount。除非设置 `dashboard.serviceAccount.automountServiceAccountToken=true`，否则不会挂载 Kubernetes API token。如果仍需沿用现有身份，可设置 `dashboard.serviceAccount.create=false` 和 `dashboard.serviceAccount.name=<existing-sa>`。
+
+`dashboard.ingress.enabled=false` 是默认值。只有在集群已经安装 Ingress Controller 时才启用：
+
+```yaml
+dashboard:
+  ingress:
+    enabled: true
+    className: nginx
+    host: dashboard.example.com
+    tls:
+      enabled: true
+      secretName: dashboard-example-tls
+    fromNamespaces:
+      - ingress-nginx
+```
+
+启用 NetworkPolicy 时，如果 Ingress Controller 运行在 Helm release namespace 之外，`dashboard.ingress.fromNamespaces` 必须包含该 Ingress Controller 所在命名空间，Ingress Controller 才能访问 Dashboard Service。
+
 ### 自动扩缩容、监控、网络策略、测试和证书
 
 `hpa.enabled` 会为数据面创建 HorizontalPodAutoscaler。集群具备 metrics-server 或等价指标能力时可开启：
@@ -667,6 +728,29 @@ helm test nantian-gw --namespace nantian-gw
 certs:
   generate: false
 ```
+
+生产环境的 gRPC/xDS TLS 建议使用 cert-manager 或预先创建的 Secret。集群已经安装 cert-manager 且存在 Issuer 时，chart 可以渲染 cert-manager `Certificate` 资源：
+
+```yaml
+controlplane:
+  grpcTLS:
+    enabled: true
+    requireClientCert: true
+dataplane:
+  xdsTLS:
+    enabled: true
+certs:
+  certManager:
+    enabled: true
+    issuerRef:
+      name: nantian-ca
+      kind: ClusterIssuer
+      group: cert-manager.io
+```
+
+仅渲染 cert-manager `Certificate` 资源并不会自动启用运行时 TLS；仍需显式设置 `controlplane.grpcTLS.enabled=true` 和 `dataplane.xdsTLS.enabled=true`。但启用 `certs.certManager.enabled=true` 仍会修改 Pod 清单，为控制面和数据面工作负载挂载约定的 TLS Secret 卷。
+
+`certs.generate=true` 仍然只作为开发环境快捷方式。新生成的自签名证书默认使用 365 天 CA 和 90 天 server/client 证书。
 
 ### 生产示例
 

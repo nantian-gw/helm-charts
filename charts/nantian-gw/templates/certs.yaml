@@ -9,9 +9,22 @@
 {{- $existingServer := lookup "v1" "Secret" $ns $serverSecretName }}
 {{- $existingClient := lookup "v1" "Secret" $ns $clientSecretName }}
 {{- $reuseExisting := and $existingCA $existingServer $existingClient }}
-{{- $ca := genCA (printf "%s-ca" $name) 3650 }}
-{{- $serverCert := genSignedCert $domain nil (list $domain) 3650 $ca }}
-{{- $clientCert := genSignedCert (printf "%s-client" $name) nil nil 3650 $ca }}
+{{- $ca := genCA (printf "%s-ca" $name) (int .Values.certs.selfSigned.caDurationDays) }}
+{{- if and $existingCA $existingCA.data (index $existingCA.data "tls.crt") (index $existingCA.data "tls.key") -}}
+{{- $ca = buildCustomCert (index $existingCA.data "tls.crt") (index $existingCA.data "tls.key") -}}
+{{- end -}}
+{{- $serverCert := genSignedCert $domain nil (list $domain) (int .Values.certs.selfSigned.serverDurationDays) $ca }}
+{{- $clientCert := genSignedCert (printf "%s-client" $name) nil nil (int .Values.certs.selfSigned.clientDurationDays) $ca }}
+{{- $serverCA := "" -}}
+{{- if and $reuseExisting $existingServer $existingServer.data -}}
+{{- $serverCA = (index $existingServer.data "ca.crt" | default "") -}}
+{{- end -}}
+{{- if and $reuseExisting (not $serverCA) $existingClient $existingClient.data -}}
+{{- $serverCA = (index $existingClient.data "ca.crt" | default "") -}}
+{{- end -}}
+{{- if and (not $serverCA) $existingCA $existingCA.data -}}
+{{- $serverCA = (index $existingCA.data "tls.crt" | default "") -}}
+{{- end -}}
 ---
 apiVersion: v1
 kind: Secret
@@ -42,6 +55,7 @@ type: kubernetes.io/tls
 data:
   tls.crt: {{ if $reuseExisting }}{{ index $existingServer.data "tls.crt" }}{{ else }}{{ $serverCert.Cert | b64enc }}{{ end }}
   tls.key: {{ if $reuseExisting }}{{ index $existingServer.data "tls.key" }}{{ else }}{{ $serverCert.Key | b64enc }}{{ end }}
+  ca.crt: {{ if $serverCA }}{{ $serverCA }}{{ else }}{{ $ca.Cert | b64enc }}{{ end }}
 ---
 apiVersion: v1
 kind: Secret
