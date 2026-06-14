@@ -22,6 +22,10 @@ cert_manager_render="$tmp_dir/cert-manager.yaml"
 cert_manager_missing_issuer="$tmp_dir/cert-manager-missing-issuer.out"
 cert_conflict_render="$tmp_dir/cert-conflict.out"
 tls_paths_render="$tmp_dir/tls-paths.yaml"
+dev_render="$tmp_dir/values-dev.rendered.yaml"
+staging_render="$tmp_dir/values-staging.rendered.yaml"
+production_render="$tmp_dir/values-production.rendered.yaml"
+ai_gateway_render="$tmp_dir/values-ai-gateway.rendered.yaml"
 
 python3 - "$chart_dir/values.yaml" <<'PY'
 import sys
@@ -53,6 +57,26 @@ if grep -q 'name: tcproutes.gateway.networking.k8s.io' "$default_render"; then
   echo "default render unexpectedly contains experimental TCPRoute CRD" >&2
   exit 1
 fi
+
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  -f "$chart_dir/values-dev.yaml" > "$dev_render"
+grep -q 'enableExperimentalGateway: false' "$dev_render"
+grep -q 'enableAiGateway: false' "$dev_render"
+
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  -f "$chart_dir/values-staging.yaml" > "$staging_render"
+grep -q 'enableExperimentalGateway: false' "$staging_render"
+grep -q 'enableAiGateway: false' "$staging_render"
+
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  -f "$chart_dir/values-production.yaml" > "$production_render"
+grep -q 'enableExperimentalGateway: false' "$production_render"
+grep -q 'enableAiGateway: false' "$production_render"
+
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  -f "$chart_dir/values-ai-gateway.yaml" > "$ai_gateway_render"
+grep -q 'enableExperimentalGateway: true' "$ai_gateway_render"
+grep -q 'enableAiGateway: true' "$ai_gateway_render"
 
 helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set featureMode=experimental > "$experimental_render"

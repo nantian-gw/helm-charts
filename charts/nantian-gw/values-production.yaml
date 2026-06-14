@@ -1,0 +1,24 @@
+featureMode: standard
+
+gatewayAPI:
+  installCRDs: false
+  channel: standard
+
+controlplane:
+  replicas: 2
+
+dataplane:
+  replicas: 2
+
+dashboard:
+  enabled: true
+  ingress:
+    enabled: false
+
+networkPolicies:
+  enabled: true
+
+certs:
+  generate: false
+  certManager:
+    enabled: false

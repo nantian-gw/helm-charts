@@ -1,0 +1,20 @@
+gatewayAPI:
+  installCRDs: true
+  channel: standard
+
+controlplane:
+  replicas: 1
+  image:
+    pullPolicy: IfNotPresent
+  config:
+    leaderElection:
+      enabled: false
+
+dataplane:
+  replicas: 1
+  image:
+    pullPolicy: IfNotPresent
+
+dashboard:
+  image:
+    pullPolicy: IfNotPresent

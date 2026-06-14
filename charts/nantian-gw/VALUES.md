@@ -32,6 +32,33 @@ helm lint charts/nantian-gw
 helm template nantian-gw charts/nantian-gw --namespace nantian-gw
 ```
 
+### Preset Values Files
+
+The chart also ships with scenario overlays that are meant to be layered on top of the base defaults:
+
+```bash
+helm upgrade --install nantian-gw charts/nantian-gw \
+  --namespace nantian-gw \
+  -f charts/nantian-gw/values.yaml \
+  -f charts/nantian-gw/values-production.yaml
+```
+
+- `values-dev.yaml`: local Kind or disposable cluster installs
+- `values-staging.yaml`: shared test or pre-production validation
+- `values-production.yaml`: explicit production baseline
+- `values-ai-gateway.yaml`: experimental runtime plus AI gateway overlay
+
+These preset files intentionally do not set environment-specific secrets, Ingress hosts, TLS issuers, image digests, or existing Secret names.
+
+这些预设文件用于覆盖基础默认值，而不是替代 `values.yaml`。建议使用 `-f values.yaml -f values-*.yaml` 的叠加方式。
+
+- `values-dev.yaml`：本地 Kind 或一次性测试集群
+- `values-staging.yaml`：联调或预发布环境
+- `values-production.yaml`：生产环境基线
+- `values-ai-gateway.yaml`：实验性运行时与 AI 网关场景
+
+这些预设不会内置环境相关的 Secret、Ingress Host、TLS Issuer、镜像 digest 或已有 Secret 名称。
+
 ### Feature Modes
 
 `featureMode` controls Nantian Gateway runtime feature gates, not CRD installation:

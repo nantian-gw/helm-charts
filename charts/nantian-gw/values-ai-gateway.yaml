@@ -1,0 +1,6 @@
+featureMode: experimental
+
+controlplane:
+  config:
+    features:
+      enableAiGateway: true

@@ -1,0 +1,20 @@
+featureMode: standard
+
+gatewayAPI:
+  installCRDs: false
+  channel: standard
+
+controlplane:
+  replicas: 2
+  image:
+    pullPolicy: IfNotPresent
+
+dataplane:
+  replicas: 2
+  image:
+    pullPolicy: IfNotPresent
+
+dashboard:
+  replicas: 1
+  image:
+    pullPolicy: IfNotPresent
