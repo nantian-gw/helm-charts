@@ -149,7 +149,7 @@ controlplane:
     enabled: true
 ```
 
-Use at least two replicas for availability. Keep leader election enabled when replicas are greater than one. The default `tag` is an immutable `sha-` image tag for the tested control plane build; replace it with another immutable release tag or digest for environment-specific production rollouts.
+Use at least two replicas for availability. Keep leader election enabled when replicas are greater than one. The current default `tag` is `latest` so quick installs follow the current public image set. Production rollouts should override it with an immutable release tag or digest.
 
 `controlplane.grpcTLS` controls xDS/gRPC server TLS secret mounting:
 
@@ -503,7 +503,7 @@ controlplane:
       memory: 512Mi
 ```
 
-生产建议至少两个副本，并在多副本时保持 leader election 开启。默认 `tag` 是经过验证的 controlplane 构建对应的不可变 `sha-` 镜像 tag，也可以在环境 values 中替换为其他不可变发布 tag 或 digest。
+生产建议至少两个副本，并在多副本时保持 leader election 开启。当前默认 `tag` 是 `latest`，便于快速安装时跟随当前公开镜像；生产环境应在 values 中替换为不可变发布 tag 或 digest。
 
 `controlplane.grpcTLS` 控制 gRPC 服务端 TLS Secret 挂载：
 

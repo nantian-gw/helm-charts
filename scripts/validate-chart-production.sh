@@ -29,6 +29,8 @@ if gateway_api.get("channel") != "standard":
     raise SystemExit("values.yaml gatewayAPI.channel default must be standard")
 PY
 
+bash scripts/test-version-docs.sh
+
 helm lint "$chart_dir"
 
 helm template nantian-gw "$chart_dir" --namespace nantian-gw > "$default_render"
