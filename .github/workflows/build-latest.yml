@@ -46,13 +46,13 @@ jobs:
 
           cp .dist/*.tgz .
           rm -rf .dist
-          helm repo index . --url "https://charts.nantian.dev"
+          helm repo index . --url "https://chart.nantian.dev"
           if grep -q '\.dist/' index.yaml; then
             echo "index.yaml must not contain unpublished .dist chart URLs" >&2
             exit 1
           fi
 
-          echo "charts.nantian.dev" > CNAME
+          echo "chart.nantian.dev" > CNAME
 
           git add index.yaml *.tgz CNAME
           git diff --staged --quiet || git commit -m "build latest [skip ci]"
