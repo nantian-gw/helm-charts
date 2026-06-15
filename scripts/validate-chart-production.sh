@@ -356,6 +356,15 @@ for pod in pods.values():
 
 dataplane = deployments["nantian-gw-dataplane"]
 dp_pod = dataplane["spec"]["template"]["spec"]
+dp_env_names = {
+    env.get("name")
+    for env in dp_pod["containers"][0].get("env", [])
+    if isinstance(env, dict)
+}
+if "AEG_NODE_ID" not in dp_env_names:
+    raise SystemExit("dataplane container missing AEG_NODE_ID downward API env")
+if "PGW_NODE_ID" in dp_env_names:
+    raise SystemExit("dataplane container renders obsolete PGW_NODE_ID env")
 dp_pod_sc = dp_pod.get("securityContext", {})
 if dp_pod_sc.get("runAsNonRoot") is not True:
     raise SystemExit("dataplane pod missing runAsNonRoot=true")
