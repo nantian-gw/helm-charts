@@ -341,10 +341,14 @@
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "installCRDs": { "type": "boolean" },
+        "installCRDs": {
+          "type": "boolean",
+          "description": "Install the standard Gateway API CRD bundle through Helm crds/."
+        },
         "channel": {
           "type": "string",
-          "enum": ["standard", "experimental"]
+          "enum": ["standard", "experimental"],
+          "description": "standard installs the standard bundle; experimental adds the experimental-only CRDs."
         }
       }
     },

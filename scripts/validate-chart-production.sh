@@ -8,7 +8,9 @@ trap 'rm -rf "$tmp_dir"' EXIT
 default_render="$tmp_dir/default.yaml"
 experimental_render="$tmp_dir/feature-mode-experimental.yaml"
 experimental_crd_render="$tmp_dir/experimental-crds.yaml"
+experimental_crd_include_render="$tmp_dir/experimental-crds-include.yaml"
 standard_crd_render="$tmp_dir/standard-crds.yaml"
+standard_crd_include_render="$tmp_dir/standard-crds-include.yaml"
 no_crd_render="$tmp_dir/no-crds.yaml"
 certs_render="$tmp_dir/certs.yaml"
 custom_namespace_render="$tmp_dir/custom-namespace.yaml"
@@ -115,9 +117,17 @@ fi
 
 helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set gatewayAPI.installCRDs=true > "$standard_crd_render"
-grep -q 'name: gatewayclasses.gateway.networking.k8s.io' "$standard_crd_render"
-grep -q 'gateway.networking.k8s.io/channel: standard' "$standard_crd_render"
-if grep -q 'name: tcproutes.gateway.networking.k8s.io' "$standard_crd_render"; then
+if grep -q 'name: gatewayclasses.gateway.networking.k8s.io' "$standard_crd_render"; then
+  echo "standard Gateway API CRDs unexpectedly rendered from templates" >&2
+  exit 1
+fi
+
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  --include-crds \
+  --set gatewayAPI.installCRDs=true > "$standard_crd_include_render"
+grep -q 'name: gatewayclasses.gateway.networking.k8s.io' "$standard_crd_include_render"
+grep -q 'gateway.networking.k8s.io/channel: standard' "$standard_crd_include_render"
+if grep -q 'name: tcproutes.gateway.networking.k8s.io' "$standard_crd_include_render"; then
   echo "standard Gateway API CRDs unexpectedly include TCPRoute" >&2
   exit 1
 fi
@@ -126,7 +136,20 @@ helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set gatewayAPI.installCRDs=true \
   --set gatewayAPI.channel=experimental > "$experimental_crd_render"
 grep -q 'name: tcproutes.gateway.networking.k8s.io' "$experimental_crd_render"
-grep -q 'gateway.networking.k8s.io/channel: experimental' "$experimental_crd_render"
+grep -q 'name: udproutes.gateway.networking.k8s.io' "$experimental_crd_render"
+grep -q 'name: xbackendtrafficpolicies.gateway.networking.x-k8s.io' "$experimental_crd_render"
+grep -q 'name: xmeshes.gateway.networking.x-k8s.io' "$experimental_crd_render"
+if grep -q 'name: gatewayclasses.gateway.networking.k8s.io' "$experimental_crd_render"; then
+  echo "experimental templated CRD render unexpectedly contains standard bundle" >&2
+  exit 1
+fi
+
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  --include-crds \
+  --set gatewayAPI.installCRDs=true \
+  --set gatewayAPI.channel=experimental > "$experimental_crd_include_render"
+grep -q 'name: gatewayclasses.gateway.networking.k8s.io' "$experimental_crd_include_render"
+grep -q 'name: tcproutes.gateway.networking.k8s.io' "$experimental_crd_include_render"
 
 helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set certs.generate=true > "$certs_render"

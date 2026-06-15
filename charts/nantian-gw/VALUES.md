@@ -81,7 +81,7 @@ helm upgrade --install nantian-gw charts/nantian-gw \
 
 ### Gateway API CRDs
 
-The chart vendors official Gateway API v1.5.1 CRDs and renders them from templates so values can control CRD installation:
+The chart vendors official Gateway API v1.5.1 CRDs:
 
 ```yaml
 gatewayAPI:
@@ -89,9 +89,15 @@ gatewayAPI:
   channel: standard # standard | experimental
 ```
 
-`installCRDs=true` renders Gateway API CRDs from this chart. `channel=standard` renders the official standard bundle. `channel=experimental` renders the official experimental bundle, including resources such as TCPRoute and UDPRoute.
+The chart now splits CRD handling by bundle type:
 
-`installCRDs=false` is the production default and renders no Gateway API CRDs. Use this when CRDs are managed by a platform team, GitOps controller, or a separate cluster bootstrap process. In that mode, install official CRDs before applying Gateway API resources:
+- `installCRDs=false` renders no Gateway API CRDs.
+- `installCRDs=true, channel=standard` installs the standard bundle through Helm's `crds/` mechanism.
+- `installCRDs=true, channel=experimental` installs the standard bundle through `crds/` and renders only the experimental-only CRDs from templates, including `TCPRoute`, `UDPRoute`, `xBackendTrafficPolicy`, and `xMesh`.
+
+Helm `crds/` resources are installed before ordinary manifests, are not removed by `helm uninstall`, and are not managed like normal templated resources during upgrades.
+
+`installCRDs=false` is the production default. Use it when CRDs are managed by a platform team, GitOps controller, or a separate cluster bootstrap process. In that mode, install official CRDs before applying Gateway API resources:
 
 ```bash
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
@@ -494,9 +500,15 @@ gatewayAPI:
   channel: standard # standard | experimental
 ```
 
-`installCRDs=true` 表示由本 Chart 渲染 Gateway API CRD。`channel=standard` 渲染官方 standard bundle。`channel=experimental` 渲染官方 experimental bundle，其中包含 TCPRoute、UDPRoute 等实验性资源。
+本 Chart 现在按 CRD 类型拆分安装方式：
 
-`installCRDs=false` 是生产默认值，表示本 Chart 不渲染 Gateway API CRD。平台团队统一管理 CRD、使用 GitOps 管理 CRD、或在集群初始化阶段单独安装 CRD 时，建议使用这个模式。此时应先安装官方 CRD：
+- `installCRDs=false` 不渲染任何 Gateway API CRD。
+- `installCRDs=true, channel=standard` 通过 Helm 的 `crds/` 机制安装 standard bundle。
+- `installCRDs=true, channel=experimental` 通过 `crds/` 安装 standard bundle，并仅通过模板额外渲染实验性增量 CRD，包括 `TCPRoute`、`UDPRoute`、`xBackendTrafficPolicy` 和 `xMesh`。
+
+Helm `crds/` 资源会先于普通模板资源安装，不会在 `helm uninstall` 时自动删除，也不会像普通模板资源那样在升级时由 Helm 常规覆盖管理。
+
+`installCRDs=false` 是生产默认值。平台团队统一管理 CRD、使用 GitOps 管理 CRD、或在集群初始化阶段单独安装 CRD 时，建议使用这个模式。此时应先安装官方 CRD：
 
 ```bash
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml

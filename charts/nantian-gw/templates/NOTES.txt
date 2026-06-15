@@ -9,7 +9,7 @@ NAMESPACE: {{ $ns }}
 FEATURE MODE: {{ .Values.featureMode }}
 GATEWAY API CRDS:
 {{- if .Values.gatewayAPI.installCRDs }}
-   Managed by this chart, channel={{ .Values.gatewayAPI.channel }}
+   Standard Gateway API CRDs installed through Helm CRD management, channel={{ .Values.gatewayAPI.channel }}
 {{- else }}
    Not managed by this chart. Install Gateway API CRDs separately before creating Gateway API resources.
 {{- end }}
@@ -80,7 +80,10 @@ Get started:
   kubectl apply -f my-httproute.yaml
 
 {{- if .Values.gatewayAPI.installCRDs }}
-Gateway API {{ .Values.gatewayAPI.channel }} CRDs (v1.5.1) were rendered by the chart.
+Gateway API standard CRDs (v1.5.1) were installed through Helm CRD management.
+{{- if eq .Values.gatewayAPI.channel "experimental" }}
+Experimental-only Gateway API CRDs were rendered by the chart.
+{{- end }}
 {{- else }}
 Gateway API CRDs were not rendered by the chart.
 {{- end }}

@@ -15,3 +15,8 @@ sources:
   - https://github.com/nantian-gw/gateway
 maintainers:
   - name: Nantian Gateway Maintainers
+dependencies:
+  - name: gateway-api-crds-standard
+    version: 0.1.0
+    repository: "file://./charts/gateway-api-crds-standard"
+    condition: gatewayAPI.installCRDs
