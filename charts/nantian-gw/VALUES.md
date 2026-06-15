@@ -288,6 +288,13 @@ dataplane:
     domainName: nantian-gw-controlplane-grpc.nantian-gw.svc.cluster.local
 ```
 
+By default, the chart also creates and reuses a stable dataplane admin bearer token Secret so the latest dataplane image can safely bind `0.0.0.0:19080`. The chart wires:
+
+- dataplane `adminAuth.bearerTokenFile` to `/etc/nantian-gw/admin-auth/token`
+- controlplane `adminRuntime.dataplaneAggregation.bearerTokenFile` to `/etc/nantian-gw/dataplane-admin-auth/token`
+
+Replace the generated Secret with your own token by setting `dataplane.adminAuth.existingSecret`. Use `dataplane.adminAuth.secretKey` when the token key inside that Secret is not `token`.
+
 Use `sessionPersistence.existingSecret` or `sessionPersistence.sharedSecret` when multi-replica dataplanes need stable HMAC-backed session behavior. Prefer `existingSecret` in production so secret rotation is managed outside Helm values.
 
 ### Dashboard
@@ -683,6 +690,13 @@ dataplane:
     existingSecret: nantian-grpc-client-tls
     domainName: nantian-gw-controlplane-grpc.nantian-gw.svc.cluster.local
 ```
+
+默认情况下，Chart 还会创建并复用一个稳定的数据面 Admin bearer token Secret，以满足最新 dataplane 镜像对 `0.0.0.0:19080` 安全绑定的要求。Chart 会自动接线：
+
+- 数据面 `adminAuth.bearerTokenFile` 到 `/etc/nantian-gw/admin-auth/token`
+- 控制面 `adminRuntime.dataplaneAggregation.bearerTokenFile` 到 `/etc/nantian-gw/dataplane-admin-auth/token`
+
+如果你希望改用自管 token Secret，请设置 `dataplane.adminAuth.existingSecret`。当 Secret 内的 token key 不是默认的 `token` 时，再同时设置 `dataplane.adminAuth.secretKey`。
 
 多副本数据面需要稳定会话行为时，可使用 `sessionPersistence.existingSecret` 或 `sessionPersistence.sharedSecret`。生产环境优先使用 `existingSecret`，避免将密钥直接写入 Helm values。
 

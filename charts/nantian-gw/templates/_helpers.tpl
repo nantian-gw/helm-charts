@@ -246,6 +246,80 @@ securityContext:
 {{- end }}
 
 {{/*
+Returns whether dataplane admin auth should be sourced from a Secret mount.
+Inline bearerToken config disables secret-based defaulting.
+*/}}
+{{- define "nantian-gw.dataplaneAdminAuthUsesSecret" -}}
+{{- $cfg := default (dict) .Values.dataplane.config -}}
+{{- $adminAuth := default (dict) (get $cfg "adminAuth") -}}
+{{- $inlineToken := trim (default "" (get $adminAuth "bearerToken")) -}}
+{{- if and .Values.dataplane.enabled (not $inlineToken) -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end }}
+
+{{/*
+Resolve the dataplane admin auth Secret name.
+*/}}
+{{- define "nantian-gw.dataplaneAdminAuthSecretName" -}}
+{{- if .Values.dataplane.adminAuth.existingSecret -}}
+{{- .Values.dataplane.adminAuth.existingSecret -}}
+{{- else -}}
+{{- printf "%s-dataplane-admin-auth" (include "nantian-gw.name" .) -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Resolve the dataplane admin auth file path inside the dataplane container.
+*/}}
+{{- define "nantian-gw.dataplaneAdminAuthFilePath" -}}
+{{- $cfg := default (dict) .Values.dataplane.config -}}
+{{- $adminAuth := default (dict) (get $cfg "adminAuth") -}}
+{{- $configPath := trim (default "" (get $adminAuth "bearerTokenFile")) -}}
+{{- $chartPath := trim (default "" .Values.dataplane.adminAuth.bearerTokenFile) -}}
+{{- if $configPath -}}
+{{- $configPath -}}
+{{- else if $chartPath -}}
+{{- $chartPath -}}
+{{- else -}}
+{{- printf "/etc/nantian-gw/admin-auth/%s" .Values.dataplane.adminAuth.secretKey -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Resolve the dataplane admin auth file path inside the controlplane container for dataplane aggregation.
+Only used when the chart is supplying the bearer token Secret.
+*/}}
+{{- define "nantian-gw.controlplaneDataplaneAdminAuthFilePath" -}}
+{{- $cfg := default (dict) .Values.controlplane.config -}}
+{{- $adminRuntime := default (dict) (get $cfg "adminRuntime") -}}
+{{- $dataplaneAggregation := default (dict) (get $adminRuntime "dataplaneAggregation") -}}
+{{- $configuredPath := trim (default "" (get $dataplaneAggregation "bearerTokenFile")) -}}
+{{- if $configuredPath -}}
+{{- $configuredPath -}}
+{{- else -}}
+{{- printf "/etc/nantian-gw/dataplane-admin-auth/%s" .Values.dataplane.adminAuth.secretKey -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Returns whether the controlplane should auto-mount the dataplane admin auth Secret.
+*/}}
+{{- define "nantian-gw.controlplaneDataplaneAdminAuthNeedsMount" -}}
+{{- $cfg := default (dict) .Values.controlplane.config -}}
+{{- $adminRuntime := default (dict) (get $cfg "adminRuntime") -}}
+{{- $dataplaneAggregation := default (dict) (get $adminRuntime "dataplaneAggregation") -}}
+{{- $configuredPath := trim (default "" (get $dataplaneAggregation "bearerTokenFile")) -}}
+{{- if and .Values.controlplane.enabled .Values.dataplane.enabled (eq (include "nantian-gw.dataplaneAdminAuthUsesSecret" .) "true") (not $configuredPath) -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end }}
+
+{{/*
 Controlplane config as YAML
 */}}
 {{- define "nantian-gw.controlplane.configYaml" -}}
@@ -254,6 +328,27 @@ Controlplane config as YAML
 {{- if not (get $dashboardApi "dataplaneAdminUrl") -}}
 {{- $_ := set $dashboardApi "dataplaneAdminUrl" (printf "http://%s-dataplane-admin.%s.svc.cluster.local:19080" (include "nantian-gw.name" .) (include "nantian-gw.namespace" .)) -}}
 {{- $_ := set $cfg "dashboardApi" $dashboardApi -}}
+{{- end -}}
+{{- $adminRuntime := default (dict) $cfg.adminRuntime -}}
+{{- if .Values.dataplane.enabled -}}
+{{- $dataplaneAggregation := default (dict) (get $adminRuntime "dataplaneAggregation") -}}
+{{- if not (get $dataplaneAggregation "serviceName") -}}
+{{- $_ := set $dataplaneAggregation "serviceName" (printf "%s-dataplane-admin" (include "nantian-gw.name" .)) -}}
+{{- end -}}
+{{- if not (get $dataplaneAggregation "namespace") -}}
+{{- $_ := set $dataplaneAggregation "namespace" (include "nantian-gw.namespace" .) -}}
+{{- end -}}
+{{- if not (get $dataplaneAggregation "portName") -}}
+{{- $_ := set $dataplaneAggregation "portName" "admin" -}}
+{{- end -}}
+{{- if not (get $dataplaneAggregation "timeout") -}}
+{{- $_ := set $dataplaneAggregation "timeout" "2s" -}}
+{{- end -}}
+{{- if and (eq (include "nantian-gw.controlplaneDataplaneAdminAuthNeedsMount" .) "true") (not (get $dataplaneAggregation "bearerTokenFile")) -}}
+{{- $_ := set $dataplaneAggregation "bearerTokenFile" (include "nantian-gw.controlplaneDataplaneAdminAuthFilePath" .) -}}
+{{- end -}}
+{{- $_ := set $adminRuntime "dataplaneAggregation" $dataplaneAggregation -}}
+{{- $_ := set $cfg "adminRuntime" $adminRuntime -}}
 {{- end -}}
 {{- $configuredDashboard := default (dict) $cfg.dashboard -}}
 {{- if not (hasKey $configuredDashboard "enabled") -}}
@@ -308,6 +403,11 @@ Dataplane config as YAML
 {{- end -}}
 {{- $_ := set $cfg "xdsTls" $xdsTLS -}}
 {{- end -}}
+{{- $adminAuth := default (dict) $cfg.adminAuth -}}
+{{- if and (eq (include "nantian-gw.dataplaneAdminAuthUsesSecret" .) "true") (not (get $adminAuth "bearerTokenFile")) -}}
+{{- $_ := set $adminAuth "bearerTokenFile" (include "nantian-gw.dataplaneAdminAuthFilePath" .) -}}
+{{- $_ := set $cfg "adminAuth" $adminAuth -}}
+{{- end -}}
 {{- if $cfg.controlPlaneAddr -}}
 {{- $dpConfig := omit $cfg "controlPlaneAddr" -}}
 controlPlaneAddr: {{ $cfg.controlPlaneAddr | quote }}
@@ -337,4 +437,21 @@ Resolve the dashboard auth secret value.
 {{- randAlphaNum 32 }}
 {{- end }}
 {{- end }}
+{{- end }}
+
+{{/*
+Resolve the dataplane admin auth secret value.
+1. Reuse the existing secret token when present
+2. Otherwise, generate a random value on first install
+*/}}
+{{- define "nantian-gw.dataplane-admin-auth-token" -}}
+{{- $ns := include "nantian-gw.namespace" . -}}
+{{- $secretName := include "nantian-gw.dataplaneAdminAuthSecretName" . -}}
+{{- $secretKey := .Values.dataplane.adminAuth.secretKey -}}
+{{- $secret := lookup "v1" "Secret" $ns $secretName -}}
+{{- if and $secret (index $secret.data $secretKey) -}}
+{{- index $secret.data $secretKey | b64dec -}}
+{{- else -}}
+{{- randAlphaNum 32 -}}
+{{- end -}}
 {{- end }}

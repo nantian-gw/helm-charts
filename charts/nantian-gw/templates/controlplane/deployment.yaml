@@ -126,6 +126,11 @@ spec:
               mountPath: /etc/nantian-gw/admin-auth
               readOnly: true
             {{- end }}
+            {{- if eq (include "nantian-gw.controlplaneDataplaneAdminAuthNeedsMount" .) "true" }}
+            - name: dataplane-admin-auth
+              mountPath: {{ dir (include "nantian-gw.controlplaneDataplaneAdminAuthFilePath" .) }}
+              readOnly: true
+            {{- end }}
             {{- with .Values.controlplane.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -142,6 +147,14 @@ spec:
         - name: admin-auth
           secret:
             secretName: {{ .Values.controlplane.adminAuth.existingSecret }}
+        {{- end }}
+        {{- if eq (include "nantian-gw.controlplaneDataplaneAdminAuthNeedsMount" .) "true" }}
+        - name: dataplane-admin-auth
+          secret:
+            secretName: {{ include "nantian-gw.dataplaneAdminAuthSecretName" . }}
+            items:
+              - key: {{ .Values.dataplane.adminAuth.secretKey }}
+                path: {{ base (include "nantian-gw.controlplaneDataplaneAdminAuthFilePath" .) }}
         {{- end }}
         {{- with .Values.controlplane.extraVolumes }}
         {{- toYaml . | nindent 8 }}

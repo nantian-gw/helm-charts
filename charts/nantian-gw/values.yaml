@@ -161,6 +161,7 @@ controlplane:
       retryPeriod: "2s"
     adminAuth:
       bearerToken: ""
+      # -- Empty value defaults to the chart-managed dataplane admin token file path when no inline bearer token is set.
       bearerTokenFile: ""
     grpcTLS:
       enabled: false
@@ -391,8 +392,12 @@ dataplane:
 
   # -- Admin API authentication
   adminAuth:
+    # -- Optional bearer token file path inside the dataplane container. When empty and no inline
+    # -- dataplane.config.adminAuth.bearerToken is set, the chart defaults to a generated Secret-backed file path.
     bearerTokenFile: ""
+    # -- Name of an existing Secret containing the dataplane admin bearer token. Leave empty to let the chart generate and reuse a stable Secret.
     existingSecret: ""
+    # -- Secret key containing the dataplane admin bearer token.
     secretKey: "token"
 
   # -- Session persistence configuration

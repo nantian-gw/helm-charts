@@ -62,9 +62,6 @@ GatewayClass creation disabled
 {{- if and .Values.controlplane.adminAuth.bearerTokenFile (not .Values.controlplane.adminAuth.existingSecret) }}
 {{- $warnings = append $warnings "controlplane.adminAuth.bearerTokenFile set but no existingSecret" }}
 {{- end }}
-{{- if and .Values.dataplane.adminAuth.bearerTokenFile (not .Values.dataplane.adminAuth.existingSecret) }}
-{{- $warnings = append $warnings "dataplane.adminAuth.bearerTokenFile set but no existingSecret" }}
-{{- end }}
 {{- if and .Values.dataplane.sessionPersistence.sharedSecret (not .Values.dataplane.sessionPersistence.existingSecret) }}
 {{- $warnings = append $warnings "dataplane.sessionPersistence.sharedSecret set but no existingSecret — internal secret will be generated" }}
 {{- end }}

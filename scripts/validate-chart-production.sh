@@ -49,6 +49,11 @@ helm template nantian-gw "$chart_dir" --namespace nantian-gw > "$default_render"
 grep -q 'enableExperimentalGateway: false' "$default_render"
 grep -q 'enableAiGateway: false' "$default_render"
 grep -q 'dashboard:' "$default_render"
+grep -q 'name: nantian-gw-dataplane-admin-auth' "$default_render"
+grep -q 'mountPath: /etc/nantian-gw/admin-auth' "$default_render"
+grep -q 'bearerTokenFile: /etc/nantian-gw/admin-auth/token' "$default_render"
+grep -q 'mountPath: /etc/nantian-gw/dataplane-admin-auth' "$default_render"
+grep -q 'bearerTokenFile: /etc/nantian-gw/dataplane-admin-auth/token' "$default_render"
 if grep -q 'kind: CustomResourceDefinition' "$default_render"; then
   echo "default production render unexpectedly contains Gateway API CRDs" >&2
   exit 1

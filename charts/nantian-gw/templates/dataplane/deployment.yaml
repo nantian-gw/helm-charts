@@ -124,9 +124,9 @@ spec:
               mountPath: /etc/nantian-gw/xds-tls
               readOnly: true
             {{- end }}
-            {{- if .Values.dataplane.adminAuth.existingSecret }}
+            {{- if eq (include "nantian-gw.dataplaneAdminAuthUsesSecret" .) "true" }}
             - name: admin-auth
-              mountPath: /etc/nantian-gw/admin-auth
+              mountPath: {{ dir (include "nantian-gw.dataplaneAdminAuthFilePath" .) }}
               readOnly: true
             {{- end }}
             {{- if or .Values.dataplane.sessionPersistence.existingSecret .Values.dataplane.sessionPersistence.sharedSecret }}
@@ -158,10 +158,13 @@ spec:
           secret:
             secretName: {{ .Values.dataplane.xdsTLS.existingSecret | default (printf "%s-grpc-client-tls" $dpName) }}
         {{- end }}
-        {{- if .Values.dataplane.adminAuth.existingSecret }}
+        {{- if eq (include "nantian-gw.dataplaneAdminAuthUsesSecret" .) "true" }}
         - name: admin-auth
           secret:
-            secretName: {{ .Values.dataplane.adminAuth.existingSecret }}
+            secretName: {{ include "nantian-gw.dataplaneAdminAuthSecretName" . }}
+            items:
+              - key: {{ .Values.dataplane.adminAuth.secretKey }}
+                path: {{ base (include "nantian-gw.dataplaneAdminAuthFilePath" .) }}
         {{- end }}
         {{- if or .Values.dataplane.sessionPersistence.existingSecret .Values.dataplane.sessionPersistence.sharedSecret }}
         - name: session-persistence
