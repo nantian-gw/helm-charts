@@ -24,6 +24,9 @@ cert_manager_render="$tmp_dir/cert-manager.yaml"
 cert_manager_missing_issuer="$tmp_dir/cert-manager-missing-issuer.out"
 cert_conflict_render="$tmp_dir/cert-conflict.out"
 tls_paths_render="$tmp_dir/tls-paths.yaml"
+session_shared_render="$tmp_dir/session-shared.rendered.yaml"
+session_existing_render="$tmp_dir/session-existing.rendered.yaml"
+session_override_render="$tmp_dir/session-override.rendered.yaml"
 dev_render="$tmp_dir/values-dev.rendered.yaml"
 staging_render="$tmp_dir/values-staging.rendered.yaml"
 production_render="$tmp_dir/values-production.rendered.yaml"
@@ -218,7 +221,20 @@ helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set controlplane.grpcTLS.enabled=true \
   --set dataplane.xdsTLS.enabled=true > "$tls_paths_render"
 
-python3 - "$default_render" "$no_crd_render" "$standard_crd_render" "$experimental_crd_render" "$certs_render" "$custom_namespace_render" "$dashboard_disabled_render" "$dashboard_override_render" "$dashboard_ingress_render" "$self_signed_tls_render" "$cert_manager_render" "$tls_paths_render" <<'PY'
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  --set dataplane.sessionPersistence.sharedSecret=sticky-secret \
+  --set dataplane.sessionPersistence.secretKey=sticky-key > "$session_shared_render"
+
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  --set dataplane.sessionPersistence.existingSecret=sticky-secret \
+  --set dataplane.sessionPersistence.secretKey=sticky-key > "$session_existing_render"
+
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  --set dataplane.sessionPersistence.existingSecret=sticky-secret \
+  --set dataplane.sessionPersistence.secretKey=sticky-key \
+  --set dataplane.config.sessionPersistence.secretKeyFile=/custom/session/key > "$session_override_render"
+
+python3 - "$default_render" "$no_crd_render" "$standard_crd_render" "$experimental_crd_render" "$certs_render" "$custom_namespace_render" "$dashboard_disabled_render" "$dashboard_override_render" "$dashboard_ingress_render" "$self_signed_tls_render" "$cert_manager_render" "$tls_paths_render" "$session_shared_render" "$session_existing_render" "$session_override_render" <<'PY'
 import sys
 from pathlib import Path
 
@@ -270,6 +286,11 @@ def named_doc(path, kind, name):
         if doc.get("metadata", {}).get("name") == name:
             return doc
     raise SystemExit(f"{kind}/{name} not found in {path}")
+
+
+def dataplane_config(path):
+    configmap = named_doc(path, "ConfigMap", "nantian-gw-dataplane-config")
+    return yaml.safe_load(configmap["data"]["config.yaml"])
 
 
 def assert_controlplane_grpc_tls(config, message_prefix):
@@ -393,6 +414,28 @@ if "AEG_NODE_ID" not in dp_env_names:
     raise SystemExit("dataplane container missing AEG_NODE_ID downward API env")
 if "PGW_NODE_ID" in dp_env_names:
     raise SystemExit("dataplane container renders obsolete PGW_NODE_ID env")
+
+shared_dp = dataplane_config(sys.argv[13])
+shared_session = shared_dp.get("sessionPersistence") or {}
+if shared_session.get("secretKeyFile") != "/etc/nantian-gw/session-persistence/sticky-key":
+    raise SystemExit(
+        "shared-secret dataplane config must render sessionPersistence.secretKeyFile from the mounted Secret"
+    )
+
+existing_dp = dataplane_config(sys.argv[14])
+existing_session = existing_dp.get("sessionPersistence") or {}
+if existing_session.get("secretKeyFile") != "/etc/nantian-gw/session-persistence/sticky-key":
+    raise SystemExit(
+        "existing-secret dataplane config must render sessionPersistence.secretKeyFile from the mounted Secret"
+    )
+
+override_dp = dataplane_config(sys.argv[15])
+override_session = override_dp.get("sessionPersistence") or {}
+if override_session.get("secretKeyFile") != "/custom/session/key":
+    raise SystemExit(
+        "explicit dataplane.config.sessionPersistence.secretKeyFile must not be overwritten"
+    )
+
 dp_pod_sc = dp_pod.get("securityContext", {})
 if dp_pod_sc.get("runAsNonRoot") is not True:
     raise SystemExit("dataplane pod missing runAsNonRoot=true")

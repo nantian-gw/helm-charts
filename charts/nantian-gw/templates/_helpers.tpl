@@ -289,6 +289,13 @@ Resolve the dataplane admin auth file path inside the dataplane container.
 {{- end }}
 
 {{/*
+Resolve the dataplane session-persistence Secret file path inside the dataplane container.
+*/}}
+{{- define "nantian-gw.dataplaneSessionPersistenceFilePath" -}}
+{{- printf "/etc/nantian-gw/session-persistence/%s" .Values.dataplane.sessionPersistence.secretKey -}}
+{{- end }}
+
+{{/*
 Resolve the dataplane admin auth file path inside the controlplane container for dataplane aggregation.
 Only used when the chart is supplying the bearer token Secret.
 */}}
@@ -407,6 +414,14 @@ Dataplane config as YAML
 {{- if and (eq (include "nantian-gw.dataplaneAdminAuthUsesSecret" .) "true") (not (get $adminAuth "bearerTokenFile")) -}}
 {{- $_ := set $adminAuth "bearerTokenFile" (include "nantian-gw.dataplaneAdminAuthFilePath" .) -}}
 {{- $_ := set $cfg "adminAuth" $adminAuth -}}
+{{- end -}}
+{{- $sessionPersistence := default (dict) (get $cfg "sessionPersistence") -}}
+{{- $sessionSecretManaged := or .Values.dataplane.sessionPersistence.existingSecret .Values.dataplane.sessionPersistence.sharedSecret -}}
+{{- $sessionSecretKeyFile := trim (default "" (get $sessionPersistence "secretKeyFile")) -}}
+{{- $sessionInlineSecret := trim (default "" (get $sessionPersistence "sharedSecret")) -}}
+{{- if and $sessionSecretManaged (not $sessionSecretKeyFile) (not $sessionInlineSecret) -}}
+{{- $_ := set $sessionPersistence "secretKeyFile" (include "nantian-gw.dataplaneSessionPersistenceFilePath" .) -}}
+{{- $_ := set $cfg "sessionPersistence" $sessionPersistence -}}
 {{- end -}}
 {{- if $cfg.controlPlaneAddr -}}
 {{- $dpConfig := omit $cfg "controlPlaneAddr" -}}

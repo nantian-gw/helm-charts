@@ -334,6 +334,8 @@ dataplane:
 
   # -- Dataplane application config (merged into ConfigMap as config.yaml)
   config:
+    # -- Fallback dataplane nodeId. The chart injects AEG_NODE_ID from metadata.name,
+    # -- so Kubernetes replicas use unique runtime node IDs by default.
     nodeId: "dp-kubernetes"
     cluster: "kubernetes"
     controlPlaneAddr: ""
@@ -402,9 +404,11 @@ dataplane:
 
   # -- Session persistence configuration
   sessionPersistence:
-    # -- Shared secret for HMAC-based session keys (enables multi-replica safety)
+    # -- Shared secret for HMAC-based session keys (enables multi-replica safety).
+    # -- When this chart mounts the Secret, it also wires dataplane sessionPersistence.secretKeyFile automatically.
     sharedSecret: ""
-    # -- Name of existing Secret containing session persistence key
+    # -- Name of existing Secret containing session persistence key. The mounted Secret is wired into
+    # -- dataplane sessionPersistence.secretKeyFile automatically unless the runtime config overrides it.
     existingSecret: ""
     # -- Secret key for the session persistence token (default: session-persistence)
     secretKey: "session-persistence"

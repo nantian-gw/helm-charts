@@ -294,6 +294,8 @@ dataplane:
     domainName: nantian-gw-controlplane-grpc.nantian-gw.svc.cluster.local
 ```
 
+The chart keeps `dataplane.config.nodeId` as a fallback, but Kubernetes installs should rely on the chart-managed `AEG_NODE_ID` environment variable sourced from Pod `metadata.name`. That gives each replica a unique runtime node identity even when the static fallback remains `dp-kubernetes`.
+
 By default, the chart also creates and reuses a stable dataplane admin bearer token Secret so the latest dataplane image can safely bind `0.0.0.0:19080`. The chart wires:
 
 - dataplane `adminAuth.bearerTokenFile` to `/etc/nantian-gw/admin-auth/token`
@@ -301,7 +303,7 @@ By default, the chart also creates and reuses a stable dataplane admin bearer to
 
 Replace the generated Secret with your own token by setting `dataplane.adminAuth.existingSecret`. Use `dataplane.adminAuth.secretKey` when the token key inside that Secret is not `token`.
 
-Use `sessionPersistence.existingSecret` or `sessionPersistence.sharedSecret` when multi-replica dataplanes need stable HMAC-backed session behavior. Prefer `existingSecret` in production so secret rotation is managed outside Helm values.
+Use `sessionPersistence.existingSecret` or `sessionPersistence.sharedSecret` when multi-replica dataplanes need stable HMAC-backed session behavior. When either option is set, the chart mounts the Secret and writes `sessionPersistence.secretKeyFile` into the rendered dataplane `config.yaml` automatically. Prefer `existingSecret` in production so secret rotation is managed outside Helm values.
 
 ### Dashboard
 
@@ -703,6 +705,8 @@ dataplane:
     domainName: nantian-gw-controlplane-grpc.nantian-gw.svc.cluster.local
 ```
 
+Chart 会保留 `dataplane.config.nodeId` 作为兜底值，但在 Kubernetes 场景下应以 Chart 自动注入、来源于 Pod `metadata.name` 的 `AEG_NODE_ID` 为准，这样即使静态兜底值仍是 `dp-kubernetes`，每个副本也会获得唯一的运行时节点身份。
+
 默认情况下，Chart 还会创建并复用一个稳定的数据面 Admin bearer token Secret，以满足最新 dataplane 镜像对 `0.0.0.0:19080` 安全绑定的要求。Chart 会自动接线：
 
 - 数据面 `adminAuth.bearerTokenFile` 到 `/etc/nantian-gw/admin-auth/token`
@@ -710,7 +714,7 @@ dataplane:
 
 如果你希望改用自管 token Secret，请设置 `dataplane.adminAuth.existingSecret`。当 Secret 内的 token key 不是默认的 `token` 时，再同时设置 `dataplane.adminAuth.secretKey`。
 
-多副本数据面需要稳定会话行为时，可使用 `sessionPersistence.existingSecret` 或 `sessionPersistence.sharedSecret`。生产环境优先使用 `existingSecret`，避免将密钥直接写入 Helm values。
+多副本数据面需要稳定会话行为时，可使用 `sessionPersistence.existingSecret` 或 `sessionPersistence.sharedSecret`。设置任一方式后，Chart 会挂载对应 Secret，并自动把 `sessionPersistence.secretKeyFile` 写入渲染后的 dataplane `config.yaml`。生产环境优先使用 `existingSecret`，避免将密钥直接写入 Helm values。
 
 ### Dashboard
 
