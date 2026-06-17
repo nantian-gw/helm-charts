@@ -560,6 +560,9 @@ serviceMonitor:
   # -- Labels added to ServiceMonitor resources
   labels: {}
     # release: kube-prometheus-stack
+  # -- Additional namespaces whose Prometheus pods may reach metrics endpoints through NetworkPolicy.
+  # -- Dataplane metrics share the admin port, so only grant trusted monitoring namespaces.
+  fromNamespaces: []
   # -- Scrape interval
   interval: "30s"
   # -- Scrape timeout

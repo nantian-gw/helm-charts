@@ -22,6 +22,15 @@ spec:
       ports:
         - protocol: TCP
           port: 19080
+    {{- range .Values.serviceMonitor.fromNamespaces }}
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . | quote }}
+      ports:
+        - protocol: TCP
+          port: 19080
+    {{- end }}
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0

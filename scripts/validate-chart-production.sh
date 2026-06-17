@@ -31,6 +31,7 @@ dev_render="$tmp_dir/values-dev.rendered.yaml"
 staging_render="$tmp_dir/values-staging.rendered.yaml"
 production_render="$tmp_dir/values-production.rendered.yaml"
 ai_gateway_render="$tmp_dir/values-ai-gateway.rendered.yaml"
+service_monitor_render="$tmp_dir/service-monitor.rendered.yaml"
 
 python3 - "$chart_dir/values.yaml" <<'PY'
 import sys
@@ -82,6 +83,13 @@ helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   -f "$chart_dir/values-production.yaml" > "$production_render"
 grep -q 'enableExperimentalGateway: false' "$production_render"
 grep -q 'enableAiGateway: false' "$production_render"
+grep -q 'image: ghcr.io/nantian-gw/nantian-controlplane:sha-8737dc3' "$production_render"
+grep -q 'image: ghcr.io/nantian-gw/dataplane:sha-9670107' "$production_render"
+grep -q 'image: ghcr.io/nantian-gw/dashboard:sha-af29925' "$production_render"
+if grep -Eq 'image: ghcr\.io/nantian-gw/(nantian-controlplane|dataplane|dashboard):latest' "$production_render"; then
+  echo "production preset must not render mutable latest component images" >&2
+  exit 1
+fi
 
 helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   -f "$chart_dir/values-ai-gateway.yaml" > "$ai_gateway_render"
@@ -234,7 +242,11 @@ helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set dataplane.sessionPersistence.secretKey=sticky-key \
   --set dataplane.config.sessionPersistence.secretKeyFile=/custom/session/key > "$session_override_render"
 
-python3 - "$default_render" "$no_crd_render" "$standard_crd_render" "$experimental_crd_render" "$certs_render" "$custom_namespace_render" "$dashboard_disabled_render" "$dashboard_override_render" "$dashboard_ingress_render" "$self_signed_tls_render" "$cert_manager_render" "$tls_paths_render" "$session_shared_render" "$session_existing_render" "$session_override_render" <<'PY'
+helm template nantian-gw "$chart_dir" --namespace nantian-gw \
+  --set serviceMonitor.enabled=true \
+  --set 'serviceMonitor.fromNamespaces[0]=monitoring' > "$service_monitor_render"
+
+python3 - "$default_render" "$no_crd_render" "$standard_crd_render" "$experimental_crd_render" "$certs_render" "$custom_namespace_render" "$dashboard_disabled_render" "$dashboard_override_render" "$dashboard_ingress_render" "$self_signed_tls_render" "$cert_manager_render" "$tls_paths_render" "$session_shared_render" "$session_existing_render" "$session_override_render" "$service_monitor_render" <<'PY'
 import sys
 from pathlib import Path
 
@@ -286,6 +298,22 @@ def named_doc(path, kind, name):
         if doc.get("metadata", {}).get("name") == name:
             return doc
     raise SystemExit(f"{kind}/{name} not found in {path}")
+
+
+def network_policy_allows_namespace(path, policy_name, namespace_name, port):
+    policy = named_doc(path, "NetworkPolicy", policy_name)
+    for rule in policy["spec"].get("ingress", []):
+        has_namespace = any(
+            peer.get("namespaceSelector", {})
+            .get("matchLabels", {})
+            .get("kubernetes.io/metadata.name")
+            == namespace_name
+            for peer in rule.get("from", [])
+        )
+        has_port = any(item.get("port") == port for item in rule.get("ports", []))
+        if has_namespace and has_port:
+            return True
+    return False
 
 
 def dataplane_config(path):
@@ -629,6 +657,28 @@ tls_paths_dp = yaml.safe_load(
     tls_paths_configmaps["nantian-gw-dataplane-config"]["data"]["config.yaml"]
 )
 assert_dataplane_xds_tls(tls_paths_dp, "tls-paths dataplane")
+
+service_monitor = named_doc(sys.argv[16], "ServiceMonitor", "nantian-gw-controlplane")
+selector = service_monitor["spec"]["selector"]["matchLabels"]
+if selector.get("app.kubernetes.io/component") != "controlplane":
+    raise SystemExit(
+        "controlplane ServiceMonitor must select only controlplane metrics Service"
+    )
+if selector.get("gateway.nantian.dev/service-role") != "metrics":
+    raise SystemExit("controlplane ServiceMonitor must select metrics service-role")
+
+if not network_policy_allows_namespace(
+    sys.argv[16], "nantian-gw-controlplane", "monitoring", 18082
+):
+    raise SystemExit(
+        "controlplane NetworkPolicy must allow configured monitoring namespace to metrics port"
+    )
+if not network_policy_allows_namespace(
+    sys.argv[16], "nantian-gw-dataplane", "monitoring", 19080
+):
+    raise SystemExit(
+        "dataplane NetworkPolicy must allow configured monitoring namespace to metrics/admin port"
+    )
 PY
 
 if grep -Eq 'gen(CA|SignedCert).*\b3650\b' "$chart_dir/templates/certs.yaml"; then

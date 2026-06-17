@@ -26,6 +26,15 @@ spec:
           port: 18081
         - protocol: TCP
           port: 18082
+    {{- range .Values.serviceMonitor.fromNamespaces }}
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . | quote }}
+      ports:
+        - protocol: TCP
+          port: 18082
+    {{- end }}
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0

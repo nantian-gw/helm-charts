@@ -25,7 +25,7 @@ networkPolicies:
 
 The default mode keeps experimental runtime features disabled, does not render cluster-scoped Gateway API CRDs, creates two control plane replicas, creates two data plane replicas, enables PodDisruptionBudgets when replicas are greater than one, and keeps NetworkPolicies enabled.
 
-The current chart defaults use the `latest` tag for control plane, data plane, and dashboard images so a fresh install follows the currently published public images. For stricter supply-chain control, pin image digests or immutable release tags in environment values, configure external secrets for TLS and admin authentication, and run the validation command before rollout:
+The base chart defaults use the `latest` tag for control plane, data plane, and dashboard images so a fresh install follows the currently published public images. The production preset pins the current published component images to immutable `sha-*` tags; replace those tags with your promoted release tags or digests during release promotion. Configure external secrets for TLS and admin authentication, and run the validation command before rollout:
 
 ```bash
 helm lint charts/nantian-gw
@@ -48,7 +48,7 @@ helm upgrade --install nantian-gw charts/nantian-gw \
 - `values-production.yaml`: explicit production baseline
 - `values-ai-gateway.yaml`: experimental runtime plus AI gateway overlay
 
-These preset files intentionally do not set environment-specific secrets, Ingress hosts, TLS issuers, image digests, or existing Secret names.
+These preset files intentionally do not set environment-specific secrets, Ingress hosts, TLS issuers, or existing Secret names. The production preset sets immutable component image tags for the current validated image set.
 
 这些预设文件用于覆盖基础默认值，而不是替代 `values.yaml`。建议使用 `-f values.yaml -f values-*.yaml` 的叠加方式。
 
@@ -57,7 +57,7 @@ These preset files intentionally do not set environment-specific secrets, Ingres
 - `values-production.yaml`：生产环境基线
 - `values-ai-gateway.yaml`：实验性运行时与 AI 网关场景
 
-这些预设不会内置环境相关的 Secret、Ingress Host、TLS Issuer、镜像 digest 或已有 Secret 名称。
+这些预设不会内置环境相关的 Secret、Ingress Host、TLS Issuer 或已有 Secret 名称。生产 preset 会内置当前验证过的不可变组件镜像 tag。
 
 ### Feature Modes
 
@@ -358,7 +358,11 @@ serviceMonitor:
   enabled: true
   labels:
     release: kube-prometheus-stack
+  fromNamespaces:
+    - monitoring
 ```
+
+When NetworkPolicies are enabled, `serviceMonitor.fromNamespaces` must include any Prometheus namespace outside the Helm release namespace that needs to scrape metrics. Dataplane metrics share the admin port, so only grant trusted monitoring namespaces.
 
 `networkPolicies.enabled=true` restricts control plane, data plane, and dashboard ingress. Keep it enabled in production and tune cluster-level NetworkPolicy behavior as needed.
 
@@ -465,7 +469,7 @@ networkPolicies:
 
 默认模式会关闭实验性运行时能力，不渲染集群级 Gateway API CRD，创建两个控制面副本和两个数据面副本，副本数大于 1 时启用 PodDisruptionBudget，并默认启用 NetworkPolicy。
 
-当前 chart 默认对 controlplane、dataplane 和 dashboard 都使用 `latest` tag，便于跟随当前公开发布的镜像快速安装。生产环境可以进一步固定镜像 digest 或不可变发布 tag；TLS、Admin API token 等敏感配置应使用外部 Secret；上线前运行：
+基础 chart 默认对 controlplane、dataplane 和 dashboard 都使用 `latest` tag，便于跟随当前公开发布的镜像快速安装。生产 preset 会将当前已发布组件镜像固定到不可变 `sha-*` tag；正式发布推广时应替换为已晋级的 release tag 或 digest。TLS、Admin API token 等敏感配置应使用外部 Secret；上线前运行：
 
 ```bash
 helm lint charts/nantian-gw
@@ -769,7 +773,11 @@ serviceMonitor:
   enabled: true
   labels:
     release: kube-prometheus-stack
+  fromNamespaces:
+    - monitoring
 ```
+
+启用 NetworkPolicy 时，如果 Prometheus 运行在 Helm release namespace 之外，`serviceMonitor.fromNamespaces` 必须包含 Prometheus 所在命名空间才能抓取 metrics。dataplane metrics 与 admin 端口共用同一个端口，因此只应放行可信监控命名空间。
 
 `networkPolicies.enabled=true` 会限制控制面、数据面和 Dashboard 的入站流量。生产环境建议保持开启，并结合集群网络插件策略进行调整。
 

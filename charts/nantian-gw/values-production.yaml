@@ -6,12 +6,21 @@ gatewayAPI:
 
 controlplane:
   replicas: 2
+  image:
+    tag: "sha-8737dc3"
+    pullPolicy: IfNotPresent
 
 dataplane:
   replicas: 2
+  image:
+    tag: "sha-9670107"
+    pullPolicy: IfNotPresent
 
 dashboard:
   enabled: true
+  image:
+    tag: "sha-af29925"
+    pullPolicy: IfNotPresent
   ingress:
     enabled: false
 

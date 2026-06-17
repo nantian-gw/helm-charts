@@ -567,6 +567,7 @@
       "properties": {
         "enabled": { "type": "boolean" },
         "labels": { "$ref": "#/definitions/stringMap" },
+        "fromNamespaces": { "$ref": "#/definitions/stringArray" },
         "interval": { "type": "string", "minLength": 1 },
         "scrapeTimeout": { "type": "string", "minLength": 1 }
       }
