@@ -582,8 +582,8 @@ tests:
   # -- Enable Helm test hook rendering
   enabled: true
   image:
-    repository: "busybox"
-    tag: "1.36"
+    repository: "public.ecr.aws/docker/library/busybox"
+    tag: "1.36.1"
     pullPolicy: IfNotPresent
   resources:
     requests:

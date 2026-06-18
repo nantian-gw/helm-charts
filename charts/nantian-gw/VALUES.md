@@ -366,7 +366,7 @@ When NetworkPolicies are enabled, `serviceMonitor.fromNamespaces` must include a
 
 `networkPolicies.enabled=true` restricts control plane, data plane, and dashboard ingress. Keep it enabled in production and tune cluster-level NetworkPolicy behavior as needed.
 
-`tests.enabled=true` renders a Helm test pod that checks health endpoints. Run it after install:
+`tests.enabled=true` renders a Helm test pod that checks health endpoints. By default the hook uses `public.ecr.aws/docker/library/busybox:1.36.1`, and operators can override `tests.image.repository`, `tests.image.tag`, and `tests.image.pullPolicy` to point at an internal mirror or a different compatible image. The chart hook policy deletes the test pod before recreation and after both successful and failed runs, so repeated `helm test` or uninstall flows do not leave stale failed hook pods behind. Run it after install:
 
 ```bash
 helm test nantian-gw --namespace nantian-gw
@@ -781,7 +781,7 @@ serviceMonitor:
 
 `networkPolicies.enabled=true` 会限制控制面、数据面和 Dashboard 的入站流量。生产环境建议保持开启，并结合集群网络插件策略进行调整。
 
-`tests.enabled=true` 会渲染 Helm test Pod，用于检查健康端点。安装后可运行：
+`tests.enabled=true` 会渲染 Helm test Pod，用于检查健康端点。默认镜像为 `public.ecr.aws/docker/library/busybox:1.36.1`，运维人员仍可通过 `tests.image.repository`、`tests.image.tag` 和 `tests.image.pullPolicy` 覆盖到内部镜像仓库或其他兼容镜像。Chart 的 hook 策略会在重新创建前删除旧 Pod，并在测试成功或失败后自动清理测试 Pod，因此重复执行 `helm test` 或卸载时不会遗留失败的 hook Pod。安装后可运行：
 
 ```bash
 helm test nantian-gw --namespace nantian-gw
