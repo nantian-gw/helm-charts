@@ -1,5 +1,6 @@
-{{- if and .Values.dataplane.enabled .Values.hpa.enabled }}
+{{- if .Values.hpa.enabled }}
 {{- $ns := include "nantian-gw.namespace" . }}
+{{- if .Values.dataplane.enabled }}
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -14,8 +15,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "nantian-gw.name" . }}-dataplane
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  minReplicas: {{ .Values.hpa.dataplane.minReplicas }}
+  maxReplicas: {{ .Values.hpa.dataplane.maxReplicas }}
   metrics:
     - type: Resource
       resource:
@@ -29,4 +30,36 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.hpa.targetMemoryUtilization }}
+{{- end }}
+{{- if .Values.controlplane.enabled }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "nantian-gw.name" . }}-controlplane
+  namespace: {{ $ns }}
+  labels:
+    {{- include "nantian-gw.controlplane.labels" . | nindent 4 }}
+    gateway.nantian.dev/addon: controlplane-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "nantian-gw.name" . }}-controlplane
+  minReplicas: {{ .Values.hpa.controlplane.minReplicas }}
+  maxReplicas: {{ .Values.hpa.controlplane.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.targetCPUUtilization }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.targetMemoryUtilization }}
+{{- end }}
 {{- end }}

@@ -59,20 +59,22 @@ controlplane:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/nantian-controlplane"
-    tag: "latest"
-    pullPolicy: Always
+    tag: "v2026.06.0"
+    pullPolicy: IfNotPresent
 
   # -- Pod security context (overrides defaults)
-  podSecurityContext: {}
-    # runAsNonRoot: true
-    # runAsUser: 65532
-    # runAsGroup: 65532
-    # fsGroup: 65532
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 65532
+    runAsGroup: 65532
+    fsGroup: 65532
 
   # -- Container security context (overrides defaults)
-  containerSecurityContext: {}
-    # allowPrivilegeEscalation: false
-    # readOnlyRootFilesystem: true
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
 
   # -- Resource requests and limits
   resources:
@@ -262,23 +264,23 @@ dataplane:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/dataplane"
-    tag: "latest"
-    pullPolicy: Always
+    tag: "v2026.06.0"
+    pullPolicy: IfNotPresent
 
   # -- Pod security context (overrides defaults)
-  podSecurityContext: {}
-    # runAsNonRoot: true
-    # runAsUser: 65532
-    # runAsGroup: 65532
-    # fsGroup: 65532
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 65532
+    runAsGroup: 65532
+    fsGroup: 65532
 
   # -- Container security context (overrides defaults)
-  containerSecurityContext: {}
-    # allowPrivilegeEscalation: false
-    # readOnlyRootFilesystem: true
-    # capabilities:
-    #   drop: [ALL]
-    #   add: [NET_BIND_SERVICE]
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
+      add: [NET_BIND_SERVICE]
 
   # -- Resource requests and limits
   resources:
@@ -474,8 +476,8 @@ dashboard:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/dashboard"
-    tag: "latest"
-    pullPolicy: Always
+    tag: "v2026.06.0"
+    pullPolicy: IfNotPresent
 
   # -- Pod security context
   podSecurityContext:
@@ -485,11 +487,11 @@ dashboard:
     fsGroup: 1000
 
   # -- Container security context
-  containerSecurityContext: {}
-    # allowPrivilegeEscalation: false
-    # readOnlyRootFilesystem: true
-    # capabilities:
-    #   drop: [ALL]
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
 
   # -- Resource requests and limits
   resources:
@@ -521,6 +523,11 @@ dashboard:
       maxSurge: 1
       maxUnavailable: 0
 
+  # -- PodDisruptionBudget
+  pdb:
+    # -- Minimum available pods during voluntary disruptions
+    minAvailable: 1
+
   # -- Topology spread constraints
   topologySpreadConstraints: []
 
@@ -540,16 +547,18 @@ dashboard:
 # HPA (Horizontal Pod Autoscaler)
 # =============================================================================
 hpa:
-  # -- Enable HPA for the dataplane
+  # -- Enable HPA for the dataplane and controlplane
   enabled: false
-  # -- Minimum replicas
-  minReplicas: 2
-  # -- Maximum replicas
-  maxReplicas: 10
   # -- Target CPU utilization percentage
   targetCPUUtilization: 70
   # -- Target memory utilization percentage
   targetMemoryUtilization: 75
+  dataplane:
+    minReplicas: 2
+    maxReplicas: 10
+  controlplane:
+    minReplicas: 2
+    maxReplicas: 5
 
 # =============================================================================
 # ServiceMonitor (Prometheus Operator)
