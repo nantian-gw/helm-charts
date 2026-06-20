@@ -68,6 +68,8 @@ controlplane:
     runAsUser: 65532
     runAsGroup: 65532
     fsGroup: 65532
+    seccompProfile:
+      type: RuntimeDefault
 
   # -- Container security context (overrides defaults)
   containerSecurityContext:
@@ -273,6 +275,8 @@ dataplane:
     runAsUser: 65532
     runAsGroup: 65532
     fsGroup: 65532
+    seccompProfile:
+      type: RuntimeDefault
 
   # -- Container security context (overrides defaults)
   containerSecurityContext:
