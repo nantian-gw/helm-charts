@@ -1,0 +1,16 @@
+{{- if and .Values.dashboard.enabled (gt (int .Values.dashboard.replicas) 1) }}
+{{- $ns := include "nantian-gw.namespace" . }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "nantian-gw.name" . }}-dashboard
+  namespace: {{ $ns }}
+  labels:
+    {{- include "nantian-gw.dashboard.labels" . | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.dashboard.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "nantian-gw.dashboard.selectorLabels" . | nindent 6 }}
+{{- end }}
