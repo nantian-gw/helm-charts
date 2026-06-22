@@ -416,11 +416,11 @@ dataplane:
 
   # -- Session persistence configuration
   sessionPersistence:
-    # -- Shared secret for HMAC-based session keys (enables multi-replica safety).
-    # -- When this chart mounts the Secret, it also wires dataplane sessionPersistence.secretKeyFile automatically.
+    # -- Shared secret for HMAC-based session keys. Auto-generated on first install
+    # -- when left empty; set explicitly for cross-cluster or pre-provisioned deployments.
     sharedSecret: ""
-    # -- Name of existing Secret containing session persistence key. The mounted Secret is wired into
-    # -- dataplane sessionPersistence.secretKeyFile automatically unless the runtime config overrides it.
+    # -- Name of existing Secret containing session persistence key. When set, the chart
+    # -- skips auto-generation and uses this Secret instead.
     existingSecret: ""
     # -- Secret key for the session persistence token (default: session-persistence)
     secretKey: "session-persistence"
