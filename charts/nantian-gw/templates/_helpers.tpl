@@ -296,6 +296,30 @@ Resolve the dataplane session-persistence Secret file path inside the dataplane 
 {{- end }}
 
 {{/*
+Resolve the session persistence shared secret value.
+1. Use an explicit existingSecret reference
+2. Use an explicit sharedSecret value
+3. Reuse an existing auto-generated Secret
+4. Otherwise, generate a random value on first install
+*/}}
+{{- define "nantian-gw.session-persistence-secret" -}}
+{{- if .Values.dataplane.sessionPersistence.sharedSecret -}}
+{{- .Values.dataplane.sessionPersistence.sharedSecret -}}
+{{- else if not .Values.dataplane.sessionPersistence.existingSecret -}}
+{{- $ns := include "nantian-gw.namespace" . -}}
+{{- $secretName := printf "%s-dataplane-session-persistence" (include "nantian-gw.name" .) -}}
+{{- $secret := lookup "v1" "Secret" $ns $secretName -}}
+{{- if and $secret (index $secret.data (.Values.dataplane.sessionPersistence.secretKey)) -}}
+{{- index $secret.data .Values.dataplane.sessionPersistence.secretKey | b64dec -}}
+{{- else -}}
+{{- randAlphaNum 64 -}}
+{{- end -}}
+{{- else -}}
+{{- "" -}}
+{{- end -}}
+{{- end }}
+
+{{/*
 Resolve the dataplane admin auth file path inside the controlplane container for dataplane aggregation.
 Only used when the chart is supplying the bearer token Secret.
 */}}
@@ -418,10 +442,9 @@ Dataplane config as YAML
 {{- $_ := set $cfg "adminAuth" $adminAuth -}}
 {{- end -}}
 {{- $sessionPersistence := default (dict) (get $cfg "sessionPersistence") -}}
-{{- $sessionSecretManaged := or .Values.dataplane.sessionPersistence.existingSecret .Values.dataplane.sessionPersistence.sharedSecret -}}
 {{- $sessionSecretKeyFile := trim (default "" (get $sessionPersistence "secretKeyFile")) -}}
 {{- $sessionInlineSecret := trim (default "" (get $sessionPersistence "sharedSecret")) -}}
-{{- if and $sessionSecretManaged (not $sessionSecretKeyFile) (not $sessionInlineSecret) -}}
+{{- if and (not $sessionSecretKeyFile) (not $sessionInlineSecret) -}}
 {{- $_ := set $sessionPersistence "secretKeyFile" (include "nantian-gw.dataplaneSessionPersistenceFilePath" .) -}}
 {{- $_ := set $cfg "sessionPersistence" $sessionPersistence -}}
 {{- end -}}

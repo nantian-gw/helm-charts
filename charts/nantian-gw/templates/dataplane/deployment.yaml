@@ -129,11 +129,9 @@ spec:
               mountPath: {{ dir (include "nantian-gw.dataplaneAdminAuthFilePath" .) }}
               readOnly: true
             {{- end }}
-            {{- if or .Values.dataplane.sessionPersistence.existingSecret .Values.dataplane.sessionPersistence.sharedSecret }}
             - name: session-persistence
               mountPath: /etc/nantian-gw/session-persistence
               readOnly: true
-            {{- end }}
             - name: tmp
               mountPath: /tmp
             {{- $accessLogMountExists := false }}
@@ -166,7 +164,6 @@ spec:
               - key: {{ .Values.dataplane.adminAuth.secretKey }}
                 path: {{ base (include "nantian-gw.dataplaneAdminAuthFilePath" .) }}
         {{- end }}
-        {{- if or .Values.dataplane.sessionPersistence.existingSecret .Values.dataplane.sessionPersistence.sharedSecret }}
         - name: session-persistence
           secret:
             {{- if .Values.dataplane.sessionPersistence.existingSecret }}
@@ -174,7 +171,6 @@ spec:
             {{- else }}
             secretName: {{ $dpName }}-dataplane-session-persistence
             {{- end }}
-        {{- end }}
         - name: tmp
           emptyDir:
             sizeLimit: 128Mi
