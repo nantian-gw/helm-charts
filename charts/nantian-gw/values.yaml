@@ -226,12 +226,13 @@ controlplane:
 
   # -- gRPC TLS configuration
   grpcTLS:
-    # -- Enable gRPC mTLS
-    enabled: false
+    # -- Enable gRPC mTLS between controlplane and dataplane.
+    # Requires certs.generate=true or an existingSecret to be set.
+    enabled: true
     # -- Name of existing Secret containing tls.crt, tls.key, ca.crt
     existingSecret: ""
-    # -- Require client certificates
-    requireClientCert: false
+    # -- Require client certificates (mutual TLS)
+    requireClientCert: true
 
   # -- Admin API authentication
   adminAuth:
@@ -395,7 +396,9 @@ dataplane:
 
   # -- xDS TLS configuration
   xdsTLS:
-    enabled: false
+    # -- Enable mTLS for xDS connections to the controlplane.
+    # Requires certs.generate=true or an existingSecret to be set.
+    enabled: true
     # -- Name of existing Secret containing tls.crt, tls.key, ca.crt
     existingSecret: ""
     # -- Expected domain name for the controlplane gRPC service
@@ -615,8 +618,8 @@ tests:
 certs:
   # -- Generate self-signed certificates for gRPC mTLS.
   # When enabled, creates a CA, server cert, and client cert.
-  # Disabled by default; use cert-manager or existingSecret values for production.
-  generate: false
+  # Set to false and use certManager or existingSecret for production.
+  generate: true
   # -- Namespace-scoped domain used for gRPC server certificate SAN.
   # Auto-computed from release name + namespace if empty.
   domain: ""
