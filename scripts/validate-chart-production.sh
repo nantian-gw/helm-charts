@@ -208,6 +208,7 @@ helm template nantian-gw "$chart_dir" --namespace nantian-gw \
 
 helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set certs.certManager.enabled=true \
+  --set certs.generate=false \
   --set certs.certManager.issuerRef.name=nantian-ca \
   --set controlplane.grpcTLS.enabled=true \
   --set controlplane.grpcTLS.requireClientCert=true \
