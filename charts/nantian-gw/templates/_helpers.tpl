@@ -407,6 +407,8 @@ Dataplane config as YAML
 {{- end -}}
 {{- if and (not (get $xdsTLS "domainName")) .Values.dataplane.xdsTLS.domainName -}}
 {{- $_ := set $xdsTLS "domainName" .Values.dataplane.xdsTLS.domainName -}}
+{{- else if not (get $xdsTLS "domainName") -}}
+{{- $_ := set $xdsTLS "domainName" (printf "%s-controlplane-grpc.%s.svc.cluster.local" (include "nantian-gw.name" .) (include "nantian-gw.namespace" .)) -}}
 {{- end -}}
 {{- $_ := set $cfg "xdsTls" $xdsTLS -}}
 {{- end -}}
