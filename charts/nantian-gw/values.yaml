@@ -278,9 +278,6 @@ dataplane:
     fsGroup: 65532
     seccompProfile:
       type: RuntimeDefault
-    sysctls:
-      - name: net.ipv4.ip_unprivileged_port_start
-        value: "0"
 
   # -- Container security context (overrides defaults)
   containerSecurityContext:
