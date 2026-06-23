@@ -93,6 +93,10 @@ spec:
               value: "http://{{ include "nantian-gw.name" . }}-controlplane-admin.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:18081"
             - name: DATAPLANE_ADMIN_URL
               value: "http://{{ include "nantian-gw.name" . }}-dataplane-admin.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:19080"
+            {{- if .Values.dashboard.enableHSTS }}
+            - name: DASHBOARD_ENABLE_HSTS
+              value: "true"
+            {{- end }}
           volumeMounts:
             - name: tmp
               mountPath: /tmp

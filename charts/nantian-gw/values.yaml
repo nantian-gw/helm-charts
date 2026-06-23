@@ -456,6 +456,10 @@ dashboard:
   # Takes precedence over authSecret if both are set.
   authExistingSecret: ""
 
+  # -- Enable HSTS (Strict-Transport-Security) header on dashboard responses.
+  # Only enable when served exclusively over HTTPS.
+  enableHSTS: false
+
   # -- Dashboard ServiceAccount settings
   serviceAccount:
     # -- Create a dedicated dashboard ServiceAccount
