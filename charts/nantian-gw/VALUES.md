@@ -294,7 +294,7 @@ dataplane:
     domainName: nantian-gw-controlplane-grpc.nantian-gw.svc.cluster.local
 ```
 
-The chart keeps `dataplane.config.nodeId` as a fallback, but Kubernetes installs should rely on the chart-managed `AEG_NODE_ID` environment variable sourced from Pod `metadata.name`. That gives each replica a unique runtime node identity even when the static fallback remains `dp-kubernetes`.
+The chart keeps `dataplane.config.nodeId` as a fallback, but Kubernetes installs should rely on the chart-managed `NANTIAN_GW_NODE_ID` environment variable sourced from Pod `metadata.name`. That gives each replica a unique runtime node identity even when the static fallback remains `dp-kubernetes`.
 
 By default, the chart also creates and reuses a stable dataplane admin bearer token Secret so the latest dataplane image can safely bind `0.0.0.0:19080`. The chart wires:
 
@@ -709,7 +709,7 @@ dataplane:
     domainName: nantian-gw-controlplane-grpc.nantian-gw.svc.cluster.local
 ```
 
-Chart 会保留 `dataplane.config.nodeId` 作为兜底值，但在 Kubernetes 场景下应以 Chart 自动注入、来源于 Pod `metadata.name` 的 `AEG_NODE_ID` 为准，这样即使静态兜底值仍是 `dp-kubernetes`，每个副本也会获得唯一的运行时节点身份。
+Chart 会保留 `dataplane.config.nodeId` 作为兜底值，但在 Kubernetes 场景下应以 Chart 自动注入、来源于 Pod `metadata.name` 的 `NANTIAN_GW_NODE_ID` 为准，这样即使静态兜底值仍是 `dp-kubernetes`，每个副本也会获得唯一的运行时节点身份。
 
 默认情况下，Chart 还会创建并复用一个稳定的数据面 Admin bearer token Secret，以满足最新 dataplane 镜像对 `0.0.0.0:19080` 安全绑定的要求。Chart 会自动接线：
 

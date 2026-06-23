@@ -441,8 +441,8 @@ dp_env_names = {
     for env in dp_pod["containers"][0].get("env", [])
     if isinstance(env, dict)
 }
-if "AEG_NODE_ID" not in dp_env_names:
-    raise SystemExit("dataplane container missing AEG_NODE_ID downward API env")
+if "NANTIAN_GW_NODE_ID" not in dp_env_names:
+    raise SystemExit("dataplane container missing NANTIAN_GW_NODE_ID downward API env")
 if "PGW_NODE_ID" in dp_env_names:
     raise SystemExit("dataplane container renders obsolete PGW_NODE_ID env")
 

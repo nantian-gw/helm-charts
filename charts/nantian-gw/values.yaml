@@ -147,7 +147,7 @@ controlplane:
     syncSettleDelay: "200ms"
     nodeStatus:
       namespace: ""
-      leasePrefix: "aeg-node"
+      leasePrefix: "nantian-gw-node"
       persistTimeout: "2s"
     adminRuntime:
       readHeaderTimeout: "5s"
@@ -344,7 +344,7 @@ dataplane:
 
   # -- Dataplane application config (merged into ConfigMap as config.yaml)
   config:
-    # -- Fallback dataplane nodeId. The chart injects AEG_NODE_ID from metadata.name,
+    # -- Fallback dataplane nodeId. The chart injects NANTIAN_GW_NODE_ID from metadata.name,
     # -- so Kubernetes replicas use unique runtime node IDs by default.
     nodeId: "dp-kubernetes"
     cluster: "kubernetes"

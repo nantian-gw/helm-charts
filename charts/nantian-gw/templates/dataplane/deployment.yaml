@@ -70,7 +70,7 @@ spec:
           image: {{ include "nantian-gw.dataplane.image" . }}
           imagePullPolicy: {{ .Values.dataplane.image.pullPolicy }}
           env:
-            - name: AEG_NODE_ID
+            - name: NANTIAN_GW_NODE_ID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
