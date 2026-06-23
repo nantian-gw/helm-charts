@@ -74,6 +74,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: AEG_NODE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             {{- with .Values.dataplane.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
