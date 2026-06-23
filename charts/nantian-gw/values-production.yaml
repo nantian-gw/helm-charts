@@ -1,3 +1,5 @@
+# Production values overlay. All image tags use empty strings by default —
+# the release pipeline must inject actual tags via --set or Helm post-renderer.
 featureMode: standard
 
 gatewayAPI:
@@ -7,19 +9,19 @@ gatewayAPI:
 controlplane:
   replicas: 2
   image:
-    tag: "sha-8737dc3"
+    tag: ""
     pullPolicy: IfNotPresent
 
 dataplane:
   replicas: 2
   image:
-    tag: "sha-9670107"
+    tag: ""
     pullPolicy: IfNotPresent
 
 dashboard:
   enabled: true
   image:
-    tag: "sha-af29925"
+    tag: ""
     pullPolicy: IfNotPresent
   ingress:
     enabled: false
