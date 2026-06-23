@@ -204,10 +204,8 @@ securityContext:
 {{- end }}
 
 {{/*
-Dataplane pod security context with low-port binding sysctl.
-When hostNetwork is enabled, the sysctl is skipped because privileged
-sysctls are not allowed with host networking. Set it on the host instead:
-  echo 'net.ipv4.ip_unprivileged_port_start = 0' > /etc/sysctl.d/99-nantian.conf && sysctl --system
+Dataplane pod security context.
+Low-port binding is handled by NET_BIND_SERVICE capability.
 */}}
 {{- define "nantian-gw.dataplanePodSecurityContext" -}}
 securityContext:
@@ -217,11 +215,6 @@ securityContext:
   fsGroup: 65532
   seccompProfile:
     type: RuntimeDefault
-  {{- if not .Values.dataplane.hostNetwork }}
-  sysctls:
-    - name: net.ipv4.ip_unprivileged_port_start
-      value: "0"
-  {{- end }}
 {{- end }}
 
 {{/*
