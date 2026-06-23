@@ -89,6 +89,10 @@ spec:
                   key: auth-secret
             - name: AUTH_TRUST_HOST
               value: "true"
+            - name: CONTROLPLANE_ADMIN_URL
+              value: "http://{{ include "nantian-gw.name" . }}-controlplane-admin.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:18081"
+            - name: DATAPLANE_ADMIN_URL
+              value: "http://{{ include "nantian-gw.name" . }}-dataplane-admin.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:19080"
           volumeMounts:
             - name: tmp
               mountPath: /tmp
