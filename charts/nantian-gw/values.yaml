@@ -224,6 +224,15 @@ controlplane:
       enableExperimentalGateway: false
       enableAiGateway: false
 
+    # -- Infrastructure reconciler options controlling NodePort allocation
+    # and dataplane admin port.
+    infra:
+      dataplaneAdminPort: 19080
+      nodePortBasePrivileged: 30000
+      nodePortBaseUDP: 31000
+      nodePortBaseDefault: 32000
+      nodePortRangeMax: 32767
+
   # -- gRPC TLS configuration
   grpcTLS:
     # -- Enable gRPC mTLS between controlplane and dataplane.
