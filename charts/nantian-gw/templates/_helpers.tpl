@@ -234,7 +234,7 @@ Dataplane container security context
 */}}
 {{- define "nantian-gw.dataplaneContainerSecurityContext" -}}
 securityContext:
-  allowPrivilegeEscalation: false
+  allowPrivilegeEscalation: true
   readOnlyRootFilesystem: true
   capabilities:
     drop:

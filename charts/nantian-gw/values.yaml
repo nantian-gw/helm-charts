@@ -281,7 +281,7 @@ dataplane:
 
   # -- Container security context (overrides defaults)
   containerSecurityContext:
-    allowPrivilegeEscalation: false
+    allowPrivilegeEscalation: true
     readOnlyRootFilesystem: true
     capabilities:
       drop: [ALL]
