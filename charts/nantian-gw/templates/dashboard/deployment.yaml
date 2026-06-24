@@ -93,6 +93,16 @@ spec:
               value: "http://{{ include "nantian-gw.name" . }}-controlplane-admin.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:18081"
             - name: DATAPLANE_ADMIN_URL
               value: "http://{{ include "nantian-gw.name" . }}-dataplane-admin.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:19080"
+            {{- if and .Values.dataplane.enabled (eq (include "nantian-gw.dataplaneAdminAuthUsesSecret" .) "true") }}
+            # Inject the dataplane admin bearer token so the dashboard BFF can
+            # proxy to dataplane admin endpoints, which use a different token
+            # than the controlplane admin the dashboard session authenticates with.
+            - name: DATAPLANE_BEARER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "nantian-gw.dataplaneAdminAuthSecretName" . }}
+                  key: {{ .Values.dataplane.adminAuth.secretKey }}
+            {{- end }}
             {{- if .Values.dashboard.enableHSTS }}
             - name: DASHBOARD_ENABLE_HSTS
               value: "true"
