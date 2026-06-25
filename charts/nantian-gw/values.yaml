@@ -567,7 +567,7 @@ dashboard:
 # HPA (Horizontal Pod Autoscaler)
 # =============================================================================
 hpa:
-  # -- Enable HPA for the dataplane and controlplane
+  # -- Enable HPA for the dataplane, controlplane, and dashboard
   enabled: false
   # -- Target CPU utilization percentage
   targetCPUUtilization: 70
@@ -577,6 +577,9 @@ hpa:
     minReplicas: 2
     maxReplicas: 10
   controlplane:
+    minReplicas: 2
+    maxReplicas: 5
+  dashboard:
     minReplicas: 2
     maxReplicas: 5
 
