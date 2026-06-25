@@ -215,6 +215,11 @@ securityContext:
   fsGroup: 65532
   seccompProfile:
     type: RuntimeDefault
+  {{- if not .Values.dataplane.hostNetwork }}
+  sysctls:
+    - name: net.ipv4.ip_unprivileged_port_start
+      value: "0"
+  {{- end }}
 {{- end }}
 
 {{/*

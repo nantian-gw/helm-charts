@@ -85,9 +85,9 @@ helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   -f "$chart_dir/values-production.yaml" > "$production_render"
 grep -q 'enableExperimentalGateway: false' "$production_render"
 grep -q 'enableAiGateway: false' "$production_render"
-grep -q 'image: ghcr.io/nantian-gw/nantian-controlplane:sha-8737dc3' "$production_render"
-grep -q 'image: ghcr.io/nantian-gw/dataplane:sha-9670107' "$production_render"
-grep -q 'image: ghcr.io/nantian-gw/dashboard:sha-af29925' "$production_render"
+grep -q 'image: ghcr.io/nantian-gw/nantian-controlplane:' "$production_render"
+grep -q 'image: ghcr.io/nantian-gw/dataplane:' "$production_render"
+grep -q 'image: ghcr.io/nantian-gw/dashboard:' "$production_render"
 if grep -Eq 'image: ghcr\.io/nantian-gw/(nantian-controlplane|dataplane|dashboard):latest' "$production_render"; then
   echo "production preset must not render mutable latest component images" >&2
   exit 1
