@@ -459,7 +459,7 @@ dashboard:
   enabled: true
 
   # -- Number of replicas
-  replicas: 1
+  replicas: 2
 
   # -- NextAuth secret value. Auto-generated if empty and no authExistingSecret.
   authSecret: ""
