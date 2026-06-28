@@ -64,6 +64,8 @@ controlplane:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/nantian-controlplane"
+    # For production, pin the exact digest instead of a mutable tag:
+    # digest: "sha256:abc123..."
     tag: "v2026.06.0"
     pullPolicy: IfNotPresent
 
@@ -281,6 +283,8 @@ dataplane:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/dataplane"
+    # For production, pin the exact digest instead of a mutable tag:
+    # digest: "sha256:abc123..."
     tag: "v2026.06.0"
     pullPolicy: IfNotPresent
 
@@ -504,6 +508,8 @@ dashboard:
   image:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/dashboard"
+    # For production, pin the exact digest instead of a mutable tag:
+    # digest: "sha256:abc123..."
     tag: "v2026.06.0"
     pullPolicy: IfNotPresent
 
