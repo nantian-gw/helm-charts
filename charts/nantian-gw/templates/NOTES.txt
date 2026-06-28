@@ -51,6 +51,12 @@ GatewayClass creation disabled
 ✅ ServiceMonitors enabled — metrics scraped by Prometheus operator
 {{- end }}
 
+{{/* Check for auto-generated secrets in production */}}
+{{- if not .Values.global.existingSecret }}
+⚠️  Auto-generated secrets are in use. For production, set global.existingSecret
+    and manage credentials with an external secret manager.
+{{- end }}
+
 {{/* Check for commonly missing secrets */}}
 {{- $warnings := list }}
 {{- if and .Values.controlplane.grpcTLS.enabled (not .Values.controlplane.grpcTLS.existingSecret) }}

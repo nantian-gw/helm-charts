@@ -7,6 +7,11 @@ global:
   imageRegistry: "ghcr.io"
   # -- Global image pull secrets (names of existing secrets)
   imagePullSecrets: []
+  # -- Name of an existing Kubernetes Secret containing all auto-generated
+  # credentials. When set, the chart does not create any auto-generated secrets.
+  # Production deployments must use an external secret manager (Sealed Secrets,
+  # Vault, or cloud KMS) instead of relying on chart-generated secrets.
+  existingSecret: ""
 # -- Common labels added to all resources
   commonLabels: {}
 
