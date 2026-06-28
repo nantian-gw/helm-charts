@@ -3,3 +3,4 @@ name: gateway-api-crds-standard
 description: Standard Gateway API CRDs installed via Helm crds/
 type: application
 version: 0.1.0
+appVersion: 1.2.1
