@@ -1,0 +1,119 @@
+{{- if eq .Values.featureMode "experimental" }}
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: routepolicies.gateway.nantian.dev
+spec:
+  group: gateway.nantian.dev
+  names:
+    plural: routepolicies
+    singular: routepolicy
+    kind: RoutePolicy
+    listKind: RoutePolicyList
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              targetRefs:
+                type: array
+                items:
+                  type: object
+                  required: [kind, name]
+                  properties:
+                    group:
+                      type: string
+                      maxLength: 253
+                      default: "gateway.networking.k8s.io"
+                    kind:
+                      type: string
+                      maxLength: 63
+                      enum: [Gateway, HTTPRoute]
+                    name:
+                      type: string
+                      maxLength: 253
+                  x-kubernetes-preserve-unknown-fields: true
+              default:
+                type: object
+                properties:
+                  timeout:
+                    type: object
+                    properties:
+                      request:
+                        type: string
+                        pattern: '^([0-9]+(\.[0-9]+)?(h|m|s|ms))+$'
+                      backendRequest:
+                        type: string
+                        pattern: '^([0-9]+(\.[0-9]+)?(h|m|s|ms))+$'
+                      connect:
+                        type: string
+                        pattern: '^([0-9]+(\.[0-9]+)?(h|m|s|ms))+$'
+                      nextUpstream:
+                        type: string
+                        pattern: '^([0-9]+(\.[0-9]+)?(h|m|s|ms))+$'
+                  bodyLimit:
+                    type: object
+                    properties:
+                      maxRequestBodyBytes:
+                        type: integer
+                        format: int64
+                        minimum: 0
+                      requestBodyBufferBytes:
+                        type: integer
+                        format: int64
+                        minimum: 0
+                      maxRequestHeaderBytes:
+                        type: integer
+                        format: int64
+                        minimum: 0
+                  proxy:
+                    type: object
+                    properties:
+                      requestBuffering:
+                        type: boolean
+                      responseBuffering:
+                        type: boolean
+                      bufferSize:
+                        type: integer
+                        format: int64
+                        minimum: 0
+                      bufferCount:
+                        type: integer
+                        format: int32
+                        minimum: 0
+                  connection:
+                    type: object
+                    properties:
+                      keepaliveRequests:
+                        type: integer
+                        format: int32
+                        minimum: 0
+                      keepaliveTime:
+                        type: string
+                        pattern: '^([0-9]+(\.[0-9]+)?(h|m|s|ms))+$'
+                      keepaliveTimeout:
+                        type: string
+                        pattern: '^([0-9]+(\.[0-9]+)?(h|m|s|ms))+$'
+                      upstreamKeepalivePoolSize:
+                        type: integer
+                        format: int32
+                        minimum: 0
+                      upstreamKeepaliveIdle:
+                        type: string
+                        pattern: '^([0-9]+(\.[0-9]+)?(h|m|s|ms))+$'
+          status:
+            type: object
+            properties:
+              conditions:
+                type: array
+                items:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+{{- end }}
