@@ -374,6 +374,10 @@ dataplane:
       nonBlocking: true
       nonBlockingBufferedLines: 65536
       dropWhenFull: true
+      # Sentry error/performance monitoring for the dataplane.
+      # IMPORTANT: dsn is sensitive. Prefer injecting it via a Kubernetes
+      # Secret and referencing it with bearerTokenFile or an env-var
+      # approach in your deployment overlay, rather than committing it here.
       sentry:
         enabled: false
         dsn: ""
