@@ -393,7 +393,7 @@ dataplane:
       mode: "text"
       sampleRate: 1.0
     runtime:
-      httpListenAddr: "0.0.0.0:80"
+      httpListenAddr: ""
       enableIpv6: false
       enableHttp3: false
       tlsMinVersion: "1.2"
