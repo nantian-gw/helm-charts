@@ -375,12 +375,13 @@ dataplane:
       nonBlockingBufferedLines: 65536
       dropWhenFull: true
       # Sentry error/performance monitoring for the dataplane.
-      # IMPORTANT: dsn is sensitive. Prefer injecting it via a Kubernetes
-      # Secret and referencing it with bearerTokenFile or an env-var
-      # approach in your deployment overlay, rather than committing it here.
+      # IMPORTANT: dsn is sensitive. Use existingSecret to inject it from
+      # a pre-created Kubernetes Secret instead of setting dsn directly here.
+      # The Secret must contain a key "sentry-dsn" with the DSN URL.
       sentry:
         enabled: false
         dsn: ""
+        existingSecret: ""
         environment: ""
         sampleRate: 1.0
         tracesSampleRate: 0.01

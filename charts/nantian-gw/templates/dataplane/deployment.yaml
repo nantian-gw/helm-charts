@@ -78,6 +78,15 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            {{- if .Values.dataplane.config.log.sentry.enabled }}
+            {{- if .Values.dataplane.config.log.sentry.existingSecret }}
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dataplane.config.log.sentry.existingSecret }}
+                  key: sentry-dsn
+            {{- end }}
+            {{- end }}
             {{- with .Values.dataplane.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
