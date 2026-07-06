@@ -311,7 +311,7 @@ dataplane:
   # -- Resource requests and limits
   resources:
     requests:
-      cpu: "250m"
+      cpu: "1000m"
       memory: "256Mi"
     limits:
       cpu: "2000m"
