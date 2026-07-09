@@ -9,7 +9,11 @@ metadata:
   labels:
     {{- include "nantian-gw.dataplane.labels" . | nindent 4 }}
 spec:
+  {{- if .Values.dataplane.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.dataplane.pdb.maxUnavailable }}
+  {{- else }}
   minAvailable: {{ .Values.dataplane.pdb.minAvailable }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "nantian-gw.dataplane.selectorLabels" . | nindent 6 }}

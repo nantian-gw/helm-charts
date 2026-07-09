@@ -10,7 +10,9 @@ metadata:
   labels:
     {{- include "nantian-gw.dashboard.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.hpa.enabled }}
   replicas: {{ .Values.dashboard.replicas }}
+  {{- end }}
   minReadySeconds: 5
   progressDeadlineSeconds: 300
   revisionHistoryLimit: 3

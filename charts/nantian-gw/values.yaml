@@ -40,6 +40,13 @@ namespace:
   create: true
   # -- Namespace name (ignored if create=false, uses release namespace)
   name: "nantian-gw"
+  # -- Pod Security Admission standards applied as labels on the created
+  # namespace. Both planes are `restricted`-compliant. Set to null/{} to omit.
+  podSecurityStandards:
+    enforce: restricted
+    enforceVersion: latest
+    audit: restricted
+    warn: restricted
 
 # -- GatewayClass resource
 gatewayClass:
@@ -49,6 +56,16 @@ gatewayClass:
 # -- RBAC configuration (ServiceAccounts, ClusterRole, ClusterRoleBinding)
 rbac:
   create: true
+
+# -- PriorityClass for control-plane and data-plane pods. Gateway is critical
+# infrastructure, so its pods should schedule ahead of, and evict after,
+# ordinary workloads. Set name to "" to disable; set create to false to
+# reference a pre-existing PriorityClass by name.
+priorityClass:
+  create: true
+  name: "nantian-gw-critical"
+  # Kept below the built-in system-cluster-critical (2000000000) tier.
+  value: 1000000000
 
 # =============================================================================
 # Controlplane
@@ -346,9 +363,11 @@ dataplane:
       maxSurge: 1
       maxUnavailable: 0
 
-  # -- PodDisruptionBudget
+  # -- PodDisruptionBudget. maxUnavailable keeps availability guarantees scaling
+  # with the HPA (at most one dataplane pod disrupted at a time). Set
+  # maxUnavailable to null and minAvailable to a value to switch back.
   pdb:
-    minAvailable: 1
+    maxUnavailable: 1
 
   # -- Topology spread constraints
   topologySpreadConstraints:
@@ -618,6 +637,25 @@ hpa:
   dashboard:
     minReplicas: 2
     maxReplicas: 5
+  # -- Scaling behavior applied to all HPAs (stabilization windows avoid
+  # flapping). Set to null/{} to use the Kubernetes defaults.
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 30
+        - type: Pods
+          value: 4
+          periodSeconds: 30
+      selectPolicy: Max
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 50
+          periodSeconds: 60
 
 # =============================================================================
 # ServiceMonitor (Prometheus Operator)

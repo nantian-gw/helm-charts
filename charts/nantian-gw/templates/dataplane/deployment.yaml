@@ -10,7 +10,9 @@ metadata:
   labels:
     {{- include "nantian-gw.dataplane.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.hpa.enabled }}
   replicas: {{ .Values.dataplane.replicas }}
+  {{- end }}
   minReadySeconds: 5
   progressDeadlineSeconds: 600
   revisionHistoryLimit: 5
@@ -30,6 +32,9 @@ spec:
     spec:
       serviceAccountName: {{ $dpName }}-dataplane
       automountServiceAccountToken: false
+      {{- with .Values.priorityClass.name }}
+      priorityClassName: {{ . }}
+      {{- end }}
       terminationGracePeriodSeconds: {{ .Values.dataplane.terminationGracePeriodSeconds }}
       {{- if .Values.dataplane.hostNetwork }}
       hostNetwork: true

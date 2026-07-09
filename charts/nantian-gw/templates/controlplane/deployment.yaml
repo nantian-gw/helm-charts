@@ -10,7 +10,9 @@ metadata:
   labels:
     {{- include "nantian-gw.controlplane.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.hpa.enabled }}
   replicas: {{ .Values.controlplane.replicas }}
+  {{- end }}
   minReadySeconds: 5
   progressDeadlineSeconds: 600
   revisionHistoryLimit: 5
@@ -29,6 +31,9 @@ spec:
       {{- end }}
     spec:
       serviceAccountName: {{ $cpName }}-controlplane
+      {{- with .Values.priorityClass.name }}
+      priorityClassName: {{ . }}
+      {{- end }}
       terminationGracePeriodSeconds: {{ .Values.controlplane.terminationGracePeriodSeconds }}
       {{- if .Values.controlplane.podSecurityContext }}
       securityContext:
@@ -86,14 +91,14 @@ spec:
               containerPort: 18083
           startupProbe:
             httpGet:
-              path: /livez
-              port: admin
+              path: /readyz
+              port: healthz
             periodSeconds: {{ .Values.controlplane.probes.startup.periodSeconds }}
             failureThreshold: {{ .Values.controlplane.probes.startup.failureThreshold }}
           livenessProbe:
             httpGet:
-              path: /livez
-              port: admin
+              path: /healthz
+              port: healthz
             periodSeconds: {{ .Values.controlplane.probes.liveness.periodSeconds }}
             timeoutSeconds: {{ .Values.controlplane.probes.liveness.timeoutSeconds }}
             failureThreshold: {{ .Values.controlplane.probes.liveness.failureThreshold }}

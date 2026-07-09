@@ -28,9 +28,12 @@ rules:
   - apiGroups: [""]
     resources: ["services"]
     verbs: ["create", "delete", "get", "list", "update", "watch"]
+  # Cluster-wide access to secrets is read-only (TLS certs referenced by
+  # Gateways/BackendTLSPolicies across namespaces, plus the shared informer
+  # watch). Write access is scoped to the gateway namespace via the Role below.
   - apiGroups: [""]
     resources: ["secrets"]
-    verbs: ["create", "get", "list", "patch", "update", "watch"]
+    verbs: ["get", "list", "watch"]
   - apiGroups: [""]
     resources: ["endpoints"]
     verbs: ["delete", "get", "list", "watch"]
@@ -91,6 +94,36 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
+  name: {{ include "nantian-gw.name" . }}-controlplane
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "nantian-gw.name" . }}-controlplane
+    namespace: {{ $ns }}
+---
+# Namespaced write access to secrets (chatbot-config, metrics-config, and any
+# other gateway-owned config secrets, all created in the gateway namespace).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "nantian-gw.name" . }}-controlplane
+  namespace: {{ $ns }}
+  labels:
+    {{- include "nantian-gw.controlplane.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create", "get", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "nantian-gw.name" . }}-controlplane
+  namespace: {{ $ns }}
+  labels:
+    {{- include "nantian-gw.controlplane.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
   name: {{ include "nantian-gw.name" . }}-controlplane
 subjects:
   - kind: ServiceAccount

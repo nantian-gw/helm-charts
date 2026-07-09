@@ -5,6 +5,12 @@ metadata:
   name: {{ .Values.namespace.name }}
   labels:
     {{- include "nantian-gw.labels" . | nindent 4 }}
+    {{- with .Values.namespace.podSecurityStandards }}
+    pod-security.kubernetes.io/enforce: {{ .enforce }}
+    pod-security.kubernetes.io/enforce-version: {{ .enforceVersion | default "latest" }}
+    pod-security.kubernetes.io/audit: {{ .audit | default .enforce }}
+    pod-security.kubernetes.io/warn: {{ .warn | default .enforce }}
+    {{- end }}
 {{- end }}
 ---
 {{- if .Values.gatewayClass.enabled }}

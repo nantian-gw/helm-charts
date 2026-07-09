@@ -17,6 +17,10 @@ spec:
     name: {{ include "nantian-gw.name" . }}-dataplane
   minReplicas: {{ .Values.hpa.dataplane.minReplicas }}
   maxReplicas: {{ .Values.hpa.dataplane.maxReplicas }}
+  {{- with .Values.hpa.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   metrics:
     - type: Resource
       resource:
@@ -48,6 +52,10 @@ spec:
     name: {{ include "nantian-gw.name" . }}-controlplane
   minReplicas: {{ .Values.hpa.controlplane.minReplicas }}
   maxReplicas: {{ .Values.hpa.controlplane.maxReplicas }}
+  {{- with .Values.hpa.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   metrics:
     - type: Resource
       resource:
@@ -79,6 +87,10 @@ spec:
     name: {{ include "nantian-gw.name" . }}-dashboard
   minReplicas: {{ .Values.hpa.dashboard.minReplicas }}
   maxReplicas: {{ .Values.hpa.dashboard.maxReplicas }}
+  {{- with .Values.hpa.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   metrics:
     - type: Resource
       resource:
