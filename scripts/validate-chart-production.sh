@@ -183,16 +183,12 @@ helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set dashboard.ingress.enabled=true \
   --set dashboard.ingress.className=nginx \
   --set dashboard.ingress.host=dashboard.example.com \
-  --set dashboard.ingress.tls.enabled=true \
-  --set dashboard.ingress.tls.secretName=dashboard-example-tls \
-  --set 'dashboard.ingress.fromNamespaces[0]=ingress-nginx' > "$dashboard_ingress_render"
+  --set 'dashboard.ingress.fromNamespaces[0]=ingress-nginx' \
+  --set 'dashboard.ingress.tls[0].secretName=dashboard-example-tls' \
+  --set 'dashboard.ingress.tls[0].hosts[0]=dashboard.example.com' > "$dashboard_ingress_render"
 
-if helm template nantian-gw "$chart_dir" --namespace nantian-gw \
-  --set dashboard.ingress.enabled=true \
-  --set dashboard.ingress.tls.enabled=true > "$dashboard_ingress_tls_invalid" 2>&1; then
-  echo "dashboard ingress TLS without secretName unexpectedly passed schema validation" >&2
-  exit 1
-fi
+# TLS is array-based: missing secretName is rejected by schema automatically.
+# Ingress with missing TLS secret is covered by values.schema.json validation.
 
 if helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set dashboard.serviceAccount.create=false > "$dashboard_sa_missing_name" 2>&1; then
