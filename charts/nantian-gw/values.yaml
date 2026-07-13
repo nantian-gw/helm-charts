@@ -726,7 +726,4 @@ certs:
     enabled: false
     issuerRef:
       name: ""
-      kind: ClusterIssuer
-      group: cert-manager.io
-    duration: 2160h
-    renewBefore: 360h
+      kind: Issuer
