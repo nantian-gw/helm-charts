@@ -674,6 +674,15 @@ serviceMonitor:
   scrapeTimeout: "10s"
 
 # =============================================================================
+# Observability
+# =============================================================================
+observability:
+  # -- PrometheusRule alert rules for the Nantian GW control plane and data plane
+  alerts:
+    # -- Enable PrometheusRule creation (requires Prometheus Operator)
+    enabled: false
+
+# =============================================================================
 # NetworkPolicy
 # =============================================================================
 networkPolicies:
