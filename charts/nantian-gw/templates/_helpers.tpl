@@ -435,7 +435,7 @@ Dataplane config as YAML
 {{- if and (not (get $xdsTLS "domainName")) .Values.dataplane.xdsTLS.domainName -}}
 {{- $_ := set $xdsTLS "domainName" .Values.dataplane.xdsTLS.domainName -}}
 {{- else if not (get $xdsTLS "domainName") -}}
-{{- $_ := set $xdsTLS "domainName" (printf "%s-controlplane-grpc.%s.svc.cluster.local" (include "nantian-gw.name" .) (include "nantian-gw.namespace" .)) -}}
+{{- $_ := set $xdsTLS "domainName" (printf "%s-controlplane.%s.svc.cluster.local" (include "nantian-gw.name" .) (include "nantian-gw.namespace" .)) -}}
 {{- end -}}
 {{- $_ := set $cfg "xdsTls" $xdsTLS -}}
 {{- end -}}
@@ -457,7 +457,7 @@ controlPlaneAddr: {{ $cfg.controlPlaneAddr | quote }}
 {{ toYaml $dpConfig }}
 {{- else -}}
 {{- $dpConfig := omit $cfg "controlPlaneAddr" -}}
-controlPlaneAddr: "http://{{ include "nantian-gw.name" . }}-controlplane-grpc.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:18080"
+controlPlaneAddr: "http://{{ include "nantian-gw.name" . }}-controlplane.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:18080"
 {{ toYaml $dpConfig }}
 {{- end }}
 {{- end }}

@@ -22,8 +22,8 @@ GatewayClass creation disabled
 
 {{- if .Values.controlplane.enabled }}
 ✅ Controlplane deployed ({{ .Values.controlplane.replicas }} replica(s))
-   gRPC:  {{ $name }}-controlplane-grpc.{{ $ns }}.svc:18080
-   Admin: {{ $name }}-controlplane-admin.{{ $ns }}.svc:18081
+   gRPC:  {{ $name }}-controlplane.{{ $ns }}.svc:18080
+   Admin: {{ $name }}-controlplane.{{ $ns }}.svc:18081
    {{- if .Values.controlplane.grpcTLS.enabled }}
    ⚠️  gRPC mTLS enabled — dataplanes must present valid client certs.
    {{- end }}

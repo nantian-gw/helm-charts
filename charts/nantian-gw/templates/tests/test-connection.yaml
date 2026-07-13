@@ -29,7 +29,7 @@ spec:
         - |
           echo "Checking Nantian Gateway services"
           {{- if .Values.controlplane.enabled }}
-          wget -q -T 5 -O - http://{{ $name }}-controlplane-admin:18081/livez
+          wget -q -T 5 -O - http://{{ $name }}-controlplane:18081/livez
           {{- end }}
           {{- if .Values.dataplane.enabled }}
           wget -q -T 5 -O - http://{{ $name }}-dataplane-admin:19080/livez

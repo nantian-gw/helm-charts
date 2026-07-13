@@ -92,7 +92,7 @@ spec:
             - name: AUTH_TRUST_HOST
               value: "true"
             - name: CONTROLPLANE_ADMIN_URL
-              value: "http://{{ include "nantian-gw.name" . }}-controlplane-admin.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:18081"
+              value: "http://{{ include "nantian-gw.name" . }}-controlplane.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:18081"
             - name: DATAPLANE_ADMIN_URL
               value: "http://{{ include "nantian-gw.name" . }}-dataplane-admin.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:19080"
             {{- if and .Values.dataplane.enabled (eq (include "nantian-gw.dataplaneAdminAuthUsesSecret" .) "true") }}

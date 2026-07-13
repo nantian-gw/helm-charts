@@ -17,7 +17,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/component: controlplane
-      gateway.nantian.dev/service-role: metrics
+      gateway.nantian.dev/service-role: controlplane
   namespaceSelector:
     matchNames:
       - {{ $ns }}
