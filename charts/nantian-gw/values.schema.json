@@ -530,17 +530,16 @@
                 "className": { "type": "string" },
                 "annotations": { "$ref": "#/definitions/stringMap" },
                 "host": { "type": "string" },
-                "path": { "type": "string", "pattern": "^/" },
-                "pathType": {
-                  "type": "string",
-                  "enum": ["Exact", "Prefix", "ImplementationSpecific"]
-                },
+                "namespace": { "type": "string" },
                 "tls": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "properties": {
-                    "enabled": { "type": "boolean" },
-                    "secretName": { "type": "string" }
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "properties": {
+                      "secretName": { "type": "string" },
+                      "hosts": { "$ref": "#/definitions/stringArray" }
+                    }
                   }
                 },
                 "fromNamespaces": { "$ref": "#/definitions/stringArray" }

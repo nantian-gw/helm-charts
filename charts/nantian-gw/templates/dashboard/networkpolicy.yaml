@@ -22,6 +22,16 @@ spec:
       ports:
         - protocol: TCP
           port: 3000
+    {{- $ingressNamespace := .Values.dashboard.ingress.namespace | default "ingress-nginx" }}
+    {{- if $ingressNamespace }}
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $ingressNamespace | quote }}
+      ports:
+        - protocol: TCP
+          port: 3000
+    {{- end }}
     {{- range .Values.dashboard.ingress.fromNamespaces }}
     - from:
         - namespaceSelector:

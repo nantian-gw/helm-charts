@@ -537,11 +537,10 @@ dashboard:
     className: ""
     annotations: {}
     host: ""
-    path: /
-    pathType: Prefix
-    tls:
-      enabled: false
-      secretName: ""
+    # -- Namespace where the Ingress Controller runs. Defaults to "ingress-nginx"
+    # in the networkpolicy template when empty.
+    namespace: ""
+    tls: []
     # -- Additional namespaces whose ingress controllers may reach the dashboard through NetworkPolicy.
     fromNamespaces: []
 

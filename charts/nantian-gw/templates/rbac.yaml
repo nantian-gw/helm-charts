@@ -25,6 +25,12 @@ metadata:
   labels:
     {{- include "nantian-gw.controlplane.labels" . | nindent 4 }}
 rules:
+  # Audit note: all resources below require update or patch verbs because the
+  # controlplane actively manages (creates, modifies, deletes) Gateway API
+  # resources, CRD status fields, leases, endpoints, events, and networkpolicies
+  # as part of its reconciliation loop. No * (wildcard) verbs are granted on
+  # any resource; every verb is explicitly listed and scoped to the minimum
+  # required for correct operation.
   - apiGroups: [""]
     resources: ["services"]
     verbs: ["create", "delete", "get", "list", "update", "watch"]

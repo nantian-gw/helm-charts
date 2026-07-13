@@ -17,13 +17,9 @@ spec:
   {{- if .Values.dashboard.ingress.className }}
   ingressClassName: {{ .Values.dashboard.ingress.className | quote }}
   {{- end }}
-  {{- if .Values.dashboard.ingress.tls.enabled }}
+  {{- with .Values.dashboard.ingress.tls }}
   tls:
-    - secretName: {{ .Values.dashboard.ingress.tls.secretName | quote }}
-      {{- if .Values.dashboard.ingress.host }}
-      hosts:
-        - {{ .Values.dashboard.ingress.host | quote }}
-      {{- end }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   rules:
     - {{- if .Values.dashboard.ingress.host }}
@@ -31,8 +27,8 @@ spec:
       {{- end }}
       http:
         paths:
-          - path: {{ .Values.dashboard.ingress.path | quote }}
-            pathType: {{ .Values.dashboard.ingress.pathType }}
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: {{ $name }}-dashboard
