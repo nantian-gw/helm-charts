@@ -19,6 +19,13 @@ global:
 # -- 功能模式。standard 是生产默认模式；experimental 用于显式开启实验性运行时集成点。
 featureMode: standard
 
+# Boolean field naming conventions:
+# - `enabled` is the standard toggle for components and features.
+# - `create` indicates a Kubernetes resource should be created by the chart.
+# - `generate` is used for auto-generation flags (e.g. certs.generate).
+# - `install` signals Helm-managed installation of external resources (e.g. gatewayAPI.installCRDs).
+# All boolean fields follow lowercase, verb-first naming for readability.
+
 # -- Override the name of the chart
 nameOverride: ""
 # -- Override the full name of the release
@@ -165,7 +172,8 @@ controlplane:
     adminAddr: ":18081"
     metricsAddr: ":18082"
     healthProbeAddr: ":18083"
-    controllerName: "gateway.networking.k8s.io/nantian-gw"
+    # controllerName is derived from gatewayClass.controllerName at render time
+    # to keep a single source of truth.
     statusAddress: "127.0.0.1"
     syncPeriod: "30s"
     syncSettleDelay: "200ms"

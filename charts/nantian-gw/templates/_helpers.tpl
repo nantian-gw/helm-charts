@@ -358,6 +358,8 @@ Controlplane config as YAML
 */}}
 {{- define "nantian-gw.controlplane.configYaml" -}}
 {{- $cfg := deepCopy .Values.controlplane.config -}}
+{{- /* controllerName is the single source of truth at gatewayClass.controllerName */ -}}
+{{- $_ := set $cfg "controllerName" .Values.gatewayClass.controllerName -}}
 {{- $dashboardApi := default (dict) $cfg.dashboardApi -}}
 {{- if not (get $dashboardApi "dataplaneAdminUrl") -}}
 {{- $_ := set $dashboardApi "dataplaneAdminUrl" (printf "http://%s-dataplane-admin.%s.svc.cluster.local:19080" (include "nantian-gw.name" .) (include "nantian-gw.namespace" .)) -}}
