@@ -690,6 +690,12 @@ observability:
     # -- Enable PrometheusRule creation (requires Prometheus Operator)
     enabled: false
 
+  # -- Grafana dashboard configuration
+  grafana:
+    dashboards:
+      # -- Enable Grafana dashboard ConfigMap (requires grafana_dashboard label sidecar)
+      enabled: false
+
 # =============================================================================
 # NetworkPolicy
 # =============================================================================
