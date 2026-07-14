@@ -718,6 +718,21 @@ tests:
 # =============================================================================
 # Certificate generation (one-time, at install)
 # =============================================================================
+# Secret Rotation Best Practices
+# ------------------------------
+# - Rotate certificates at least 15 days before expiry. The default server cert
+#   lifetime is 90 days (see selfSigned.serverDurationDays).
+# - Store production certs in an external secret manager (Sealed Secrets, ESO,
+#   Vault, or cloud KMS). Set certs.generate=false and reference the external
+#   Secret via controlplane.grpcTLS.existingSecret and
+#   dataplane.xdsTLS.existingSecret.
+# - After rotating the Secret, restart affected Pods so they pick up the new
+#   cert material:
+#     kubectl rollout restart deployment -n <ns> -l app.kubernetes.io/component=controlplane
+#     kubectl rollout restart daemonset  -n <ns> -l app.kubernetes.io/component=dataplane
+# - Never commit plain Secret YAML to Git. Use SealedSecret or ExternalSecret
+#   CRDs for GitOps-friendly secret management.
+# - See examples/secrets-management.md for detailed walkthroughs.
 certs:
   # -- Generate self-signed certificates for gRPC mTLS.
   # When enabled, creates a CA, server cert, and client cert.
