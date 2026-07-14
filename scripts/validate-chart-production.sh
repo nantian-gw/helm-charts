@@ -663,8 +663,8 @@ if selector.get("app.kubernetes.io/component") != "controlplane":
     raise SystemExit(
         "controlplane ServiceMonitor must select only controlplane metrics Service"
     )
-if selector.get("gateway.nantian.dev/service-role") != "metrics":
-    raise SystemExit("controlplane ServiceMonitor must select metrics service-role")
+if selector.get("gateway.nantian.dev/service-role") != "controlplane":
+    raise SystemExit("controlplane ServiceMonitor must select controlplane service-role")
 
 if not network_policy_allows_namespace(
     sys.argv[16], "nantian-gw-controlplane", "monitoring", 18082
