@@ -10,6 +10,7 @@ keywords:
   - nantian
   - rust
   - kubernetes
+icon: https://raw.githubusercontent.com/nantian-gw/nantian-gw/main/logo.png
 home: https://github.com/nantian-gw/gateway
 sources:
   - https://github.com/nantian-gw/gateway
