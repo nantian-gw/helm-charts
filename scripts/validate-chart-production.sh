@@ -59,9 +59,9 @@ grep -Eq 'image: "?public\.ecr\.aws/docker/library/busybox:1\.36\.1"?' "$default
 grep -Eq '"?helm\.sh/hook-delete-policy"?: before-hook-creation,hook-succeeded,hook-failed' "$default_render"
 grep -q 'name: nantian-gw-dataplane-admin-auth' "$default_render"
 grep -q 'mountPath: /etc/nantian-gw/admin-auth' "$default_render"
-grep -q 'bearerTokenFile: /etc/nantian-gw/admin-auth/token' "$default_render"
+grep -q 'bearer_token_file: /etc/nantian-gw/admin-auth/token' "$default_render"
 grep -q 'mountPath: /etc/nantian-gw/dataplane-admin-auth' "$default_render"
-grep -q 'bearerTokenFile: /etc/nantian-gw/dataplane-admin-auth/token' "$default_render"
+grep -q 'bearer_token_file: /etc/nantian-gw/dataplane-admin-auth/token' "$default_render"
 if grep -q 'kind: CustomResourceDefinition' "$default_render"; then
   echo "default production render unexpectedly contains Gateway API CRDs" >&2
   exit 1
@@ -229,17 +229,17 @@ helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set dataplane.xdsTLS.enabled=true > "$tls_paths_render"
 
 helm template nantian-gw "$chart_dir" --namespace nantian-gw \
-  --set dataplane.sessionPersistence.sharedSecret=sticky-secret \
-  --set dataplane.sessionPersistence.secretKey=sticky-key > "$session_shared_render"
+  --set dataplane.config.session_persistence.shared_secret=sticky-secret \
+  --set dataplane.config.session_persistence.secret_key=sticky-key > "$session_shared_render"
 
 helm template nantian-gw "$chart_dir" --namespace nantian-gw \
-  --set dataplane.sessionPersistence.existingSecret=sticky-secret \
-  --set dataplane.sessionPersistence.secretKey=sticky-key > "$session_existing_render"
+  --set dataplane.config.session_persistence.existingSecret=sticky-secret \
+  --set dataplane.config.session_persistence.secret_key=sticky-key > "$session_existing_render"
 
 helm template nantian-gw "$chart_dir" --namespace nantian-gw \
-  --set dataplane.sessionPersistence.existingSecret=sticky-secret \
-  --set dataplane.sessionPersistence.secretKey=sticky-key \
-  --set dataplane.config.sessionPersistence.secretKeyFile=/custom/session/key > "$session_override_render"
+  --set dataplane.config.session_persistence.existingSecret=sticky-secret \
+  --set dataplane.config.session_persistence.secret_key=sticky-key \
+  --set dataplane.config.session_persistence.secret_key_file=/custom/session/key > "$session_override_render"
 
 helm template nantian-gw "$chart_dir" --namespace nantian-gw \
   --set serviceMonitor.enabled=true \
@@ -335,17 +335,17 @@ def assert_controlplane_grpc_tls(config, message_prefix):
 
 
 def assert_dataplane_xds_tls(config, message_prefix):
-    xds_tls = config.get("xdsTls")
+    xds_tls = config.get("xds_tls")
     if not isinstance(xds_tls, dict):
-        raise SystemExit(f"{message_prefix} must render xdsTls config")
+        raise SystemExit(f"{message_prefix} must render xds_tls config")
     if xds_tls.get("enabled") is not True:
-        raise SystemExit(f"{message_prefix} xdsTls.enabled must render true when chart TLS is enabled")
-    if xds_tls.get("caPath") != "/etc/nantian-gw/xds-tls/ca.crt":
-        raise SystemExit(f"{message_prefix} xdsTls.caPath default mismatch")
-    if xds_tls.get("certPath") != "/etc/nantian-gw/xds-tls/tls.crt":
-        raise SystemExit(f"{message_prefix} xdsTls.certPath default mismatch")
-    if xds_tls.get("keyPath") != "/etc/nantian-gw/xds-tls/tls.key":
-        raise SystemExit(f"{message_prefix} xdsTls.keyPath default mismatch")
+        raise SystemExit(f"{message_prefix} xds_tls.enabled must render true when chart TLS is enabled")
+    if xds_tls.get("ca_path") != "/etc/nantian-gw/xds-tls/ca.crt":
+        raise SystemExit(f"{message_prefix} xds_tls.ca_path default mismatch")
+    if xds_tls.get("cert_path") != "/etc/nantian-gw/xds-tls/tls.crt":
+        raise SystemExit(f"{message_prefix} xds_tls.cert_path default mismatch")
+    if xds_tls.get("key_path") != "/etc/nantian-gw/xds-tls/tls.key":
+        raise SystemExit(f"{message_prefix} xds_tls.key_path default mismatch")
 
 
 for render_path in sys.argv[1:]:
@@ -443,24 +443,24 @@ if "PGW_NODE_ID" in dp_env_names:
     raise SystemExit("dataplane container renders obsolete PGW_NODE_ID env")
 
 shared_dp = dataplane_config(sys.argv[13])
-shared_session = shared_dp.get("sessionPersistence") or {}
-if shared_session.get("secretKeyFile") != "/etc/nantian-gw/session-persistence/sticky-key":
+shared_session = shared_dp.get("session_persistence") or {}
+if shared_session.get("shared_secret") != "sticky-secret":
     raise SystemExit(
-        "shared-secret dataplane config must render sessionPersistence.secretKeyFile from the mounted Secret"
+        "shared-secret dataplane config must render session_persistence.shared_secret from the mounted Secret"
     )
 
 existing_dp = dataplane_config(sys.argv[14])
-existing_session = existing_dp.get("sessionPersistence") or {}
-if existing_session.get("secretKeyFile") != "/etc/nantian-gw/session-persistence/sticky-key":
+existing_session = existing_dp.get("session_persistence") or {}
+if existing_session.get("secret_key_file") != "/etc/nantian-gw/session-persistence/session-persistence":
     raise SystemExit(
-        "existing-secret dataplane config must render sessionPersistence.secretKeyFile from the mounted Secret"
+        "existing-secret dataplane config must render session_persistence.secret_key_file default path"
     )
 
 override_dp = dataplane_config(sys.argv[15])
-override_session = override_dp.get("sessionPersistence") or {}
-if override_session.get("secretKeyFile") != "/custom/session/key":
+override_session = override_dp.get("session_persistence") or {}
+if override_session.get("secret_key_file") != "/custom/session/key":
     raise SystemExit(
-        "explicit dataplane.config.sessionPersistence.secretKeyFile must not be overwritten"
+        "explicit dataplane.config.session_persistence.secret_key_file must not be overwritten"
     )
 
 dp_pod_sc = dp_pod.get("securityContext", {})
