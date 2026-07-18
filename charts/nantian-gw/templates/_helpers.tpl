@@ -254,8 +254,8 @@ Inline bearerToken config disables secret-based defaulting.
 */}}
 {{- define "nantian-gw.dataplaneAdminAuthUsesSecret" -}}
 {{- $cfg := default (dict) .Values.dataplane.config -}}
-{{- $adminAuth := default (dict) (get $cfg "adminAuth") -}}
-{{- $inlineToken := trim (default "" (get $adminAuth "bearerToken")) -}}
+{{- $adminAuth := default (dict) (get $cfg "admin_auth") -}}
+{{- $inlineToken := trim (default "" (get $adminAuth "bearer_token")) -}}
 {{- if and .Values.dataplane.enabled (not $inlineToken) -}}
 true
 {{- else -}}
@@ -279,8 +279,8 @@ Resolve the dataplane admin auth file path inside the dataplane container.
 */}}
 {{- define "nantian-gw.dataplaneAdminAuthFilePath" -}}
 {{- $cfg := default (dict) .Values.dataplane.config -}}
-{{- $adminAuth := default (dict) (get $cfg "adminAuth") -}}
-{{- $configPath := trim (default "" (get $adminAuth "bearerTokenFile")) -}}
+{{- $adminAuth := default (dict) (get $cfg "admin_auth") -}}
+{{- $configPath := trim (default "" (get $adminAuth "bearer_token_file")) -}}
 {{- $chartPath := trim (default "" .Values.dataplane.adminAuth.bearerTokenFile) -}}
 {{- if $configPath -}}
 {{- $configPath -}}
@@ -330,7 +330,7 @@ Only used when the chart is supplying the bearer token Secret.
 {{- $cfg := default (dict) .Values.controlplane.config -}}
 {{- $adminRuntime := default (dict) (get $cfg "adminRuntime") -}}
 {{- $dataplaneAggregation := default (dict) (get $adminRuntime "dataplaneAggregation") -}}
-{{- $configuredPath := trim (default "" (get $dataplaneAggregation "bearerTokenFile")) -}}
+{{- $configuredPath := trim (default "" (get $dataplaneAggregation "bearer_token_file")) -}}
 {{- if $configuredPath -}}
 {{- $configuredPath -}}
 {{- else -}}
@@ -345,7 +345,7 @@ Returns whether the controlplane should auto-mount the dataplane admin auth Secr
 {{- $cfg := default (dict) .Values.controlplane.config -}}
 {{- $adminRuntime := default (dict) (get $cfg "adminRuntime") -}}
 {{- $dataplaneAggregation := default (dict) (get $adminRuntime "dataplaneAggregation") -}}
-{{- $configuredPath := trim (default "" (get $dataplaneAggregation "bearerTokenFile")) -}}
+{{- $configuredPath := trim (default "" (get $dataplaneAggregation "bearer_token_file")) -}}
 {{- if and .Values.controlplane.enabled .Values.dataplane.enabled (eq (include "nantian-gw.dataplaneAdminAuthUsesSecret" .) "true") (not $configuredPath) -}}
 true
 {{- else -}}
@@ -380,8 +380,8 @@ Controlplane config as YAML
 {{- if not (get $dataplaneAggregation "timeout") -}}
 {{- $_ := set $dataplaneAggregation "timeout" "2s" -}}
 {{- end -}}
-{{- if and (eq (include "nantian-gw.controlplaneDataplaneAdminAuthNeedsMount" .) "true") (not (get $dataplaneAggregation "bearerTokenFile")) -}}
-{{- $_ := set $dataplaneAggregation "bearerTokenFile" (include "nantian-gw.controlplaneDataplaneAdminAuthFilePath" .) -}}
+{{- if and (eq (include "nantian-gw.controlplaneDataplaneAdminAuthNeedsMount" .) "true") (not (get $dataplaneAggregation "bearer_token_file")) -}}
+{{- $_ := set $dataplaneAggregation "bearer_token_file" (include "nantian-gw.controlplaneDataplaneAdminAuthFilePath" .) -}}
 {{- end -}}
 {{- $_ := set $adminRuntime "dataplaneAggregation" $dataplaneAggregation -}}
 {{- $_ := set $cfg "adminRuntime" $adminRuntime -}}
@@ -423,43 +423,43 @@ Dataplane config as YAML
 {{- define "nantian-gw.dataplane.configYaml" -}}
 {{- $cfg := deepCopy .Values.dataplane.config -}}
 {{- if .Values.dataplane.xdsTLS.enabled -}}
-{{- $xdsTLS := default (dict) $cfg.xdsTls -}}
-{{- $_ := set $xdsTLS "enabled" true -}}
-{{- if not (get $xdsTLS "caPath") -}}
-{{- $_ := set $xdsTLS "caPath" "/etc/nantian-gw/xds-tls/ca.crt" -}}
+{{- $xds_tls := default (dict) $cfg.xds_tls -}}
+{{- $_ := set $xds_tls "enabled" true -}}
+{{- if not (get $xds_tls "ca_path") -}}
+{{- $_ := set $xds_tls "ca_path" "/etc/nantian-gw/xds-tls/ca.crt" -}}
 {{- end -}}
-{{- if not (get $xdsTLS "certPath") -}}
-{{- $_ := set $xdsTLS "certPath" "/etc/nantian-gw/xds-tls/tls.crt" -}}
+{{- if not (get $xds_tls "cert_path") -}}
+{{- $_ := set $xds_tls "cert_path" "/etc/nantian-gw/xds-tls/tls.crt" -}}
 {{- end -}}
-{{- if not (get $xdsTLS "keyPath") -}}
-{{- $_ := set $xdsTLS "keyPath" "/etc/nantian-gw/xds-tls/tls.key" -}}
+{{- if not (get $xds_tls "key_path") -}}
+{{- $_ := set $xds_tls "key_path" "/etc/nantian-gw/xds-tls/tls.key" -}}
 {{- end -}}
-{{- if and (not (get $xdsTLS "domainName")) .Values.dataplane.xdsTLS.domainName -}}
-{{- $_ := set $xdsTLS "domainName" .Values.dataplane.xdsTLS.domainName -}}
-{{- else if not (get $xdsTLS "domainName") -}}
-{{- $_ := set $xdsTLS "domainName" (printf "%s-controlplane.%s.svc.cluster.local" (include "nantian-gw.name" .) (include "nantian-gw.namespace" .)) -}}
+{{- if and (not (get $xds_tls "domain_name")) .Values.dataplane.xdsTLS.domainName -}}
+{{- $_ := set $xds_tls "domain_name" .Values.dataplane.xdsTLS.domainName -}}
+{{- else if not (get $xds_tls "domain_name") -}}
+{{- $_ := set $xds_tls "domain_name" (printf "%s-controlplane.%s.svc.cluster.local" (include "nantian-gw.name" .) (include "nantian-gw.namespace" .)) -}}
 {{- end -}}
-{{- $_ := set $cfg "xdsTls" $xdsTLS -}}
+{{- $_ := set $cfg "xds_tls" $xds_tls -}}
 {{- end -}}
-{{- $adminAuth := default (dict) $cfg.adminAuth -}}
-{{- if and (eq (include "nantian-gw.dataplaneAdminAuthUsesSecret" .) "true") (not (get $adminAuth "bearerTokenFile")) -}}
-{{- $_ := set $adminAuth "bearerTokenFile" (include "nantian-gw.dataplaneAdminAuthFilePath" .) -}}
-{{- $_ := set $cfg "adminAuth" $adminAuth -}}
+{{- $admin_auth := default (dict) $cfg.admin_auth -}}
+{{- if and (eq (include "nantian-gw.dataplaneAdminAuthUsesSecret" .) "true") (not (get $admin_auth "bearer_token_file")) -}}
+{{- $_ := set $admin_auth "bearer_token_file" (include "nantian-gw.dataplaneAdminAuthFilePath" .) -}}
+{{- $_ := set $cfg "admin_auth" $admin_auth -}}
 {{- end -}}
-{{- $sessionPersistence := default (dict) (get $cfg "sessionPersistence") -}}
-{{- $sessionSecretKeyFile := trim (default "" (get $sessionPersistence "secretKeyFile")) -}}
-{{- $sessionInlineSecret := trim (default "" (get $sessionPersistence "sharedSecret")) -}}
+{{- $sessionPersistence := default (dict) (get $cfg "session_persistence") -}}
+{{- $sessionSecretKeyFile := trim (default "" (get $sessionPersistence "secret_key_file")) -}}
+{{- $sessionInlineSecret := trim (default "" (get $sessionPersistence "shared_secret")) -}}
 {{- if and (not $sessionSecretKeyFile) (not $sessionInlineSecret) -}}
-{{- $_ := set $sessionPersistence "secretKeyFile" (include "nantian-gw.dataplaneSessionPersistenceFilePath" .) -}}
-{{- $_ := set $cfg "sessionPersistence" $sessionPersistence -}}
+{{- $_ := set $sessionPersistence "secret_key_file" (include "nantian-gw.dataplaneSessionPersistenceFilePath" .) -}}
+{{- $_ := set $cfg "session_persistence" $sessionPersistence -}}
 {{- end -}}
-{{- if $cfg.controlPlaneAddr -}}
-{{- $dpConfig := omit $cfg "controlPlaneAddr" -}}
-controlPlaneAddr: {{ $cfg.controlPlaneAddr | quote }}
+{{- if $cfg.control_plane_addr -}}
+{{- $dpConfig := omit $cfg "control_plane_addr" -}}
+control_plane_addr: {{ $cfg.control_plane_addr | quote }}
 {{ toYaml $dpConfig }}
 {{- else -}}
-{{- $dpConfig := omit $cfg "controlPlaneAddr" -}}
-controlPlaneAddr: "http://{{ include "nantian-gw.name" . }}-controlplane.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:18080"
+{{- $dpConfig := omit $cfg "control_plane_addr" -}}
+control_plane_addr: "http://{{ include "nantian-gw.name" . }}-controlplane.{{ include "nantian-gw.namespace" . }}.svc.cluster.local:18080"
 {{ toYaml $dpConfig }}
 {{- end }}
 {{- end }}
