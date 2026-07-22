@@ -1,0 +1,41 @@
+{{- if not .Values.gatewayAPI.installCRDs }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "nantian-gw.fullname" . }}-prereq-check
+  namespace: {{ include "nantian-gw.namespace" . }}
+  labels:
+    {{- include "nantian-gw.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "nantian-gw.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ include "nantian-gw.serviceAccountName" . }}
+      containers:
+      - name: check
+        image: bitnami/kubectl:latest
+        command:
+        - sh
+        - -c
+        - |
+          set -e
+          echo "Checking Gateway API CRDs..."
+          REQUIRED="gatewayclasses.gateway.networking.k8s.io gateways.gateway.networking.k8s.io httproutes.gateway.networking.k8s.io"
+          for crd in $REQUIRED; do
+            if ! kubectl get crd "$crd" >/dev/null 2>&1; then
+              echo "ERROR: Required CRD $crd not found."
+              echo "Install with: kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml"
+              echo "Or set gatewayAPI.installCRDs=true"
+              exit 1
+            fi
+            echo "  ✓ $crd"
+          done
+          echo "All required CRDs present."
+{{- end }}

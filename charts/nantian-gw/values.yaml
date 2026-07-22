@@ -36,7 +36,7 @@ fullnameOverride: ""
 gatewayAPI:
   # -- Install the standard Gateway API CRD bundle through Helm's crds/ path. Experimental adds only the extra experimental CRDs from templates.
   # -- 是否通过 Helm crds/ 机制安装 standard Gateway API CRD；experimental 只会额外渲染实验性增量 CRD。
-  installCRDs: false
+  installCRDs: true
   # -- Gateway API CRD channel: standard installs the standard bundle; experimental installs the standard bundle plus experimental-only CRDs.
   # -- Gateway API CRD 通道：standard 安装标准 CRD；experimental 在标准 CRD 之上追加实验性增量 CRD。
   channel: standard
