@@ -25,10 +25,11 @@ spec:
     metadata:
       labels:
         {{- include "nantian-gw.controlplane.labels" . | nindent 8 }}
-      {{- with .Values.controlplane.podAnnotations }}
       annotations:
+        checksum/config: {{ include "nantian-gw.controlplane.configYaml" . | sha256sum }}
+        {{- with .Values.controlplane.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
     spec:
       serviceAccountName: {{ $cpName }}-controlplane
       {{- with .Values.priorityClass.name }}
