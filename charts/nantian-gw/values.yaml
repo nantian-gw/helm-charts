@@ -147,6 +147,7 @@ controlplane:
     # -- Minimum available pods during voluntary disruptions
     minAvailable: 1
 
+  # For production HA, change to DoNotSchedule to guarantee pods spread across nodes.
   # -- Topology spread constraints
   topologySpreadConstraints:
     - maxSkew: 1
@@ -207,6 +208,11 @@ controlplane:
       # -- Path to a file containing the static bearer token. Overrides
       # bearerToken if both are set. Only used when authMode is "static".
       bearerTokenFile: ""
+
+      # SECURITY: When authMode is "static" and bearerToken is empty, the admin
+      # API (port 18081) is accessible without authentication to any pod in the
+      # same namespace. For production, either set a strong bearerToken or use
+      # authMode: "kubernetes" with TokenReview validation.
     grpcTLS:
       enabled: false
       certPath: ""
@@ -377,6 +383,7 @@ dataplane:
   pdb:
     maxUnavailable: 1
 
+  # For production HA, change to DoNotSchedule to guarantee pods spread across nodes.
   # -- Topology spread constraints
   topologySpreadConstraints:
     - maxSkew: 1
@@ -612,6 +619,7 @@ dashboard:
     # -- Minimum available pods during voluntary disruptions
     minAvailable: 1
 
+  # For production HA, change to DoNotSchedule to guarantee pods spread across nodes.
   # -- Topology spread constraints
   topologySpreadConstraints:
     - maxSkew: 1
