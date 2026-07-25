@@ -613,7 +613,10 @@ dashboard:
     minAvailable: 1
 
   # -- Topology spread constraints
-  topologySpreadConstraints: []
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
 
   # -- Termination grace period (seconds)
   terminationGracePeriodSeconds: 20
