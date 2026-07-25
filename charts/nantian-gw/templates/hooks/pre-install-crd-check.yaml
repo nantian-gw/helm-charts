@@ -18,9 +18,27 @@ spec:
     spec:
       restartPolicy: Never
       serviceAccountName: {{ include "nantian-gw.fullname" . }}-controlplane
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: check
-        image: bitnami/kubectl:latest
+        image: bitnami/kubectl:1.32
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
         command:
         - sh
         - -c
