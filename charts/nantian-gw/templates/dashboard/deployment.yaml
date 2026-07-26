@@ -26,7 +26,7 @@ spec:
       labels:
         {{- include "nantian-gw.dashboard.labels" . | nindent 8 }}
       annotations:
-        checksum/auth: {{ include "nantian-gw.dashboard.authSecretName" . | sha256sum }}
+        checksum/auth: {{ include "nantian-gw.dashboard-auth-secret" . | sha256sum }}
     spec:
       serviceAccountName: {{ include "nantian-gw.dashboard.serviceAccountName" . }}
       automountServiceAccountToken: {{ .Values.dashboard.serviceAccount.automountServiceAccountToken }}

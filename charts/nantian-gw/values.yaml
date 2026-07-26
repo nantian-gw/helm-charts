@@ -90,7 +90,7 @@ controlplane:
     repository: "nantian-gw/nantian-controlplane"
     # For production, pin the exact digest instead of a mutable tag:
     # digest: "sha256:abc123..."
-    tag: "v2026.06.0"
+    tag: "latest"
     pullPolicy: IfNotPresent
 
   # -- Pod security context (overrides defaults)
@@ -283,11 +283,7 @@ controlplane:
   grpcTLS:
     # -- Enable gRPC mTLS between controlplane and dataplane.
     # Requires certs.generate=true or an existingSecret to be set.
-    enabled: true
-    # -- Name of existing Secret containing tls.crt, tls.key, ca.crt
-    existingSecret: ""
-    # -- Require client certificates (mutual TLS)
-    requireClientCert: true
+    enabled: false
 
   # -- Admin API authentication
   adminAuth:
@@ -324,7 +320,7 @@ dataplane:
     repository: "nantian-gw/dataplane"
     # For production, pin the exact digest instead of a mutable tag:
     # digest: "sha256:abc123..."
-    tag: "v2026.06.0"
+    tag: "latest"
     pullPolicy: IfNotPresent
 
   # -- Pod security context (overrides defaults)
@@ -472,8 +468,7 @@ dataplane:
   xdsTLS:
     # -- Enable mTLS for xDS connections to the controlplane.
     # Requires certs.generate=true or an existingSecret to be set.
-    enabled: true
-    # -- Name of existing Secret containing tls.crt, tls.key, ca.crt
+    enabled: false
     existingSecret: ""
     # -- Expected domain name for the controlplane gRPC service
     domainName: ""
@@ -565,7 +560,7 @@ dashboard:
     repository: "nantian-gw/dashboard"
     # For production, pin the exact digest instead of a mutable tag:
     # digest: "sha256:abc123..."
-    tag: "v2026.06.0"
+    tag: "latest"
     pullPolicy: IfNotPresent
 
   # -- Pod security context
