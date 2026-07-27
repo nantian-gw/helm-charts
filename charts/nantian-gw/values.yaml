@@ -710,6 +710,13 @@ observability:
 networkPolicies:
   # -- Enable NetworkPolicies
   enabled: true
+  # -- Enable egress rules. When enabled, restricts outbound traffic to only
+  # what each component needs (DNS, K8s API, internal services). Controlplane
+  # and dashboard get restrictive egress rules; dataplane is intentionally
+  # excluded because it needs to reach arbitrary upstream backends.
+  # Set to true in production for defense-in-depth.
+  egress:
+    enabled: false
 
 # =============================================================================
 # Helm Tests
