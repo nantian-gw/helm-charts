@@ -229,6 +229,7 @@ controlplane:
       snapshotSendTimeout: "5s"
       snapshotAckTimeout: "30s"
       permitWithoutStream: false
+      xdsProtocol: sotw
     translatorLimits:
       maxInputObjects: 0
       maxSnapshotObjects: 0
@@ -463,6 +464,7 @@ dataplane:
       cert_path: ""
       key_path: ""
       domain_name: ""
+    xds_protocol: sotw
 
   # -- xDS TLS configuration
   xdsTLS:
