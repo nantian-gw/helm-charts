@@ -1,6 +1,6 @@
 # Nantian Gateway Helm Charts
 
-Helm charts for deploying [Nantian Gateway](https://github.com/nantian-gw/gateway).
+Helm charts for deploying [Nantian Gateway](https://github.com/nantian-gw/gateway) — Kubernetes Gateway API with a built-in AI gateway.
 
 ## Charts
 
