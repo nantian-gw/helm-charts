@@ -35,7 +35,14 @@ spec:
         {{- toYaml .Values.dashboard.podSecurityContext | nindent 8 }}
       {{- if .Values.dashboard.topologySpreadConstraints }}
       topologySpreadConstraints:
-        {{- toYaml .Values.dashboard.topologySpreadConstraints | nindent 8 }}
+        {{- range .Values.dashboard.topologySpreadConstraints }}
+        - maxSkew: {{ .maxSkew }}
+          topologyKey: {{ .topologyKey }}
+          whenUnsatisfiable: {{ .whenUnsatisfiable }}
+          labelSelector:
+            matchLabels:
+              {{- include "nantian-gw.dashboard.selectorLabels" $ | nindent 14 }}
+        {{- end }}
       {{- end }}
       {{- with .Values.dashboard.nodeSelector }}
       nodeSelector:

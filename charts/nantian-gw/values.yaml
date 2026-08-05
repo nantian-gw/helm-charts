@@ -147,12 +147,11 @@ controlplane:
     # -- Minimum available pods during voluntary disruptions
     minAvailable: 1
 
-  # For production HA, change to DoNotSchedule to guarantee pods spread across nodes.
-  # -- Topology spread constraints
+  # -- Topology spread constraints. For production HA, use DoNotSchedule to guarantee pods spread across nodes.
   topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
+      whenUnsatisfiable: DoNotSchedule
 
   # -- Termination grace period (seconds)
   terminationGracePeriodSeconds: 30
@@ -380,12 +379,11 @@ dataplane:
   pdb:
     maxUnavailable: 1
 
-  # For production HA, change to DoNotSchedule to guarantee pods spread across nodes.
-  # -- Topology spread constraints
+  # -- Topology spread constraints. For production HA, use DoNotSchedule to guarantee pods spread across nodes.
   topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
+      whenUnsatisfiable: DoNotSchedule
 
   # -- Termination grace period (seconds)
   terminationGracePeriodSeconds: 30
@@ -616,12 +614,11 @@ dashboard:
     # -- Minimum available pods during voluntary disruptions
     minAvailable: 1
 
-  # For production HA, change to DoNotSchedule to guarantee pods spread across nodes.
-  # -- Topology spread constraints
+  # -- Topology spread constraints. For production HA, use DoNotSchedule to guarantee pods spread across nodes.
   topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
+      whenUnsatisfiable: DoNotSchedule
 
   # -- Termination grace period (seconds)
   terminationGracePeriodSeconds: 20

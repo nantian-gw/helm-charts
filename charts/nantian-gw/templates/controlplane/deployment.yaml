@@ -1,6 +1,9 @@
 {{- if .Values.controlplane.enabled }}
 {{- $ns := include "nantian-gw.namespace" . }}
 {{- $cpName := include "nantian-gw.name" . }}
+{{- if and (eq (toString .Values.controlplane.config.adminAuth.authMode) "static") (and (empty .Values.controlplane.config.adminAuth.bearerToken) (empty .Values.controlplane.config.adminAuth.bearerTokenFile)) }}
+{{- fail "PRODUCTION SAFETY: controlplane.config.adminAuth.authMode is 'static' but no bearerToken or bearerTokenFile is set. The admin API would be accessible without authentication. Set a bearerToken, configure bearerTokenFile, or use authMode: 'kubernetes'." }}
+{{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment

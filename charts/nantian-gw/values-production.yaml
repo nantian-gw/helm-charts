@@ -11,6 +11,12 @@ controlplane:
   image:
     tag: ""
     pullPolicy: IfNotPresent
+  # Production: must set a bearerToken or use authMode: kubernetes
+  config:
+    adminAuth:
+      authMode: "static"
+      bearerToken: ""  # SET THIS to a strong random token
+      bearerTokenFile: ""
 
 dataplane:
   replicas: 2
