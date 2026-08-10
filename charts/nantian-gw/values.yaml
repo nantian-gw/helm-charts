@@ -724,7 +724,9 @@ tests:
   # -- Enable Helm test hook rendering
   enabled: true
   image:
-    repository: "public.ecr.aws/docker/library/busybox"
+    # cgr.dev/chainguard/busybox is a minimal distroless image with no package manager,
+    # reducing the attack surface compared to the full ECR library busybox.
+    repository: "cgr.dev/chainguard/busybox"
     tag: "1.36.1"
     pullPolicy: IfNotPresent
   resources:
