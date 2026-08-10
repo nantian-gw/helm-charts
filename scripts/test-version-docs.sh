@@ -8,7 +8,7 @@ docs=(
   .github/workflows/release.yml
 )
 canonical_chart_repo_url='https://chart.nantian.dev'
-legacy_chart_repo_host='chart.nantian.dev'
+legacy_chart_repo_host='charts.nantian.dev'
 combined="$(mktemp)"
 trap 'rm -f "$combined"' EXIT
 
