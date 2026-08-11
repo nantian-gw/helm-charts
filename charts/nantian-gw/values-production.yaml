@@ -15,7 +15,7 @@ controlplane:
   config:
     adminAuth:
       authMode: "static"
-      bearerToken: ""  # SET THIS to a strong random token
+      bearerToken: "change-me-to-a-strong-random-token"  # REQUIRED: Set this to a strong random token for production
       bearerTokenFile: ""
 
 dataplane:
