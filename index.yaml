@@ -3,7 +3,7 @@ entries:
   nantian-gw:
   - apiVersion: v2
     appVersion: 2026.08.0-alpha.1
-    created: "2026-08-13T05:31:17.134263347Z"
+    created: "2026-08-13T05:37:40.563912162Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -31,7 +31,7 @@ entries:
     version: 0.4.0-alpha.1-c589ce8
   - apiVersion: v2
     appVersion: 2026.08.0-alpha.1
-    created: "2026-08-13T05:31:17.126569758Z"
+    created: "2026-08-13T05:37:40.556182332Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -59,7 +59,7 @@ entries:
     version: 0.4.0-alpha.1-4f49fc9
   - apiVersion: v2
     appVersion: 2026.08.0-alpha.1
-    created: "2026-08-13T05:31:17.141222838Z"
+    created: "2026-08-13T05:37:40.571257435Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -67,7 +67,7 @@ entries:
       version: 0.1.0
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
-    digest: 1774e9b5fd5597e4ef6e428e644bd7e6f8650984669b60bc2747697e16ae7ee4
+    digest: a8e24457d2b33d674aafc9d659bdcba4f5f733f6ae63ee3960c06e560db2a4d0
     home: https://github.com/nantian-gw/gateway
     icon: https://raw.githubusercontent.com/nantian-gw/nantian-gw/main/logo.png
     keywords:
@@ -87,7 +87,7 @@ entries:
     version: 0.4.0-alpha.1
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.120291408Z"
+    created: "2026-08-13T05:37:40.549651745Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -115,7 +115,7 @@ entries:
     version: 0.3.1-a0321d2
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.113126197Z"
+    created: "2026-08-13T05:37:40.542007946Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -143,7 +143,7 @@ entries:
     version: 0.3.1-91bc52b
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.105610075Z"
+    created: "2026-08-13T05:37:40.533655043Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -171,7 +171,7 @@ entries:
     version: 0.3.1-17c4da0
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.098419142Z"
+    created: "2026-08-13T05:37:40.527226207Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -198,7 +198,7 @@ entries:
     version: 0.3.0-e7b7b63
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.090517046Z"
+    created: "2026-08-13T05:37:40.52008726Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -226,7 +226,7 @@ entries:
     version: 0.3.0-af33d4e
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.083712849Z"
+    created: "2026-08-13T05:37:40.512850409Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -254,7 +254,7 @@ entries:
     version: 0.3.0-a78cf7d
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.076095273Z"
+    created: "2026-08-13T05:37:40.505239985Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -281,7 +281,7 @@ entries:
     version: 0.3.0-82d36ce
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.068329793Z"
+    created: "2026-08-13T05:37:40.497811139Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -308,7 +308,7 @@ entries:
     version: 0.3.0-7426b8b
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.061291797Z"
+    created: "2026-08-13T05:37:40.489454826Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -335,7 +335,7 @@ entries:
     version: 0.3.0-734f260
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.05488914Z"
+    created: "2026-08-13T05:37:40.483210575Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -363,7 +363,7 @@ entries:
     version: 0.3.0-6ebbb8c
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.046798159Z"
+    created: "2026-08-13T05:37:40.47594308Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -390,7 +390,7 @@ entries:
     version: 0.3.0-6d687c7
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.040436182Z"
+    created: "2026-08-13T05:37:40.468627104Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -418,7 +418,7 @@ entries:
     version: 0.3.0-6cd2709
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.032332327Z"
+    created: "2026-08-13T05:37:40.461322051Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -446,7 +446,7 @@ entries:
     version: 0.3.0-413f3ea
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.025922089Z"
+    created: "2026-08-13T05:37:40.453751688Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -474,7 +474,7 @@ entries:
     version: 0.3.0-3e6b2be
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.017814634Z"
+    created: "2026-08-13T05:37:40.446087342Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -502,7 +502,7 @@ entries:
     version: 0.3.0-35cea57
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:17.011575828Z"
+    created: "2026-08-13T05:37:40.438099858Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -529,7 +529,7 @@ entries:
     version: 0.3.0-00cac77
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:17.004647582Z"
+    created: "2026-08-13T05:37:40.43182007Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -556,7 +556,7 @@ entries:
     version: 0.2.3
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.997940253Z"
+    created: "2026-08-13T05:37:40.423324991Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -583,7 +583,7 @@ entries:
     version: 0.2.3-fa15e53
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.990985251Z"
+    created: "2026-08-13T05:37:40.4171821Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -610,7 +610,7 @@ entries:
     version: 0.2.3-f375099
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.982489591Z"
+    created: "2026-08-13T05:37:40.408768345Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -637,7 +637,7 @@ entries:
     version: 0.2.3-f222158
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.976137983Z"
+    created: "2026-08-13T05:37:40.402652084Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 32e40565e269fd23348cfbaf394eeecffc3befc43a3fa5a24afa591a87785c13
@@ -659,7 +659,7 @@ entries:
     version: 0.2.3-eebe14d
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.964617153Z"
+    created: "2026-08-13T05:37:40.391429332Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 4cff99ec206ca975205efafed9acd9e4023bb10682ee637e333c632359f4739c
@@ -681,7 +681,7 @@ entries:
     version: 0.2.3-e15ef4d
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.953371983Z"
+    created: "2026-08-13T05:37:40.379869067Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: f6a69d40b0295d199baf90d7c7495644bc6f5d7b8045001262f36fbaea7c87e5
@@ -703,7 +703,7 @@ entries:
     version: 0.2.3-dcfdcc7
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.938621751Z"
+    created: "2026-08-13T05:37:40.363904323Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -730,7 +730,7 @@ entries:
     version: 0.2.3-db3eb7a
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.932321616Z"
+    created: "2026-08-13T05:37:40.35747747Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -757,7 +757,7 @@ entries:
     version: 0.2.3-ca59393
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.924586317Z"
+    created: "2026-08-13T05:37:40.349822998Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -784,7 +784,7 @@ entries:
     version: 0.2.3-c5c733a
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.918438742Z"
+    created: "2026-08-13T05:37:40.343747533Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -811,7 +811,7 @@ entries:
     version: 0.2.3-bd7b814
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.91054828Z"
+    created: "2026-08-13T05:37:40.336183739Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -838,7 +838,7 @@ entries:
     version: 0.2.3-ba0edc4
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.902532069Z"
+    created: "2026-08-13T05:37:40.327815532Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -865,7 +865,7 @@ entries:
     version: 0.2.3-b5035e5
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.894155816Z"
+    created: "2026-08-13T05:37:40.320772557Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -892,7 +892,7 @@ entries:
     version: 0.2.3-a52f21c
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.887141592Z"
+    created: "2026-08-13T05:37:40.313640424Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -919,7 +919,7 @@ entries:
     version: 0.2.3-9adf7b0
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.872585781Z"
+    created: "2026-08-13T05:37:40.298582166Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 7f1c96c2c81e9585626909aec20b74de5eb62edac0674dd95b57fbaaed36fb5d
@@ -941,7 +941,7 @@ entries:
     version: 0.2.3-952d3de
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.860269325Z"
+    created: "2026-08-13T05:37:40.284880103Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -968,7 +968,7 @@ entries:
     version: 0.2.3-92e2f4c
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.853968502Z"
+    created: "2026-08-13T05:37:40.278283674Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -995,7 +995,7 @@ entries:
     version: 0.2.3-920605f
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.846846066Z"
+    created: "2026-08-13T05:37:40.269564451Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1022,7 +1022,7 @@ entries:
     version: 0.2.3-8e81e35
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.840637937Z"
+    created: "2026-08-13T05:37:40.262312808Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: c25b579c0c7c956eac699d6f8a9f5e119f4bcfb156690ee09dfadbae18395892
@@ -1044,7 +1044,7 @@ entries:
     version: 0.2.3-801663e
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.82807067Z"
+    created: "2026-08-13T05:37:40.249029609Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1071,7 +1071,7 @@ entries:
     version: 0.2.3-7d0d3af
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.820923015Z"
+    created: "2026-08-13T05:37:40.24065326Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1098,7 +1098,7 @@ entries:
     version: 0.2.3-765d41e
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.814813943Z"
+    created: "2026-08-13T05:37:40.233503973Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 6f9a46f60a3ffff5454baf251db0d2f0be6f75ac81668a1b6da021e9522f5986
@@ -1120,7 +1120,7 @@ entries:
     version: 0.2.3-6fb97ac
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.802126435Z"
+    created: "2026-08-13T05:37:40.221047261Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 1710c8bbc4003a1ffee0feb04d2a8d80899ac30caa3c0b942eaebfa6bec1e453
@@ -1142,7 +1142,7 @@ entries:
     version: 0.2.3-65b7818
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.779470358Z"
+    created: "2026-08-13T05:37:40.197845313Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1169,7 +1169,7 @@ entries:
     version: 0.2.3-5de53cb
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.772469275Z"
+    created: "2026-08-13T05:37:40.190960351Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 535d23780ff747cd934d0812341b4b941b077465f2777303c88d9bce111a5014
@@ -1191,7 +1191,7 @@ entries:
     version: 0.2.3-5b6bf32
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.752879679Z"
+    created: "2026-08-13T05:37:40.169228487Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1218,7 +1218,7 @@ entries:
     version: 0.2.3-57cb44d
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.744684974Z"
+    created: "2026-08-13T05:37:40.162807065Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1245,7 +1245,7 @@ entries:
     version: 0.2.3-55c7ae6
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.738345869Z"
+    created: "2026-08-13T05:37:40.155623036Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1272,7 +1272,7 @@ entries:
     version: 0.2.3-500b71f
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.732071096Z"
+    created: "2026-08-13T05:37:40.14932797Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: a82df18c8b8bf38964aa9258afcdb7922a328130edd0397718f0e64257a1fe0c
@@ -1294,7 +1294,7 @@ entries:
     version: 0.2.3-4d3bbda
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.720531912Z"
+    created: "2026-08-13T05:37:40.13858292Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 68a02a83e1efa8ac61d4fd7e015b14ac3db8ba00394042fbf095bfd056c9f5ae
@@ -1316,7 +1316,7 @@ entries:
     version: 0.2.3-46a15da
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.70703055Z"
+    created: "2026-08-13T05:37:40.125333657Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1343,7 +1343,7 @@ entries:
     version: 0.2.3-442c58b
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.700110435Z"
+    created: "2026-08-13T05:37:40.118904841Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1370,7 +1370,7 @@ entries:
     version: 0.2.3-38c31e7
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.693980381Z"
+    created: "2026-08-13T05:37:40.111080584Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1397,7 +1397,7 @@ entries:
     version: 0.2.3-31e4d34
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.686938631Z"
+    created: "2026-08-13T05:37:40.104950006Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1424,7 +1424,7 @@ entries:
     version: 0.2.3-2b7c5a9
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.678653994Z"
+    created: "2026-08-13T05:37:40.097602348Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1451,7 +1451,7 @@ entries:
     version: 0.2.3-29f0ba2
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.671352921Z"
+    created: "2026-08-13T05:37:40.089353167Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1478,7 +1478,7 @@ entries:
     version: 0.2.3-276ed64
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.664164888Z"
+    created: "2026-08-13T05:37:40.081581957Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 4e8bb842f9d0e7472ff099c25a58143e0ed8364e3af1805b8f6fb19cf5575a6e
@@ -1500,7 +1500,7 @@ entries:
     version: 0.2.3-23fabed
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.652803213Z"
+    created: "2026-08-13T05:37:40.070088018Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1527,7 +1527,7 @@ entries:
     version: 0.2.3-1b5ca08
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.646243765Z"
+    created: "2026-08-13T05:37:40.063057898Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 41ee3554b914c209d47a9a3d2a9f8f160422cf43726af23810c8a8403394f554
@@ -1549,7 +1549,7 @@ entries:
     version: 0.2.3-19992d4
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.634828631Z"
+    created: "2026-08-13T05:37:40.05167731Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 5ac9d6a9bf479814e16af817ffad4c52d4ecea6a22b7220a4b72a31154fe609f
@@ -1571,7 +1571,7 @@ entries:
     version: 0.2.3-142a30d
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.621296855Z"
+    created: "2026-08-13T05:37:40.040261304Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1598,7 +1598,7 @@ entries:
     version: 0.2.3-07ca55a
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.613652923Z"
+    created: "2026-08-13T05:37:40.031953751Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1625,7 +1625,7 @@ entries:
     version: 0.2.3-058a223
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.606591994Z"
+    created: "2026-08-13T05:37:40.025001185Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1652,7 +1652,7 @@ entries:
     version: 0.2.3-03afe37
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.599986503Z"
+    created: "2026-08-13T05:37:40.018801016Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1679,7 +1679,7 @@ entries:
     version: 0.2.3-02681f9
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.879840863Z"
+    created: "2026-08-13T05:37:40.306148019Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1706,7 +1706,7 @@ entries:
     version: 0.2.3-9977593
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.78729548Z"
+    created: "2026-08-13T05:37:40.206966553Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1733,7 +1733,7 @@ entries:
     version: 0.2.3-6105187
   - apiVersion: v2
     appVersion: 2026.06.0
-    created: "2026-08-13T05:31:16.760295814Z"
+    created: "2026-08-13T05:37:40.177740648Z"
     dependencies:
     - condition: gatewayAPI.installCRDs
       name: gateway-api-crds-standard
@@ -1760,7 +1760,7 @@ entries:
     version: 0.2.3-5939967
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.59217167Z"
+    created: "2026-08-13T05:37:40.012123583Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 582252bd77b6759357696fcdb77a10e31e2dbffe33c725174e9f09c2cb77b968
@@ -1782,7 +1782,7 @@ entries:
     version: 0.2.2-d5b69ab
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.580406673Z"
+    created: "2026-08-13T05:37:40.000508938Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 441d83598f166c53fd922cc1d6e618527137a6a7ceb22a12a7fddb0e91f246b3
@@ -1804,7 +1804,7 @@ entries:
     version: 0.2.2-61d5c2f
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.567397584Z"
+    created: "2026-08-13T05:37:39.989578509Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 3e8fdde0e7cebecc6b051475bc10392b992385a2649b66ace82849ea7deab2e8
@@ -1826,7 +1826,7 @@ entries:
     version: 0.2.1-31b590f
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.555186345Z"
+    created: "2026-08-13T05:37:39.97846056Z"
     description: Nantian Gateway - Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane
     digest: 012ed9f8e17b62d79809646796ab5cb8e0ac967d050dccd4f440e56e722d6653
@@ -1850,7 +1850,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.526372465Z"
+    created: "2026-08-13T05:37:39.942349378Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 4e56bf4579af2ee476fd5987104db42f638ac160c217357d30e4ca01b7bc2f97
@@ -1874,7 +1874,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.544532605Z"
+    created: "2026-08-13T05:37:39.965476995Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: c49ff3c347efdb4e048adc94b038e35e0417f9aeb611ce855a1fa63fa7c79930
@@ -1898,7 +1898,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.543313969Z"
+    created: "2026-08-13T05:37:39.964311114Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: c53d1334fd2243b926ff31407004786779ad4f64b44943220aeff11f13135dc8
@@ -1922,7 +1922,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.539035428Z"
+    created: "2026-08-13T05:37:39.960724344Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 87b49cd270b8d970ce3bd10216a0c03eb9297859428214565a59f2782637eaed
@@ -1946,7 +1946,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.53539599Z"
+    created: "2026-08-13T05:37:39.951276869Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: dacfecbc25f01016cd63a153b74c6c9b33920f8ac74adfbb25bbc96845fe56bf
@@ -1970,7 +1970,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.531021648Z"
+    created: "2026-08-13T05:37:39.946720759Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 3cd58e4ff62a153080d308b352e82762bf7404c5a73efc3225bdd9439add722b
@@ -1994,7 +1994,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.522854093Z"
+    created: "2026-08-13T05:37:39.938718456Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 32b0dd0f6150f4ccfeeee7e8949715a9c8b64b938086e2b4b021891e7dd10cbd
@@ -2018,7 +2018,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.521693095Z"
+    created: "2026-08-13T05:37:39.937532347Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: 535da2a143cff5f3b3aec3635157dad9273bfbdc5116cdfc3ce195ab9da14081
@@ -2042,7 +2042,7 @@ entries:
       experimental: "true"
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-13T05:31:16.51706087Z"
+    created: "2026-08-13T05:37:39.933214079Z"
     description: Nantian Gateway — Kubernetes Gateway API implementation with Go control
       plane and Rust/Nantian data plane (experimental internal chart)
     digest: b4b2a9ff6524e08cf0cc38b829769d7dafbd734a995f7a5f336fb32afd03986c
@@ -2062,4 +2062,4 @@ entries:
     urls:
     - https://chart.nantian.dev/nantian-gw-0.1.0-47c5e31.tgz
     version: 0.1.0-47c5e31
-generated: "2026-08-13T05:31:16.511623298Z"
+generated: "2026-08-13T05:37:39.927005295Z"
