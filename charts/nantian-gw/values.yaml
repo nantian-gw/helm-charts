@@ -89,8 +89,7 @@ controlplane:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/nantian-controlplane"
     # For production, pin the exact digest instead of a mutable tag:
-    # digest: "sha256:abc123..."
-    tag: "latest"
+    tag: "v2026.08.0-alpha.1"
     pullPolicy: IfNotPresent
 
   # -- Pod security context (overrides defaults)
@@ -319,8 +318,7 @@ dataplane:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/dataplane"
     # For production, pin the exact digest instead of a mutable tag:
-    # digest: "sha256:abc123..."
-    tag: "latest"
+    tag: "v2026.08.0-alpha.1"
     pullPolicy: IfNotPresent
 
   # -- Pod security context (overrides defaults)
@@ -559,8 +557,7 @@ dashboard:
     # registry inherits from global.imageRegistry unless explicitly set
     repository: "nantian-gw/dashboard"
     # For production, pin the exact digest instead of a mutable tag:
-    # digest: "sha256:abc123..."
-    tag: "latest"
+    tag: "v2026.08.0-alpha.1"
     pullPolicy: IfNotPresent
 
   # -- Pod security context

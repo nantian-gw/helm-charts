@@ -2,12 +2,12 @@ apiVersion: v2
 name: nantian-gw
 description: Nantian Gateway - Kubernetes Gateway API implementation with Go control plane and Rust/Nantian data plane
 type: application
-# Version 0.3.1 — pre-1.0 because the chart API is still evolving.
+# Version 0.4.0-alpha.1 — pre-1.0 because the chart API is still evolving.
 # Production readiness items remain: external secret manager integration,
 # digest-pinned image defaults, and conformance validation across all
 # supported Kubernetes versions. Bump to 1.0.0 once these are resolved.
-version: 0.3.1
-appVersion: "2026.06.0"
+version: 0.4.0-alpha.1
+appVersion: "2026.08.0-alpha.1"
 keywords:
   - gateway
   - gateway-api
