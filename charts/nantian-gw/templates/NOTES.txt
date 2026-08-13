@@ -15,6 +15,10 @@ Data Plane:     HTTP on NodePort 10080, Admin API on 19080
 Dashboard:      http://{{ $name }}-dashboard.{{ $ns }}.svc:3000
 {{- end }}
 
+{{- if eq .Values.featureMode "experimental" }}
+🔬 Experimental mode enabled — AI Gateway, Wasm, TokenPolicy, and RoutePolicy features are active.
+{{- end }}
+
 {{/* System requirements */}}
 ⚠️  System Requirements:
    • Gateway API CRDs must exist in the cluster (chart installs them by default)

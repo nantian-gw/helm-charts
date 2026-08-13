@@ -24,7 +24,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-      - name: check
+      - name: check-gatewayclass
         image: "registry.k8s.io/kubectl:v1.32.0"
         securityContext:
           allowPrivilegeEscalation: false
@@ -43,6 +43,42 @@ spec:
         - get
         - crd
         - gatewayclasses.gateway.networking.k8s.io
+      - name: check-gateway
+        image: "registry.k8s.io/kubectl:v1.32.0"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+        args:
+        - get
+        - crd
         - gateways.gateway.networking.k8s.io
+      - name: check-httproute
+        image: "registry.k8s.io/kubectl:v1.32.0"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+        args:
+        - get
+        - crd
         - httproutes.gateway.networking.k8s.io
 {{- end }}
