@@ -25,7 +25,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: check
-        image: "bitnami/kubectl:{{ .Capabilities.KubeVersion.Major }}.{{ .Capabilities.KubeVersion.Minor }}"
+        image: "registry.k8s.io/kubectl:v1.32.0"
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
@@ -39,21 +39,10 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
-        command:
-        - sh
-        - -c
-        - |
-          set -e
-          echo "Checking Gateway API CRDs..."
-          REQUIRED="gatewayclasses.gateway.networking.k8s.io gateways.gateway.networking.k8s.io httproutes.gateway.networking.k8s.io"
-          for crd in $REQUIRED; do
-            if ! kubectl get crd "$crd" >/dev/null 2>&1; then
-              echo "ERROR: Required CRD $crd not found."
-              echo "Install with: kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml"
-              echo "Or set gatewayAPI.installCRDs=true"
-              exit 1
-            fi
-            echo "  ✓ $crd"
-          done
-          echo "All required CRDs present."
+        args:
+        - get
+        - crd
+        - gatewayclasses.gateway.networking.k8s.io
+        - gateways.gateway.networking.k8s.io
+        - httproutes.gateway.networking.k8s.io
 {{- end }}
