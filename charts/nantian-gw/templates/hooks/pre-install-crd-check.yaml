@@ -17,7 +17,7 @@ spec:
         {{- include "nantian-gw.labels" . | nindent 8 }}
     spec:
       restartPolicy: Never
-      serviceAccountName: {{ include "nantian-gw.fullname" . }}-controlplane
+      serviceAccountName: default
       securityContext:
         runAsNonRoot: true
         runAsUser: 65532
