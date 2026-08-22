@@ -27,6 +27,7 @@ jobs:
 
       - name: Validate chart
         run: |
+          bash scripts/verify-gateway-api-crds.sh
           bash scripts/validate-chart-production.sh
           bash scripts/test-package-snapshot-charts.sh
 

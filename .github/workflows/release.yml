@@ -23,6 +23,12 @@ jobs:
         run: |
           curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
+      - name: Verify Gateway API CRDs
+        run: bash scripts/verify-gateway-api-crds.sh
+
+      - name: Validate chart
+        run: bash scripts/validate-chart-production.sh
+
       - name: Package chart
         run: |
           mkdir -p .dist

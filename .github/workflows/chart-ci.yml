@@ -25,6 +25,9 @@ jobs:
       - name: Validate version docs
         run: bash scripts/test-version-docs.sh
 
+      - name: Verify Gateway API CRDs
+        run: bash scripts/verify-gateway-api-crds.sh
+
       - name: Validate chart production renders
         run: bash scripts/validate-chart-production.sh
 

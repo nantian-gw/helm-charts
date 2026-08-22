@@ -19,6 +19,17 @@ helm install nantian-gw nantian-gw/nantian-gw --namespace nantian-gw --create-na
 
 ## Development
 
+### Syncing Gateway API CRDs
+
+The chart vendors Gateway API CRDs from a pinned upstream release. Do not edit those CRD YAML files by hand; regenerate them and verify the result:
+
+```bash
+GATEWAY_API_VERSION=v1.5.1 bash scripts/sync-gateway-api-crds.sh
+bash scripts/verify-gateway-api-crds.sh
+```
+
+`verify-gateway-api-crds.sh` is also wired into chart CI, snapshot publishing, and release publishing so stale CRD bundles fail before packaging.
+
 ### Cutting a release
 
 Push a version tag to trigger the release workflow:
